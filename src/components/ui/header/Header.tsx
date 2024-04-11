@@ -5,7 +5,7 @@ import { twMerge } from 'tailwind-merge'
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Home, Search } from 'lucide-react';
 import React from 'react'
-import Button from "./button";
+import Button from "./Button";
 
 
 interface HeaderProps{
