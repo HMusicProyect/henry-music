@@ -2,6 +2,7 @@
 
 import ListItem from "@/components/home/ListItem";
 import Header from "@/components/ui/header/Header";
+import AlbumCard from "@/components/ui/sidebar/AlbumCard";
 
 export default function Home() {
   return (
@@ -30,7 +31,12 @@ export default function Home() {
           List of Songs!
         </div>
       </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 mt-4">
+        
+            <AlbumCard />
+          </div>
     </div>
+    
   );
 }
 
