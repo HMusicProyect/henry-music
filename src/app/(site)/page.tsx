@@ -1,6 +1,6 @@
 "use client"
 
-import Header from "@/components/header/Header";
+import Header from "@/components/ui/header/Header";
 import ListItem from "@/components/home/ListItem";
 
 export default function Home() {

@@ -1,6 +1,6 @@
 import { Figtree } from 'next/font/google'
 import "./globals.css";
-import Sidebar from '@/components/sidebar/Sidebar';
+import Sidebar from '@/components/ui/sidebar/Sidebar';
 
 
 const inter = Figtree({ subsets: ["latin"] });
