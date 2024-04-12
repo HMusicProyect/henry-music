@@ -3,6 +3,7 @@ import { twMerge } from 'tailwind-merge';
 interface CardProps {
     children: React.ReactNode;
     className?: string;
+    
 }
 
 const Card: React.FC<CardProps> = ({ children, className }) => {
@@ -15,9 +16,11 @@ const Card: React.FC<CardProps> = ({ children, className }) => {
         'shadow-lg', 
         className 
     );
-
+const clic = ()=>{
+    alert("abrir listas")
+}
     return (
-        <div className={cardClasses}>
+        <div onClick={clic} className={cardClasses}>
             {children}
         </div>
     );
