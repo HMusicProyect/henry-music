@@ -35,6 +35,30 @@ export const data = [
     songName: "BZR sesion",
     artistName: "Bizarrap",
     releaseYear: 2020
+  },
+  {
+    imageUrl: "https://i.scdn.co/image/ab67616d0000b27315583045b2fdb7d7bab10e81",
+    songName: "BZR sesion",
+    artistName: "Bizarrap",
+    releaseYear: 2020
+  },
+  {
+    imageUrl: "https://i.scdn.co/image/ab67616d0000b27315583045b2fdb7d7bab10e81",
+    songName: "BZR sesion",
+    artistName: "Bizarrap",
+    releaseYear: 2020
+  },
+  {
+    imageUrl: "https://i.scdn.co/image/ab67616d0000b27315583045b2fdb7d7bab10e81",
+    songName: "BZR sesion",
+    artistName: "Bizarrap",
+    releaseYear: 2020
+  },
+  {
+    imageUrl: "https://f4.bcbits.com/img/a0465333642_10.jpg",
+    songName: "Stones Album",
+    artistName: "Rolling Stones",
+    releaseYear: 1971
   }
 ];
   
