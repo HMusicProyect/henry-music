@@ -6,7 +6,8 @@ import AlbumCard from "@/components/ui/sidebar/AlbumCard";
 const Search: React.FC = () => {
   const [filteredData, setFilteredData] = useState(data);
   const [query, setQuery] = useState('');
-  const [orderBy, setOrderBy] = useState('desc');
+  const [orderByDate, setOrderByDate] = useState('desc');
+  const [orderByName, setOrderByName] = useState('alphaAsc');
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(6);
 
@@ -22,7 +23,7 @@ const Search: React.FC = () => {
     setCurrentPage(1); // Resetear a la primera página al hacer una nueva búsqueda
   };
 
-  const handleSort = (selectedOrder: string) => {
+  const handleSortByDate = (selectedOrder: string) => {
     const sortedData = [...filteredData];
     sortedData.sort((a, b) => {
       if (selectedOrder === 'asc') {
@@ -32,7 +33,22 @@ const Search: React.FC = () => {
       }
     });
     setFilteredData(sortedData);
-    setOrderBy(selectedOrder);
+    setOrderByDate(selectedOrder);
+  };
+
+  const handleSortByName = (selectedOrder: string) => {
+    const sortedData = [...filteredData];
+    sortedData.sort((a, b) => {
+      const fieldA = a.songName.toLowerCase();
+      const fieldB = b.songName.toLowerCase();
+      if (selectedOrder === 'alphaAsc') {
+        return fieldA.localeCompare(fieldB);
+      } else {
+        return fieldB.localeCompare(fieldA);
+      }
+    });
+    setFilteredData(sortedData);
+    setOrderByName(selectedOrder);
   };
 
   // Calcula el número total de páginas
@@ -65,12 +81,20 @@ const Search: React.FC = () => {
           className="px-4 py-2 border rounded-full bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 w-72"
         />
         <select
-          value={orderBy}
-          onChange={(e) => handleSort(e.target.value)}
+          value={orderByDate}
+          onChange={(e) => handleSortByDate(e.target.value)}
           className="mt-2 px-4 py-2 border rounded-full bg-gray-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="desc">Fecha de estreno (descendente)</option>
           <option value="asc">Fecha de estreno (ascendente)</option>
+        </select>
+        <select
+          value={orderByName}
+          onChange={(e) => handleSortByName(e.target.value)}
+          className="mt-2 px-4 py-2 border rounded-full bg-gray-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="alphaAsc">Nombre de canción (A-Z)</option>
+          <option value="alphaDesc">Nombre de canción (Z-A)</option>
         </select>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 mt-4">
@@ -99,3 +123,4 @@ const Search: React.FC = () => {
 };
 
 export default Search;
+
