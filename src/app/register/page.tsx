@@ -1,7 +1,7 @@
 "use client"
 import React, { useState } from 'react';
 import { useRouter } from "next/navigation";
-import { useStore } from '@/store/user.store'; // Asegúrate de reemplazar esto con la ruta a tu archivo de Zustand
+import { useStore } from '@/store/user.store';
 
 type User = {
     name: string;
@@ -29,11 +29,11 @@ const RegisterPage: React.FC = () => {
         try {
         const response = await postUser(newUser);
         
-        if (response && response.ok) { // Si la respuesta es exitosa
-            router.push('/login'); // Redirige a la URL '/'
+        if (response && response.ok) { 
+            router.push('/login'); 
         }
         } catch (error) {
-            alert('Ocurrió un error al registrar el usuario.'); // Muestra una alerta
+            alert('Ocurrió un error al registrar el usuario.');
         }
     };
 
