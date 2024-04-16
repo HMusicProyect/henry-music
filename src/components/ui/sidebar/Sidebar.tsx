@@ -1,17 +1,22 @@
 "use client";
 import { usePathname } from 'next/navigation';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Home, Search } from 'lucide-react';
 import Box from './Box';
 import SidebarItem from './SidebarItem';
 import MusicLibrary from './MusicLibrary';
+import useStore from '@/store/songs.store';
 
 
 interface SidebarProps {
     children:React.ReactNode;
 }
 const Sidebar: React.FC<SidebarProps> = ({ children }) => {
+    const { todos, getMusic } = useStore();
 
+    useEffect(() => {
+      getMusic();
+    }, []);
     const pathname = usePathname();
     const routes = useMemo(() => [
         {
@@ -38,7 +43,7 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
                     </div>
                 </Box>
                 <Box className="overflow-y-auto h-full">
-                    <MusicLibrary />
+                    <MusicLibrary songs={todos}/>
                 </Box>
             </div>
             <main className="h-full flex-1 overflow-y-auto py-2">

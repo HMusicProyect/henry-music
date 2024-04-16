@@ -1,8 +1,14 @@
 "use client"
 
+import { Music } from '@/store/songs.store';
 import { Plus, Library } from 'lucide-react';
+import MediaItem from './MediaItem';
 
-const MusicLibrary = () => {
+interface MusicLibraryProps{
+    songs: Music[];
+}
+
+const MusicLibrary: React.FC<MusicLibraryProps> = ({songs}) => {
     const onClick = () => {
 
     }
@@ -18,7 +24,13 @@ const MusicLibrary = () => {
 
             </div>
             <div className="flex flex-col gap-y-2 mt-4 px-3">
-                List of Songs!
+                {songs.map((item)=> (
+                   <MediaItem 
+                    onClick={() => {}}
+                    key={item.id}
+                    data={item}
+                   />
+                ))}
             </div>
         </div>
     )

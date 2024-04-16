@@ -6,16 +6,18 @@ import AlbumCard from "@/components/ui/sidebar/AlbumCard";
 import { data } from '@/components/ui/sidebar/data';
 import ListItem from "@/components/home/ListItem";
 import useStore from '@/store/songs.store';
+import SongsPage from '@/components/home/SongsPage';
 
 
 const Home: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize] = useState(3); // Número de elementos por página
 
-   const { todos, getMusic } = useStore(); 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize] = useState(6); // Número de elementos por página
+
+  const { todos, getMusic } = useStore();
 
   useEffect(() => {
-    getMusic(); // Obtiene los datos de la música cuando se monta el componente
+    getMusic();
   }, []);
 
   // Función para calcular el índice de inicio y fin de la página actual
@@ -46,6 +48,10 @@ const Home: React.FC = () => {
         <div className="flex justify-between items-center">
           <h1 className="text-white text-2xl font-semibold">Newest Songs</h1>
         </div>
+        <SongsPage songs={todos}/>
+        <div className="mt-5 flex justify-between items-center">
+          <h1 className="text-white text-2xl font-semibold">Newest Albums</h1>
+        </div>
         {/* Aquí puedes colocar la lógica para mostrar la lista de canciones */}
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 mt-4">
           {getCurrentPageData().map((item, index) => (
@@ -63,9 +69,8 @@ const Home: React.FC = () => {
             <button
               key={index}
               onClick={() => handleChangePage(index + 1)}
-              className={`px-4 py-2 mx-1 border rounded-full bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                currentPage === index + 1 ? 'bg-blue-500' : ''
-              }`}
+              className={`px-4 py-2 mx-1 border rounded-full bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${currentPage === index + 1 ? 'bg-blue-500' : ''
+                }`}
             >
               {index + 1}
             </button>

@@ -1,9 +1,29 @@
 "use client"
-import React, { useState } from 'react';
-import { data } from '@/components/ui/sidebar/data'; 
+import React, { useEffect, useState } from 'react';
+import { data } from '@/components/ui/sidebar/data';
 import AlbumCard from "@/components/ui/sidebar/AlbumCard";
+import Header from '@/components/ui/header/Header';
+import SearchInput from '@/components/search/SearchInput';
+import SearchContent from '@/components/search/SearchContent';
+import useStore from '@/store/songs.store';
+import { Input } from '@/components/ui/input';
+
+
+interface SearchProps {
+  searchParams: {
+    title: string;
+  }
+}
 
 const Search: React.FC = () => {
+
+  //todo music data, hacer el filter
+  const { todos, getMusic, filterMusic } = useStore();
+
+  useEffect(() => {
+    getMusic();
+  }, []);
+  const [value, setValue] = useState<string>("");
   const [filteredData, setFilteredData] = useState(data);
   const [query, setQuery] = useState('');
   const [orderByDate, setOrderByDate] = useState('desc');
@@ -72,13 +92,18 @@ const Search: React.FC = () => {
 
   return (
     <div className="bg-neutral-900 rounded-lg h-full w-full overflow-hidden overflow-y-auto">
+      <Header className='from-bg-neutral-900'>
+        <h1 className='text-white text-3xl font-semibold'>
+          Search
+        </h1>
+      </Header>
       <div className="mt-2 mb-7 px-6 flex justify-between items-center">
-        <input
-          type="text"
+        {/*  <SearchInput /> */}
+        <Input
+        className='w-1/4'
+          placeholder="Buscar canción o Artista"
           value={query}
           onChange={handleSearch}
-          placeholder="Buscar canción o artista..."
-          className="px-4 py-2 border rounded-full bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 w-72"
         />
         <select
           value={orderByDate}
@@ -97,6 +122,7 @@ const Search: React.FC = () => {
           <option value="alphaDesc">Nombre de canción (Z-A)</option>
         </select>
       </div>
+      <SearchContent songs={todos} />
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 mt-4">
         {paginatedData.map((item, index) => (
           <AlbumCard key={index} {...item} />
