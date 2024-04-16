@@ -22,23 +22,31 @@ export const auth: NextAuthOptions = {
                 email: { label: "email", type: "email", placeholder: "test@test.com" },
                 password: { label: "Password", type: "password" },
             },
-            async authorize(credentials, req) {
-                console.log("Credentials: ", credentials);
+            async authorize(credentials, req) : Promise<any>{
 
-                const user  = {
-                    id:"1",
-                    name: "test",
-                    email: "test@email.com",
-                    domain: "test.com",
-                    role: "admin",
-                    password: "password",
+                console.log("Authorize method", credentials)
+
+                if(!credentials?.email || !credentials?.password) throw new Error("Datos de Login necesarios")
+                try {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/login?email=${credentials.email}&password=${credentials.password}`);
+
+                if (!response.ok) {
+                    throw new Error("Error en la autenticación");
                 }
-                if(user){
-                    return user;
-                }else{
-                    return null;
+                const { access } = await response.json();
+
+                console.log("Access", access)
+
+                if (access) {
+                    return { email: credentials.email, name: 'Nombre del usuario' };
+                } else {
+                    throw new Error("Error en la autenticación");
                 }
-            },
+                } catch (error) {
+                    console.error("Error en la llamada fetch: ", error);
+                    throw error;
+                }
+            }
         }),
         
     ],

@@ -1,6 +1,6 @@
 "use client";
 import { useEffect } from 'react';
-import useStore from '@/store/songs.Store';
+import useStore from '@/store/songs.store';
 import Link from 'next/link';
 import Image from 'next/image';
 
