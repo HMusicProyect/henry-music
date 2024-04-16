@@ -1,5 +1,6 @@
 import { Figtree } from 'next/font/google'
 import Sidebar from '@/components/ui/sidebar/Sidebar';
+import Player from '@/components/ui/player';
 
 
 const inter = Figtree({ subsets: ["latin"] });
@@ -20,6 +21,7 @@ export default function RootLayout({
         <Sidebar>
           {children}
         </Sidebar>
+        <Player />
       </body>
     </html>
   );
