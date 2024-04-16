@@ -1,15 +1,22 @@
 "use client"
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from "@/components/ui/header/Header";
 import AlbumCard from "@/components/ui/sidebar/AlbumCard";
 import { data } from '@/components/ui/sidebar/data';
 import ListItem from "@/components/home/ListItem";
+import useStore from '@/store/songs.store';
 
 
 const Home: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize] = useState(6); // Número de elementos por página
+  const [pageSize] = useState(3); // Número de elementos por página
+
+   const { todos, getMusic } = useStore(); 
+
+  useEffect(() => {
+    getMusic(); // Obtiene los datos de la música cuando se monta el componente
+  }, []);
 
   // Función para calcular el índice de inicio y fin de la página actual
   const startIndex = (currentPage - 1) * pageSize;
@@ -17,7 +24,7 @@ const Home: React.FC = () => {
 
   // Función para obtener los datos de la página actual
   const getCurrentPageData = () => {
-    return data.slice(startIndex, endIndex);
+    return todos.slice(startIndex, endIndex);
   };
 
   // Función para manejar el cambio de página
@@ -42,7 +49,12 @@ const Home: React.FC = () => {
         {/* Aquí puedes colocar la lógica para mostrar la lista de canciones */}
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 mt-4">
           {getCurrentPageData().map((item, index) => (
-            <AlbumCard key={index} {...item} />
+            <AlbumCard 
+              key={index} 
+              imageUrl={item.image} 
+              songName={item.name} 
+              artistName={item.Artist?.name} 
+            />
           ))}
         </div>
         {/* Botones de paginación */}

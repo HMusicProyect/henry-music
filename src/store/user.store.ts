@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 type User = {
-  id: string;
+  id?: string;
   name: string;
   email: string;
 };
@@ -9,7 +9,7 @@ type User = {
 type Store = {
   users: User[];
   fetchUsers: () => Promise<void>;
-  postUser: (user: User) => Promise<void>;
+  postUser: (user: User) => Promise<Response>; 
   getUserById: (id: string) => User | undefined;
 };
 
@@ -32,6 +32,7 @@ export const useStore = create<Store>((set, get) => ({
       const newUser = await response.json();
       set((state) => ({ users: [...state.users, newUser] }));
     }
+    return response;
   },
   getUserById: (id: string) => {
     const state = get();
