@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from 'react';
-import useStore, { Music } from '@/store/songs.Store';
+import useStore, { Music } from '@/store/songs.store';
 import Image from 'next/image';
 
 interface Props {
@@ -24,7 +24,7 @@ export default function MusicPlayer({ params }: { params: Props }) {
 
     // Maneja el cambio en todos
     useEffect(() => {
-        const song = todos.find(song => song.id === id);
+        const song = todos.find(song => song && song.id === id);
         setCurrentSong(song);
         if (song) {
             setAudio(new Audio(song.pathMusic));
