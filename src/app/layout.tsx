@@ -1,4 +1,5 @@
 import { Figtree } from 'next/font/google'
+import AuthProvider from "@/components/auth-provider";
 import "./globals.css";
 
 
@@ -17,7 +18,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className}`}>
-          {children}
+         <AuthProvider>
+            {children}
+        </AuthProvider>
       </body>
     </html>
   );

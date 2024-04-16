@@ -9,7 +9,6 @@ import useStore from '@/store/songs.store';
 import SongsPage from '@/components/home/SongsPage';
 
 
-
 const Home: React.FC = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -27,7 +26,7 @@ const Home: React.FC = () => {
 
   // Función para obtener los datos de la página actual
   const getCurrentPageData = () => {
-    return data.slice(startIndex, endIndex);
+    return todos.slice(startIndex, endIndex);
   };
 
   // Función para manejar el cambio de página
@@ -56,7 +55,12 @@ const Home: React.FC = () => {
         {/* Aquí puedes colocar la lógica para mostrar la lista de canciones */}
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 mt-4">
           {getCurrentPageData().map((item, index) => (
-            <AlbumCard key={index} {...item} />
+            <AlbumCard 
+              key={index} 
+              imageUrl={item.image} 
+              songName={item.name} 
+              artistName={item.Artist?.name} 
+            />
           ))}
         </div>
         {/* Botones de paginación */}

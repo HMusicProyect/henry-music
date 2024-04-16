@@ -6,6 +6,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Home, Search } from 'lucide-react';
 import React from 'react'
 import Button from "./Button";
+import { useSession, signOut } from 'next-auth/react'
 
 
 interface HeaderProps{
@@ -14,10 +15,7 @@ interface HeaderProps{
 }
 const Header: React.FC<HeaderProps> = ({ children, className }) => {
     const router = useRouter();
-
-    const handleLogout = () => {
-
-    }
+    const { data: session } = useSession();
 
     return (
         <div className={twMerge(`h-fit bg-gradient-to-b from-emerald-800 p-6`, className)}>
@@ -45,24 +43,33 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
                     </button>
                 </div>
                 <div className="flex justify-between items-center gap-x-4">
-                    <>
-                        <div className="">
-                            <Button
-                                onClick={() => {}}
-                                className="bg-transparent text-neutral-300 font-medium"
-                            >
-                                Sign Up
-                            </Button>
-                        </div>
-                        <div className="">
-                            <Button
-                                onClick={() => {}}
-                                className="bg-white px-6 py-2"
-                            >
-                                Log in
-                            </Button>
-                        </div>
-                    </>
+                    {session ? (
+                        <Button
+                            onClick={() => signOut()}
+                            className="bg-white px-6 py-2"
+                        >
+                            Sign Out
+                        </Button>
+                    ) : (
+                        <>
+                            <div className="">
+                                <Button
+                                    onClick={() => {}}
+                                    className="bg-transparent text-neutral-300 font-medium"
+                                >
+                                    Sign Up
+                                </Button>
+                            </div>
+                            <div className="">
+                                <Button
+                                    onClick={() => router.replace('/login')}
+                                    className="bg-white px-6 py-2"
+                                >
+                                    Log in
+                                </Button>
+                            </div>
+                        </>
+                    )}
                 </div>
             </div>
             {children}

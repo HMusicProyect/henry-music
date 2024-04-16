@@ -6,7 +6,8 @@ import Header from '@/components/ui/header/Header';
 import SearchInput from '@/components/search/SearchInput';
 import SearchContent from '@/components/search/SearchContent';
 import useStore from '@/store/songs.store';
-import Input from '@/components/ui/input';
+import { Input } from '@/components/ui/input';
+
 
 interface SearchProps {
   searchParams: {

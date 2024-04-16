@@ -1,6 +1,6 @@
 "use client";
 import { useEffect } from 'react';
-import useStore from '@/store/songs.Store';
+import useStore from '@/store/songs.store';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -56,25 +56,25 @@ export default function InvoicesTable({
                           />
                           <div className="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
                         </div>
-                        <div>
+                        {/* <div>
                           <p className="font-semibold text-black dark:text-white">
                             {invoice.name}
                           </p>
                           <p className="text-xs text-gray-600 dark:text-gray-300">
                             {invoice.Artist?.name}
                           </p>
-                        </div>
+                        </div> */}
                       </div>
                     </Link>
                   </td>
                   <td className="px-4 py-3 text-md font-semibold dark:border-slate-500 ">
+                    {invoice?.name}
+                  </td>
+                  <td className="px-4 py-3 text-sm dark:text-gray-200 dark:border-slate-600 ">
                     {invoice.Artist?.name}
                   </td>
                   <td className="px-4 py-3 text-sm dark:text-gray-200 dark:border-slate-600 ">
                     {invoice.Genre?.name}
-                  </td>
-                  <td className="px-4 py-3 text-sm dark:text-gray-200 dark:border-slate-600 ">
-                    {invoice.pathMusic}
                   </td>
                 </tr>
               ))}

@@ -17,7 +17,7 @@ export default function Search({ placeholder }: { placeholder: string }) {
     } else {
       params.delete('music');
     }
-    // params.set('page', '1');
+    params.set('page', '1');
 
     replace(`${pathname}?${params.toString()}`);
   }, WAIT_BETWEEN_CHANGE )
