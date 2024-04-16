@@ -1,5 +1,5 @@
 import { Figtree } from 'next/font/google'
-import "./globals.css";
+import Sidebar from '@/components/ui/sidebar/Sidebar';
 
 
 const inter = Figtree({ subsets: ["latin"] });
@@ -16,8 +16,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className}`}>
+      <body className={`${inter.className} flex flex-col w-full h-screen gap-4 p-2 box-border`}>
+        <Sidebar>
           {children}
+        </Sidebar>
       </body>
     </html>
   );
