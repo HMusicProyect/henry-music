@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { twMerge } from 'tailwind-merge';
 
 interface CardProps {
@@ -20,8 +21,10 @@ const clic = ()=>{
     alert("abrir listas")
 }
     return (
-        <div onClick={clic} className={cardClasses}>
-            {children}
+        <div className={cardClasses}>
+            <Link href="/lists">
+                {children}
+            </Link>
         </div>
     );
 }
