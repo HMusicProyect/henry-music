@@ -2,22 +2,29 @@
 import { usePathname } from 'next/navigation';
 import { useEffect, useMemo } from 'react';
 import { Home, Search } from 'lucide-react';
+import { twMerge } from 'tailwind-merge';
 import Box from './Box';
 import SidebarItem from './SidebarItem';
 import MusicLibrary from './MusicLibrary';
-import useStore from '@/store/songs.store';
+import useStore, { Music } from '@/store/songs.store';
+import usePlayer from '@/store/hooks/usePlayer';
+
 
 
 interface SidebarProps {
     children:React.ReactNode;
+    songs: Music[];
 }
-const Sidebar: React.FC<SidebarProps> = ({ children }) => {
+const Sidebar: React.FC<SidebarProps> = ({ children, songs }) => {
     const { todos, getMusic } = useStore();
 
     useEffect(() => {
       getMusic();
     }, []);
     const pathname = usePathname();
+
+    const player = usePlayer();
+
     const routes = useMemo(() => [
         {
             icon: <Home />,
@@ -32,8 +39,9 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
             href: '/search'
         }
     ], [pathname]);
+
     return (
-        <div className='flex h-full'>
+        <div className={twMerge(`flex h-full`, player.activeId && "h-[calc(100%-80px)]")}>
             <div className="hidden md:flex flex-col gap-y-2 bg-black h-full w-[300px] p-2">
                 <Box>
                     <div className="flex flex-col gap-y-4 px-5 py-4">

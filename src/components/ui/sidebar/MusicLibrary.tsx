@@ -3,12 +3,17 @@
 import { Music } from '@/store/songs.store';
 import { Plus, Library } from 'lucide-react';
 import MediaItem from './MediaItem';
+import usePlayer from '@/store/hooks/usePlayer';
+import useOnPlay from '@/store/hooks/useOnPlay';
 
-interface MusicLibraryProps{
+interface MusicLibraryProps {
     songs: Music[];
 }
 
-const MusicLibrary: React.FC<MusicLibraryProps> = ({songs}) => {
+const MusicLibrary: React.FC<MusicLibraryProps> = ({ songs }) => {
+    const player = usePlayer();
+    const onPlay = useOnPlay(songs);
+
     const onClick = () => {
 
     }
@@ -24,13 +29,14 @@ const MusicLibrary: React.FC<MusicLibraryProps> = ({songs}) => {
 
             </div>
             <div className="flex flex-col gap-y-2 mt-4 px-3">
-                {songs.map((item)=> (
-                   <MediaItem 
-                    onClick={() => {}}
-                    key={item.id}
-                    data={item}
-                   />
+                {songs.map((item) => (
+                    <MediaItem
+                        onClick={(id: number) => onPlay(id.toString())}
+                        key={item.id}
+                        data={item}
+                    />
                 ))}
+
             </div>
         </div>
     )
