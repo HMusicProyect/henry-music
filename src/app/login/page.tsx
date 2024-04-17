@@ -29,7 +29,7 @@ export default async function Register() {
           <div className="flex flex-col space-y-2 text-center">
             <h1 className="text-2xl font-semibold tracking-tight">Entrar</h1>
             <p className="text-sm text-muted-foreground">
-              Entre com seus dados de Login
+              Enter your login details
             </p>
           </div>
           <UserLoginForm />
@@ -39,14 +39,14 @@ export default async function Register() {
               href="/terms"
               className="underline underline-offset-4 hover:text-primary"
             >
-              Termos de Serviço
+              Service Terms
             </Link>{" "}
             e{" "}
             <Link
               href="/privacy"
               className="underline underline-offset-4 hover:text-primary"
             >
-              Política de Privacidade
+              Privacy Policy
             </Link>
             .
           </p>

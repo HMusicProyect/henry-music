@@ -11,7 +11,7 @@ export const auth: NextAuthOptions = {
                 //     params: {
                 //         prompt: "consent",
                 //         access_type: "offline",
-                //         response_type: "code"
+                //         user_type: "code"
                 //     }
                 // },
         }),
@@ -26,19 +26,20 @@ export const auth: NextAuthOptions = {
 
                 console.log("Authorize method", credentials)
 
-                if(!credentials?.email || !credentials?.password) throw new Error("Datos de Login necesarios")
+                if(!credentials?.email || !credentials?.password) throw new Error("Login details required")
                 try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/login?email=${credentials.email}&password=${credentials.password}`);
+                const user = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/login?email=${credentials.email}&password=${credentials.password}`);
+                console.log("User", user)
 
-                if (!response.ok) {
+                if (!user.ok) {
                     throw new Error("Error en la autenticación");
                 }
-                const { access } = await response.json();
+                const data = await user.json();
 
-                console.log("Access", access)
+                console.log("Data", data)
 
-                if (access) {
-                    return { email: credentials.email, name: 'Nombre del usuario' };
+                if (data.access) {
+                    return { email: credentials.email, name: 'User name' };
                 } else {
                     throw new Error("Error en la autenticación");
                 }

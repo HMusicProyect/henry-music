@@ -31,7 +31,7 @@ export default async function Register() {
               Criar Conta
             </h1>
             <p className="text-sm text-muted-foreground">
-              Entre com seus dados
+              Enter your details
             </p>
           </div>
           <UserRegisterForm />
@@ -41,14 +41,14 @@ export default async function Register() {
               href="/terms"
               className="underline underline-offset-4 hover:text-primary"
             >
-              Termos de Serviço
+              Service Terms
             </Link>{" "}
             e{" "}
             <Link
               href="/privacy"
               className="underline underline-offset-4 hover:text-primary"
             >
-              Política de Privacidade
+              Privacy Policy
             </Link>
             .
           </p>
