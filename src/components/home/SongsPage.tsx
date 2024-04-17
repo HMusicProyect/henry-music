@@ -26,16 +26,13 @@ const SongsPage: React.FC<SongsPageProps> = ({ songs }) => {
     return (
         <div className='mt-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-4'>
             {songs.map((item) => (
-                <Link
+
+                <SongItem
                     key={item.id}
-                    href={`/lists/${item.id}`}
-                >
-                    <SongItem
-                        key={item.id}
-                        onClick={(id: number) => onPlay(id.toString())}
-                        data={item}
-                    />
-                </Link>
+                    onClick={(id: number) => onPlay(id.toString())}
+                    data={item}
+                    id={item.id}
+                />
             ))}
         </div>
     )
