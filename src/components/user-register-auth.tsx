@@ -10,6 +10,7 @@ import { ToastAction } from "@/components/ui/toast";
 
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
+import { useStore } from '@/store/user.store'; 
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -22,6 +23,8 @@ interface IUser {
 export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
   const { toast } = useToast();
 
+  const { postUser } = useStore(); 
+  
   const router = useRouter();
 
   const [data, setData] = useState<IUser>({
@@ -36,22 +39,16 @@ export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
     event.preventDefault();
     setIsLoading(true);
 
-    const request = await fetch("/api/users", {
-      method: "POST",
-      headers: {
-        "Content-type": "applicaition/json",
-      },
-      body: JSON.stringify(data),
-    });
+    const response = await postUser(data);
 
-    const response = await request.json();
+    console.log("USER RESPONSE FORM", response);
 
-    console.log("USER REGISTER FORM", response);
-
-    if (!request.ok) {
+    if (!response.ok) {
+        const errorData = await response.json();
+        console.log("ERROR DATA", errorData);
       toast({
         title: "Oooops...",
-        description: response.error,
+        description: errorData.error,
         variant: "destructive",
         action: (
           <ToastAction altText="Tente Novamente">Tente Novamente</ToastAction>

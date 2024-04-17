@@ -54,7 +54,7 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
                         <>
                             <div className="">
                                 <Button
-                                    onClick={() => {}}
+                                    onClick={() => router.replace('/register')}
                                     className="bg-transparent text-neutral-300 font-medium"
                                 >
                                     Sign Up
