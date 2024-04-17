@@ -92,6 +92,7 @@ const useStore = create<State>((set) => ({
             const music = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/songs/${id}`)
                 .then((res) => res.json());
             set({ todos: [music], loading: false });
+            console.log();
         } catch (error) {
             set({ loading: false, error: 'Error al buscar la canción' });
         }

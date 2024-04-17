@@ -29,7 +29,7 @@ const MusicLibrary: React.FC<MusicLibraryProps> = ({ songs }) => {
 
             </div>
             <div className="flex flex-col gap-y-2 mt-4 px-3">
-                {songs.map((item) => (
+                {songs?.map((item) => (
                     <MediaItem
                         onClick={(id: number) => onPlay(id.toString())}
                         key={item.id}

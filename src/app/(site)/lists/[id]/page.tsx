@@ -18,46 +18,24 @@ export default function MusicPlayer({ params }: { params: Props }) {
     const [audio, setAudio] = useState<HTMLAudioElement | null>(null); 
 
     // Llama a getMusicById cuando el componente
-    useEffect(() => {
+    useEffect(()=> {
         getMusicById(id);
-    }, [id, getMusicById]);
+        setCurrentSong(todos[0]);
+    }, [id]);
 
-    // Maneja el cambio en todos
-    useEffect(() => {
-        const song = todos.find(song => song && song.id === id);
-        setCurrentSong(song);
-        if (song) {
-            setAudio(new Audio(song.pathMusic));
-        }
-    }, [id, todos]);
+    console.log("todos",todos);
 
-    const playSong = (song: Music) => {
-        setCurrentSong(song);
-        if (audio) {
-            audio.pause(); 
-        }
-        const newAudio = new Audio(song.pathMusic);
-        setAudio(newAudio);
-        newAudio.play();
-    };
-
-    const pauseSong = () => {
-        if (audio) {
-            audio.pause();
-        }
-    };
-
+    console.log("currentSong",currentSong);
     return (
     <div>
         <h1>Music Player</h1>
         {currentSong && (
             <div>
-                <Image
+                <img
                     src={currentSong.image} 
                     alt={currentSong.name} 
                 />
-                <button onClick={() => playSong(currentSong)}>Play</button>
-                <button onClick={pauseSong}>Pause</button>
+
                 <p>{currentSong.name}</p>
                 <p>{currentSong.Artist?.name}</p>
                 <p>{currentSong.Genre?.name}</p>
