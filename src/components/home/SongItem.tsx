@@ -16,6 +16,7 @@ interface SongsItemProps {
 const SongItem: React.FC<SongsItemProps> = ({ data, onClick, id }) => {
     const { data: session } = useSession();
     const router = useRouter(); 
+
     const capitalizeWords = (str: string): string => {
         return str
             .split(' ')
@@ -25,7 +26,7 @@ const SongItem: React.FC<SongsItemProps> = ({ data, onClick, id }) => {
     const capitalizedMusicName = capitalizeWords(data.name);
     return (
         <div
-            onClick={() => onClick(data.id)}
+            onClick={() => session ? onClick(data.id) : router.push('/login')} 
             className='relative group flex flex-col items-center justify-center rounded-md overflow-hidden gap-x-4 bg-neutral-400/5 cursor-pointer hover:bg-neutral-400/10 transition p-3'
         >
             <div className='relative aspect-square w-full h-full rounded-md overflow-hidden'>
@@ -33,8 +34,8 @@ const SongItem: React.FC<SongsItemProps> = ({ data, onClick, id }) => {
                     className='object-cover' 
                     src={data.image} 
                     alt='Image' 
-                    layout='fill' // 'fill' debe ser una propiedad, no un valor
-                    onClick={() => session ? router.push(`/lists/${id}`) : router.push('/login')} // Verifica si el usuario ha iniciado sesión antes de navegar
+                    layout='fill'
+                    onClick={() => session ? router.push(`/lists/${id}`) : router.push('/login')} 
                 />
             </div>
             <div className='flex flex-col items-start w-full pt-4 gap-y-1'>
@@ -42,11 +43,10 @@ const SongItem: React.FC<SongsItemProps> = ({ data, onClick, id }) => {
                 <p className='text-md text-neutral-400 pb-4 w-full truncate'>By {data.Artist?.name}</p>
             </div>
             <div
+                // onClick={() => session ? null : router.push('/login')}
                 className='absolute bottom-24 right-5'
             >
-                <PlayButton
-                    onClick={() => session ? null : router.push('/login')}
-                />
+                <PlayButton/>
             </div>
         </div>
     )
