@@ -15,7 +15,6 @@ export default function MusicPlayer({ params }: { params: Props }) {
     const { todos, getMusicById } = useStore();
 
     const [currentSong, setCurrentSong] = useState<Music | null | undefined>(null);
-    const [audio, setAudio] = useState<HTMLAudioElement | null>(null); 
 
     // Llama a getMusicById cuando el componente
     useEffect(()=> {
