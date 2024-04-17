@@ -48,6 +48,9 @@ const Home: React.FC = () => {
       <div className="mt-2 mb-7 px-6">
         <div className="flex justify-between items-center">
           <h1 className="text-white text-2xl font-semibold">Newest Songs</h1>
+          <h2 className="text-xl">
+                View More
+            </h2>
         </div>
    
           <SongsPage songs={todos}/>

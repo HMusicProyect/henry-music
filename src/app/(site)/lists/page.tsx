@@ -4,8 +4,9 @@ import Search from '@/components/ui/search';
 import Table from '@/components/lists/table';
 import { InvoicesTableSkeleton } from '@/components/ui/skeletons';
 import { Suspense } from 'react';
+import Header from '@/components/ui/header/Header';
 
-export default  function Page({
+export default function Page({
   searchParams,
 }: {
   searchParams?:
@@ -14,35 +15,41 @@ export default  function Page({
     page?: string;
   };
 }) {
-  
-  console.log("searchParams",searchParams);
+
+  console.log("searchParams", searchParams);
 
   const query = searchParams?.music || '';
 
-  console.log("query",query);
+  console.log("query", query);
 
   const currentPage = Number(searchParams?.page) || 1;
 
   return (
-    <div className="w-full">
-      <div className="flex w-full items-center justify-between">
-      </div>
-      <div 
+    <div className="bg-neutral-900 rounded-lg h-full w-full overflow-hidden overflow-y-auto">
+      <Header className='from-bg-neutral-900'>
+        <h1 className='text-white text-3xl font-semibold'>
+          Lists of Musics
+        </h1>
+      </Header>
+      <div
         className="mt-4 flex items-center justify-between gap-2 md:mt-8"
       >
         <Search placeholder="Search invoices..." />
         {/* <CreateMusic /> */}
       </div>
-        <Suspense 
-          key={query + currentPage} 
-          fallback={<InvoicesTableSkeleton 
-        />}
+      <div className="mt-2 mb-7 px-6 flex justify-between items-center">
+        <Suspense
+          key={query + currentPage}
+          fallback={<InvoicesTableSkeleton
+          />}
         >
-        <Table 
-          query={query} 
-          currentPage={currentPage} 
-        />
-      </Suspense>
+          <Table
+            query={query}
+            currentPage={currentPage}
+          />
+        </Suspense>
+      </div>
+
       {/* <div className="mt-5 flex w-full justify-center">
         <Pagination totalPages={todos.length} />
       </div> */}

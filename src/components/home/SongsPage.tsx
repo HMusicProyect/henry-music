@@ -14,7 +14,7 @@ const SongsPage: React.FC<SongsPageProps> = ({ songs }) => {
 
     const onPlay = useOnPlay(songs);
 
-    
+
     if (songs.length === 0) {
         return (
             <div className='mt-4 text-neutral-400'>
@@ -24,19 +24,22 @@ const SongsPage: React.FC<SongsPageProps> = ({ songs }) => {
     }
 
     return (
-        <div className='mt-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-4'>
-            {songs.map((item) => (
-                <Link
-                    key={item.id}
-                    href={`/lists/${item.id}`}
-                >
-                    <SongItem
+        <div>
+            <div className='mt-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-4'>
+
+                {songs.map((item) => (
+                    <Link
                         key={item.id}
-                        onClick={(id: number) => onPlay(id.toString())}
-                        data={item}
-                    />
-                </Link>
-            ))}
+                        href={`/lists/${item.id}`}
+                    >
+                        <SongItem
+                            key={item.id}
+                            onClick={(id: number) => onPlay(id.toString())}
+                            data={item}
+                        />
+                    </Link>
+                ))}
+            </div>
         </div>
     )
 
