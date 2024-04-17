@@ -51,7 +51,7 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
                         // >
                         //     Sign Out
                         // </Button>
-                        <AuthButton/>
+                        <AuthButton page="/"/>
                     ) : (
                         <>
                             <div className="">

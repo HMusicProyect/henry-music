@@ -28,7 +28,7 @@ export default function AuthButton({ page }: { page: string }) {
                 "absolute right-4 top-4 md:right-8 md:top-8"
             )}
             >
-            Sair
+            Sign Out
             </Button>
         )}
         </>
