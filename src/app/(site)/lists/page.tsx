@@ -5,14 +5,20 @@ import Table from '@/components/lists/table';
 import { InvoicesTableSkeleton } from '@/components/ui/skeletons';
 import { Suspense } from 'react';
 import Header from '@/components/ui/header/Header';
+import useOnPlay from '@/store/hooks/useOnPlay';
+import { Music } from '@/store/songs.store';
+import Player from '@/components/ui/player';
 
 export default function Page({
   searchParams,
+
 }: {
   searchParams?:
+  
   {
     music?: string;
     page?: string;
+    songs: Music[]
   };
 }) {
 
@@ -23,6 +29,7 @@ export default function Page({
   console.log("query", query);
 
   const currentPage = Number(searchParams?.page) || 1;
+
 
   return (
     <div className="bg-neutral-900 rounded-lg h-full w-full overflow-hidden overflow-y-auto">
@@ -51,7 +58,8 @@ export default function Page({
       </div>
 
       {/* <div className="mt-5 flex w-full justify-center">
-        <Pagination totalPages={todos.length} />
+        <Pagination totalPages={todos.length}
+         />
       </div> */}
     </div>
   );
