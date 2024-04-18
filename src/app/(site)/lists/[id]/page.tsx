@@ -6,7 +6,8 @@ import { useSession } from 'next-auth/react';
 interface Props {
     id: number;
 }
-export default  function MusicPlayer({ params }: { params: Props }) {
+
+export default function MusicPlayer({ params }: { params: Props }) {
     const { data: session, status } = useSession();
     const isSessionLoading = status === 'loading';
 
@@ -22,38 +23,40 @@ export default  function MusicPlayer({ params }: { params: Props }) {
     }
 
     const id = params.id;
-    
-    console.log("id",id);
+
+    console.log("id", id);
 
     const { todos, getMusicById } = useStore();
 
     const [currentSong, setCurrentSong] = useState<Music | null | undefined>(null);
 
     // Llama a getMusicById cuando el componente
-    useEffect(()=> {
+    useEffect(() => {
         getMusicById(id);
         setCurrentSong(todos[0]);
     }, [id]);
 
-    console.log("todos",todos);
+    console.log("todos", todos);
 
-    console.log("currentSong",currentSong);
+    console.log("currentSong", currentSong);
     return (
-    <div>
-        <h1>Music Player</h1>
-        {currentSong && (
-            <div>
-                <img
-                    src={currentSong.image} 
-                    alt={currentSong.name} 
-                />
-
-                <p>{currentSong.name}</p>
-                <p>{currentSong.Artist?.name}</p>
-                <p>{currentSong.Genre?.name}</p>
-            </div>
-        )}
-        {currentSong && <p>Now playing: {currentSong.name}</p>}
+        <div>
+            <h1>Music Player</h1>
+            {todos.map((song, index) => (
+                <div key={index} className="flex flex-col items-center p-4 shadow-md">
+    <img
+        src={song.image}
+        alt={song.name}
+        className="w-90 h-70 rounded-lg mb-4"
+    />
+    <div className="text-center">
+        <p className="font-semibold text-2xl">{song.name}</p>
+        <p className="text-gray-600">{song.Artist?.name}</p>
+        <p className="text-gray-600">{song.Genre?.name}</p>
     </div>
+</div>
+            ))}
+            {todos && <p>Now playing: {todos[0].name}</p>}
+        </div>
     );
 }
