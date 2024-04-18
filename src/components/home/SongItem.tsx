@@ -5,6 +5,7 @@ import PlayButton from './PlayButton';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { capitalizeWords } from '@/utils/CapitalizeWords';
 
 
 interface SongsItemProps {
@@ -17,12 +18,6 @@ const SongItem: React.FC<SongsItemProps> = ({ data, onClick, id }) => {
     const { data: session } = useSession();
     const router = useRouter(); 
 
-    const capitalizeWords = (str: string): string => {
-        return str
-            .split(' ')
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(' ');
-    };
     const capitalizedMusicName = capitalizeWords(data.name);
     return (
         <div

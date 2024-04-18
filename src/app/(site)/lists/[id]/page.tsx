@@ -7,6 +7,7 @@ import Header from '@/components/ui/header/Header';
 import { FastAverageColor } from 'fast-average-color';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { capitalizeWords } from '@/utils/CapitalizeWords';
 
 interface Props {
     id: number;
@@ -58,7 +59,7 @@ export default function MusicPlayer({ params }: { params: Props }) {
     return (
         <div className='bg-neutral-900 rounded-lg h-full w-full overflow-hidden overflow-y-auto'>
             {currentSong && (
-                <div className={`${headerBackgroundColor} `}>
+                <div className={``}>
                     <Header className={headerBackgroundColor}>
                         <h1 className="bg-neutral-900"></h1>
                     </Header>
@@ -74,9 +75,15 @@ export default function MusicPlayer({ params }: { params: Props }) {
                                 />
                             </div>
                             <div>
-                                <h2 className="text-2xl font-semibold">{currentSong.name}</h2>
-                                <p className="text-sm text-gray-500">{currentSong.Artist?.name}</p>
-                                <p className="text-sm text-gray-500">{currentSong.Genre?.name}</p>
+                                <h2 className="text-2xl font-semibold">{capitalizeWords(currentSong.name)}</h2>
+                                <p className="text-md text-gray-500">
+                                    <span className='text-white font-semibold text-md'>Artist: </span>
+                                    {currentSong.Artist?.name}
+                                </p>
+                                <p className="text-md text-gray-500">
+                                    <span className='text-white font-semibold text-md'>Genre:</span>
+                                    {currentSong.Genre?.name}
+                                </p>
                             </div>
                         </div>
                         {currentSong && <p className='mt-5'>Now playing: {currentSong.name}</p>}
