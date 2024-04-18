@@ -8,6 +8,7 @@ import { FastAverageColor } from 'fast-average-color';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { capitalizeWords } from '@/utils/CapitalizeWords';
+import { Play } from 'lucide-react';
 
 interface Props {
     id: number;
@@ -81,11 +82,17 @@ export default function MusicPlayer({ params }: { params: Props }) {
                                     {currentSong.Artist?.name}
                                 </p>
                                 <p className="text-md text-gray-500">
-                                    <span className='text-white font-semibold text-md'>Genre:</span>
+                                    <span className='text-white font-semibold text-md'>Genre: </span>
                                     {currentSong.Genre?.name}
                                 </p>
+                                <button
+                                    className='transition rounded-full flex items-center bg-green-500 p-4 drop-shadow-md translate translate-y-1/4 group-hover:opacity-100 group-hover:translate-y-0 hover:scale-110'
+                                >
+                                    <Play className="text-black" fill="black" size={25} />
+                                </button>
                             </div>
                         </div>
+
                         {currentSong && <p className='mt-5'>Now playing: {currentSong.name}</p>}
                     </div>
                 </div>
