@@ -29,7 +29,7 @@ export default function InvoicesTable({
         <div className="w-full">
           <table className="w-full">
             <thead>
-              <tr className="text-sm font-bold text-left text-gray-600 dark:text-gray-100 bg-neutral-100/10 dark:bg-slate-700 border-b border-gray-300 dark:border-slate-700 divide-x dark:divide-slate-600">
+              <tr className="text-sm font-bold text-left text-black-600 dark:text-gray-100 bg-neutral-100/10  border-b border-gray-300 dark:border-slate-700 divide-x">
                 <th className="px-4 py-3">Imagen</th>
                 <th className="px-4 py-3">Nombre</th>
                 <th className="px-4 py-3">Artista</th>
@@ -37,7 +37,7 @@ export default function InvoicesTable({
                 {/* <th className="px-4 py-3">Ruta de la música</th> */}
               </tr>
             </thead>
-            <tbody className="bg-neutral-100/10 dark:bg-slate-600 dark:border-slate-500 divide-y dark:divide-gray-500">
+            <tbody className="bg-neutral-100/10  dark:border-slate-500 divide-y dark:divide-gray-500">
               {filteredTodos?.map((invoice) => (
                 <tr 
                   key={invoice.id}

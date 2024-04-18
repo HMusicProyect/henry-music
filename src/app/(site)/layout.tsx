@@ -16,13 +16,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${inter.className} flex flex-col w-full h-screen gap-4 p-2 box-border`}>
+      <div className={`${inter.className} flex flex-col w-full h-screen gap-4 p-2 box-border`}>
         <Sidebar>
           {children}
         </Sidebar>
         <Player />
-      </body>
-    </html>
+      </div>
   );
 }

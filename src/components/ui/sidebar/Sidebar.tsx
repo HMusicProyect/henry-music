@@ -13,9 +13,8 @@ import usePlayer from '@/store/hooks/usePlayer';
 
 interface SidebarProps {
     children:React.ReactNode;
-
 }
-const Sidebar: React.FC<SidebarProps> = ({ children }) => {
+const Sidebar: React.FC<SidebarProps> = ({ children}) => {
     const { todos, getMusic } = useStore();
 
     useEffect(() => {
