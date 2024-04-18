@@ -7,6 +7,8 @@ import { Play, Pause, StepBack, StepForward, Volume1, Volume2 } from 'lucide-rea
 import Slider from './Slider';
 import usePlayer from '@/store/hooks/usePlayer';
 import useSound from 'use-sound'
+import Modal from './Modal/Modal';
+import { useSession } from 'next-auth/react';
 
 interface PlayerContentProps {
     song: Music;
@@ -19,6 +21,10 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
     const player = usePlayer();
     const [volume, setVolume] = useState(1);
     const [isPlaying, setIsPlaying] = useState(false);
+    const { data: session, status } = useSession();
+    const [ isModalOpen, setIsModalOpen ] = useState(false);
+    const [message, setMessage] = useState("");
+
     const onPlayNext = () => {
         if (player.ids.length === 0) {
             return;
@@ -64,20 +70,32 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
     )
 
     useEffect(() => {
-        sound?.play();
-
-        return () => {
-            sound?.unload();
+        if (!session) {
+            setIsModalOpen(true);
+            setMessage('Por favor, inicia sesión para reproducir música.');
+            return;
+        } else if (session) {
+            sound?.play();
+            return () => {
+                sound?.unload();
+            }
         }
     }, [sound])
 
     const handlePlay = () => {
-        if (!isPlaying) {
-            play();
+        if (!session) {
+            setIsModalOpen(true);
+            setMessage('Por favor, inicia sesión para reproducir música.');
+            return;
+        } else if (session) {
+            if (!isPlaying) {
+                play();
 
-        } else {
-            pause();
+            } else {
+                pause();
+            }
         }
+
     };
 
     const toggleMute = () => {
@@ -88,46 +106,72 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
         }
     };
 
+    const handleModalClose = () => {
+        setIsModalOpen(false);
+        setMessage('');
+    };
+
     return (
-        <div className='grid grid-cols-2 md:grid-cols-3 h-full'>
-            <div className='flex w-full justify-start'>
-                <div className='flex items-center gap-x-4'>
-                    <MediaItem data={song} />
+            <>
+                <div className='grid grid-cols-2 md:grid-cols-3 h-full'>
+                        <div className='flex w-full justify-start'>
+                            <div className='flex items-center gap-x-4'>
+                                <MediaItem data={song} />
+                            </div>
+                        </div>
+                        <div className='hidden h-full md:flex justify-center items-center w-full max-w-[722px] gap-x-6'>
+                            <StepBack
+                                onClick={onPlayPrevious}
+                                size={30}
+                                className='text-neutral-400 cursor-pointer hover:text-white transition'
+                            />
+                            <div
+                                onClick={handlePlay}
+                                className='flex items-center justify-center h-10 w-10 rounded-full bg-white p-1 cursor-pointer'
+                            >
+                                {isPlaying ? (
+                                    <Pause className="text-black" fill="black" />
+                                ) : (
+                                    <Play className="text-black" fill="black" />
+                                )}
+                            </div>
+                            <StepForward
+                                onClick={onPlayNext}
+                                size={30}
+                                className='text-neutral-400 cursor-pointer hover:text-white transition'
+                            />
+                        </div>
+                        <div className='hidden md:flex w-full justify-end pr-2'>
+                            <div className='flex items-center gap-x-2 w-[120px]'>
+                                {volume === 0 ? (
+                                    <Volume1 onClick={toggleMute} className="text-black cursor-pointer" fill="white" size={35} />
+                                ) : (
+                                    <Volume2 onClick={toggleMute} className="text-black cursor-pointer" fill="white" size={35} />
+                                )}
+                                <Slider value={volume} onChange={(value) => setVolume(value)} />
+                            </div>
+                        </div>
                 </div>
-            </div>
-            <div className='hidden h-full md:flex justify-center items-center w-full max-w-[722px] gap-x-6'>
-                <StepBack
-                    onClick={onPlayPrevious}
-                    size={30}
-                    className='text-neutral-400 cursor-pointer hover:text-white transition'
-                />
-                <div
-                    onClick={handlePlay}
-                    className='flex items-center justify-center h-10 w-10 rounded-full bg-white p-1 cursor-pointer'
+            <Modal
+                isModalOpen={isModalOpen}
+                setIsModalOpen={setIsModalOpen}
                 >
-                    {isPlaying ? (
-                        <Pause className="text-black" fill="black" />
-                    ) : (
-                        <Play className="text-black" fill="black" />
-                    )}
+                <div className="p-8 mt-10">
+                    <div className="w-1/2 p-4 rounded-md shadow-lg bg-gray-50">
+                    <h1 className="text-2xl font-bold text-indigo-500 mb-4">{message}</h1>
+
+                    <div className="text-right">
+                        <button
+                        onClick={handleModalClose}
+                        className="inline-block bg-indigo-500 py-2 px-4 text-white rounded-md font-semibold uppercase text-sm "
+                        >
+                        Ok
+                        </button>
+                    </div>
+                    </div>
                 </div>
-                <StepForward
-                    onClick={onPlayNext}
-                    size={30}
-                    className='text-neutral-400 cursor-pointer hover:text-white transition'
-                />
-            </div>
-            <div className='hidden md:flex w-full justify-end pr-2'>
-                <div className='flex items-center gap-x-2 w-[120px]'>
-                    {volume === 0 ? (
-                        <Volume1 onClick={toggleMute} className="text-black cursor-pointer" fill="white" size={35} />
-                    ) : (
-                        <Volume2 onClick={toggleMute} className="text-black cursor-pointer" fill="white" size={35} />
-                    )}
-                    <Slider value={volume} onChange={(value) => setVolume(value)} />
-                </div>
-            </div>
-        </div>
+            </Modal>
+        </>
 
     )
 }

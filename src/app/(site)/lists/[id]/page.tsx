@@ -8,6 +8,7 @@ interface Props {
 }
 export default  function MusicPlayer({ params }: { params: Props }) {
     const { data: session, status } = useSession();
+    
     const isSessionLoading = status === 'loading';
 
     if (isSessionLoading) {
