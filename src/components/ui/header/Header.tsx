@@ -7,6 +7,7 @@ import { Home, Search } from 'lucide-react';
 import React from 'react'
 import Button from "./Button";
 import { useSession, signOut } from 'next-auth/react'
+import AuthButton from "@/components/auth-button";
 
 
 interface HeaderProps{
@@ -44,12 +45,11 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
                 </div>
                 <div className="flex justify-between items-center gap-x-4">
                     {session ? (
-                        <Button
-                            onClick={() => signOut()}
-                            className="bg-white px-6 py-2"
-                        >
-                            Sign Out
-                        </Button>
+                        <>
+                            <AuthButton 
+                                page="/"
+                            />
+                        </>
                     ) : (
                         <>
                             <div className="">

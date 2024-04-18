@@ -8,6 +8,16 @@ export default function AuthButton({ page }: { page: string }) {
     const { data: session, status } = useSession();
     const isAuthenticated = status === "authenticated";
 
+    const handleSignOut = async () => {
+        try {
+        // Cerrar sesión utilizando NextAuth
+        await signOut({ callbackUrl: "/login" });
+
+        } catch (error) {
+        console.error('Error al cerrar sesión:', error);
+        }
+    };
+
     return (
         <>
         {!isAuthenticated ? (
@@ -22,13 +32,13 @@ export default function AuthButton({ page }: { page: string }) {
             </Link>
         ) : (
             <Button
-            onClick={() => signOut({ callbackUrl: "/login" })}
+            onClick={handleSignOut}
             className={cn(
                 buttonVariants({ variant: "ghost" }),
-                "absolute right-4 top-4 md:right-8 md:top-8"
+                "right-4 top-4 md:right-8 md:top-8"
             )}
             >
-            Sair
+            Sign Out
             </Button>
         )}
         </>

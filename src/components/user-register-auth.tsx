@@ -51,7 +51,7 @@ export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
         description: errorData.error,
         variant: "destructive",
         action: (
-          <ToastAction altText="Tente Novamente">Tente Novamente</ToastAction>
+          <ToastAction altText="Tente Novamente">Try again</ToastAction>
         ),
       });
     } else {
@@ -135,7 +135,7 @@ export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
                 {isLoading && (
                 <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                 )}
-                Registrar
+                Register
             </Button>
             </div>
         </form>
@@ -145,7 +145,7 @@ export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
             </div>
             <div className="relative flex justify-center text-xs uppercase">
             <span className="bg-background px-2 text-muted-foreground">
-                Ou continue com
+                Or continue with
             </span>
             </div>
         </div>
