@@ -1,12 +1,25 @@
 "use client";
 import { useState, useEffect } from 'react';
 import useStore, { Music } from '@/store/songs.store';
-import Image from 'next/image';
+import { useSession } from 'next-auth/react';
 
 interface Props {
     id: number;
 }
-export default function MusicPlayer({ params }: { params: Props }) {
+export default  function MusicPlayer({ params }: { params: Props }) {
+    const { data: session, status } = useSession();
+    const isSessionLoading = status === 'loading';
+
+    if (isSessionLoading) {
+        return <div>Cargando...</div>;
+    }
+
+    if (!session) {
+        if (typeof window !== 'undefined') {
+            window.location.href = '/login';
+        }
+        return null;
+    }
 
     const id = params.id;
     
