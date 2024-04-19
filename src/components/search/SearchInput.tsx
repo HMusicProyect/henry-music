@@ -14,21 +14,23 @@ const SearchInput = () => {
         const query = {
             title: debouncedValue.toString(),
         }
-
+    
         const url = qs.stringifyUrl({
-            url:'/search',
-            query:query
+            url: '/search',
+            query: query
         });
         router.push(url);
-
-    }, [debouncedValue, router])
-  return (
-    <Input 
-        placeholder="Buscar canción o Artista"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-    />
-  )
+    
+    }, [debouncedValue, router]);
+    
+    return (
+        <Input
+            className='w-1/4'
+            placeholder="Buscar canción, Albunes o Artistas"
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+        />
+    )
 }
 
 export default SearchInput

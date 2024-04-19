@@ -9,8 +9,6 @@ import MusicLibrary from './MusicLibrary';
 import useStore, { Music } from '@/store/songs.store';
 import usePlayer from '@/store/hooks/usePlayer';
 
-
-
 interface SidebarProps {
     children:React.ReactNode;
 }

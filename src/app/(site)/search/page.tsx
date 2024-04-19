@@ -5,8 +5,9 @@ import AlbumCard from "@/components/ui/sidebar/AlbumCard";
 import Header from '@/components/ui/header/Header';
 import SearchInput from '@/components/search/SearchInput';
 import SearchContent from '@/components/search/SearchContent';
-import useStore from '@/store/songs.store';
+import useStore, { Music } from '@/store/songs.store';
 import { Input } from '@/components/ui/input';
+import getSongByTitle from '@/store/actions/getSongsByTitle';
 
 
 interface SearchProps {
@@ -15,32 +16,48 @@ interface SearchProps {
   }
 }
 
-const Search: React.FC = () => {
+const Search = ({searchParams}: SearchProps) => {
 
-  //todo music data, hacer el filter
-  const { todos, getMusic, filterMusic } = useStore();
+  const { todos, getMusic } = useStore();
+  const [songs, setSongs] = useState<Music[]>([]); 
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadSongsByTitle = async () => {
+      try {
+        if (searchParams.title.trim() !== '') {
+          const fetchedSongs = await getSongByTitle(searchParams.title);
+          setSongs(fetchedSongs);
+          setError(null);
+        } else {
+          setSongs([]);
+          setError('No se proporcionó ningún título de canción');
+        }
+      } catch (error) {
+        setError('Error al cargar las canciones');
+      }
+    };
+
+    loadSongsByTitle();
+  }, [searchParams.title, getMusic]);
 
   useEffect(() => {
     getMusic();
   }, []);
-  const [value, setValue] = useState<string>("");
   const [filteredData, setFilteredData] = useState(data);
+  const { searchMusic } = useStore();
+  const [searchResults, setSearchResults] = useState<Music[]>([]);
   const [query, setQuery] = useState('');
   const [orderByDate, setOrderByDate] = useState('desc');
   const [orderByName, setOrderByName] = useState('alphaAsc');
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(6);
 
+
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = event.target.value;
     setQuery(inputValue);
-    const filtered = data.filter(
-      item =>
-        item.songName.toLowerCase().includes(inputValue.toLowerCase()) ||
-        item.artistName.toLowerCase().includes(inputValue.toLowerCase())
-    );
-    setFilteredData(filtered);
-    setCurrentPage(1); // Resetear a la primera página al hacer una nueva búsqueda
+    setCurrentPage(1);
   };
 
   const handleSortByDate = (selectedOrder: string) => {
@@ -98,13 +115,7 @@ const Search: React.FC = () => {
         </h1>
       </Header>
       <div className="mt-2 mb-7 px-6 flex justify-between items-center">
-        {/*  <SearchInput /> */}
-        <Input
-        className='w-1/4'
-          placeholder="Buscar canción o Artista"
-          value={query}
-          onChange={handleSearch}
-        />
+         <SearchInput />
         <select
           value={orderByDate}
           onChange={(e) => handleSortByDate(e.target.value)}
@@ -122,7 +133,10 @@ const Search: React.FC = () => {
           <option value="alphaDesc">Nombre de canción (Z-A)</option>
         </select>
       </div>
-      <SearchContent songs={todos} />
+      <div className="mt-2 mb-7 px-6 ">
+      <h3 className='text-white text-2xl font-semibold'>Songs</h3>
+      <SearchContent songs={songs} error={error} />
+      <h3 className='text-white text-2xl font-semibold mt-4'>Albums</h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 mt-4">
         {paginatedData.map((item, index) => (
           <AlbumCard key={index} {...item} />
@@ -143,6 +157,7 @@ const Search: React.FC = () => {
         >
           Siguiente
         </button>
+      </div>
       </div>
     </div>
   );
