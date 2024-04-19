@@ -1,15 +1,13 @@
 "use client";
 import { usePathname } from 'next/navigation';
 import { useEffect, useMemo } from 'react';
-import { Home, Search } from 'lucide-react';
+import { Home, Search, List } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
 import Box from './Box';
 import SidebarItem from './SidebarItem';
 import MusicLibrary from './MusicLibrary';
 import useStore, { Music } from '@/store/songs.store';
 import usePlayer from '@/store/hooks/usePlayer';
-
-
 
 interface SidebarProps {
     children:React.ReactNode;
@@ -28,7 +26,7 @@ const Sidebar: React.FC<SidebarProps> = ({ children}) => {
         {
             icon: <Home />,
             label: 'Home',
-            active: pathname !== '/search',
+            active: pathname === '/',
             href: '/'
         },
         {
@@ -36,6 +34,12 @@ const Sidebar: React.FC<SidebarProps> = ({ children}) => {
             label: 'Search',
             active: pathname === '/search',
             href: '/search'
+        },
+        {
+            icon: <List />,
+            label: 'Lists',
+            active: pathname === '/lists',
+            href: '/lists'
         }
     ], [pathname]);
 

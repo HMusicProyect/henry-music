@@ -11,9 +11,7 @@ const Player = () => {
   const { todos } = useStore();
 
   const numericId = player.activeId && parseInt(player.activeId, 10);
-
-    // Filtrar los datos de la canción activa
-    const activeSong = todos.find(song => song.id === numericId);
+  const activeSong = todos.find(song => song.id === numericId);
 
   return (
       <div className='fixed bottom-0 bg-black w-full py-2 px-4'>

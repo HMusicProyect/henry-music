@@ -1,7 +1,9 @@
 import React from 'react';
-import { Dialog, Transition } from '@headlessui/react';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
 
-const Modal = (
+export const ModalComponent = (
   {children, isModalOpen, setIsModalOpen}:
   {
     children: React.ReactNode, 
@@ -9,25 +11,32 @@ const Modal = (
     setIsModalOpen: (val: boolean) => void
   }) => {
 
+  const handleClose = () => setIsModalOpen(false);
     return (
-      <Transition show={isModalOpen} as={React.Fragment}>
-        <Dialog
-          as="div"
-          className="fixed inset-0 z-10 overflow-y-auto"
-          onClose={setIsModalOpen}
-        >
-          <div className="flex items-center justify-center min-h-screen">
-            <Dialog.Overlay className="fixed inset-0 bg-black opacity-80" />
-
-            <div className="bg-white text-black w-3/5 h-3/5 rounded-2xl flex items-center justify-center">
-              {children}
-
-              <button className="bg-transparent border-none outline-none w-8 h-8" />
-            </div>
-          </div>
-        </Dialog>
-      </Transition>
+    <Modal
+      open={isModalOpen}
+      onClose={handleClose}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Box sx={style}>
+        <Typography id="modal-modal-title" variant="h6" component="h2">
+          {children}
+        </Typography>
+      </Box>
+    </Modal>
     )
 }
 
-export default Modal;
+
+const style = {
+  position: 'absolute' as 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  // bgcolor: 'background.paper',
+  // border: '2px solid #000',
+  boxShadow: 24,
+  // p: 4,
+};

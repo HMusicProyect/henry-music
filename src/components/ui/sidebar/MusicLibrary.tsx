@@ -11,7 +11,7 @@ interface MusicLibraryProps {
 }
 
 const MusicLibrary: React.FC<MusicLibraryProps> = ({ songs }) => {
-    const player = usePlayer();
+
     const onPlay = useOnPlay(songs);
 
     const onClick = () => {

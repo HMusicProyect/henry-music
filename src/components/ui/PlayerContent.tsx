@@ -7,8 +7,10 @@ import { Play, Pause, StepBack, StepForward, Volume1, Volume2 } from 'lucide-rea
 import Slider from './Slider';
 import usePlayer from '@/store/hooks/usePlayer';
 import useSound from 'use-sound'
-import Modal from './Modal/Modal';
+import {ModalComponent} from '@/components/ui/Modal/Modal';
 import { useSession } from 'next-auth/react';
+import { useRouter } from "next/navigation";
+import Link from 'next/link';
 
 interface PlayerContentProps {
     song: Music;
@@ -24,6 +26,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
     const { data: session, status } = useSession();
     const [ isModalOpen, setIsModalOpen ] = useState(false);
     const [message, setMessage] = useState("");
+    const router = useRouter();
 
     const onPlayNext = () => {
         if (player.ids.length === 0) {
@@ -152,28 +155,57 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
                             </div>
                         </div>
                 </div>
-            <Modal
+            <ModalComponent
                 isModalOpen={isModalOpen}
                 setIsModalOpen={setIsModalOpen}
-                >
-                <div className="p-8 mt-10">
-                    <div className="w-1/2 p-4 rounded-md shadow-lg bg-gray-50">
-                    <h1 className="text-2xl font-bold text-indigo-500 mb-4">{message}</h1>
-
-                    <div className="text-right">
-                        <button
-                        onClick={handleModalClose}
-                        className="inline-block bg-indigo-500 py-2 px-4 text-white rounded-md font-semibold uppercase text-sm "
+            >
+                <div className="flex items-center justify-center rounded-[20px] ">
+                    <div 
+                        className="
+                        flex 
+                        flex-col 
+                        items-center 
+                        bg-white 
+                        text-center 
+                        rounded-xl p-8 
+                        space-y-4 
+                        w-80
+                        bg-gradient-to-b from-green-800 to-black
+                        "
+                    >
+                        <button 
+                            className="self-end text-gray-400 w-6 h-6 focus:outline-none"
+                            onClick={handleModalClose}
                         >
-                        Ok
+                            ✖
                         </button>
-                    </div>
+                        {/* <img className="w-20" src="https://cdn-icons-png.flaticon.com/512/1047/1047711.png" alt="cookies-img" /> */}
+                        <h1 className="mb-10 text-lg">
+                            Empieza a escuchar con una cuenta gratis de Spotify
+                        </h1>
+                        <button
+                        onClick={()=> router.push('/register')}
+                            className="bg-red-500 text-white rounded-md w-48 py-3 text-sm focus:outline-none shadow-md"
+                        >
+                            Registrarse Gratis
+                        </button>
+                        <p>
+                            ya tienes una cuenta? 
+                            <Link 
+                                href="/login"
+                                className="underline underline-offset-4 hover:text-primary"
+                            >
+                                Iniciar sesión
+                            </Link>
+                        </p>
                     </div>
                 </div>
-            </Modal>
+            </ModalComponent>
         </>
 
     )
 }
 
 export default PlayerContent
+
+

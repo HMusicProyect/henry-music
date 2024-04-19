@@ -4,7 +4,6 @@ import { Music } from '@/store/songs.store'
 import React from 'react'
 import SongItem from './SongItem';
 import useOnPlay from '@/store/hooks/useOnPlay';
-import Link from 'next/link';
 
 interface SongsPageProps {
     songs: Music[];
@@ -14,7 +13,7 @@ const SongsPage: React.FC<SongsPageProps> = ({ songs }) => {
 
     const onPlay = useOnPlay(songs);
 
-    
+
     if (songs.length === 0) {
         return (
             <div className='mt-4 text-neutral-400'>
