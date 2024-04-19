@@ -19,17 +19,17 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
     const { data: session } = useSession();
 
     return (
-        <div className={twMerge(`h-fit bg-gradient-to-b from-emerald-800 p-6`, className)}>
+        <div className={twMerge(`h-fit bg-gradient-to-b from-yellow-500 p-6`, className)}>
             <div className="w-full mb-4 flex items-center justify-between">
                 <div className="hidden md:flex gap-x-2 items-center">
                     <button
                     onClick={() => router.back()}
-                    className="rounded-full bg-black flex items-center justify-center cursor-pointer hover:opacity-75 transition">
+                    className="rounded-full bg-black flex items-center justify-center cursor-pointer hover:opacity-175 transition">
                         <ChevronLeft className="text-white" size={35} />
                     </button>
                     <button 
                     onClick={() => router.forward()}
-                    className="rounded-full bg-black flex items-center justify-center cursor-pointer hover:opacity-75 transition">
+                    className="rounded-full bg-black flex items-center justify-center cursor-pointer hover:opacity-175 transition">
                         <ChevronRight className="text-white" size={35} />
                     </button>
                 </div>
@@ -55,7 +55,7 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
                             <div className="">
                                 <Button
                                     onClick={() => router.replace('/register')}
-                                    className="bg-transparent text-neutral-300 font-medium"
+                                    className="bg-transparent text-neutral-white font-medium"
                                 >
                                     Sign Up
                                 </Button>
