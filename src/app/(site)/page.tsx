@@ -7,7 +7,6 @@ import { data } from '@/components/ui/sidebar/data';
 import ListItem from "@/components/home/ListItem";
 import useStore from '@/store/songs.store';
 import SongsPage from '@/components/home/SongsPage';
-import Link from 'next/link';
 
 
 const Home: React.FC = () => {

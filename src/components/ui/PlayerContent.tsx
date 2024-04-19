@@ -9,6 +9,8 @@ import usePlayer from '@/store/hooks/usePlayer';
 import useSound from 'use-sound'
 import {ModalComponent} from '@/components/ui/Modal/Modal';
 import { useSession } from 'next-auth/react';
+import { useRouter } from "next/navigation";
+import Link from 'next/link';
 
 interface PlayerContentProps {
     song: Music;
@@ -24,6 +26,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
     const { data: session, status } = useSession();
     const [ isModalOpen, setIsModalOpen ] = useState(false);
     const [message, setMessage] = useState("");
+    const router = useRouter();
 
     const onPlayNext = () => {
         if (player.ids.length === 0) {
@@ -177,15 +180,24 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
                             ✖
                         </button>
                         {/* <img className="w-20" src="https://cdn-icons-png.flaticon.com/512/1047/1047711.png" alt="cookies-img" /> */}
-                        <p className="mb-10 text-lg">
-                            We use cookies for improving user experience, analytics and marketing.
-                        </p>
+                        <h1 className="mb-10 text-lg">
+                            Empieza a escuchar con una cuenta gratis de Spotify
+                        </h1>
                         <button
-                            onClick={handleModalClose}
+                        onClick={()=> router.push('/register')}
                             className="bg-red-500 text-white rounded-md w-48 py-3 text-sm focus:outline-none shadow-md"
                         >
-                            ok, got it!
+                            Registrarse Gratis
                         </button>
+                        <p>
+                            ya tienes una cuenta? 
+                            <Link 
+                                href="/login"
+                                className="underline underline-offset-4 hover:text-primary"
+                            >
+                                Iniciar sesión
+                            </Link>
+                        </p>
                     </div>
                 </div>
             </ModalComponent>

@@ -17,18 +17,12 @@ interface Props {
 export default function MusicPlayer({ params }: { params: Props }) {
     const { data: session, status } = useSession();
     const [headerBackgroundColor, setHeaderBackgroundColor] = useState<string>('');
+    
     const isSessionLoading = status === 'loading';
-    const router = useRouter();
 
     //musicas
     const { todos, getMusicById } = useStore();
     const [currentSong, setCurrentSong] = useState<Music | null | undefined>(null);
-
-    useEffect(() => {
-        if (!session) {
-            router.replace('/login');
-        }
-    }, [session, router]);
 
     const id = params.id;
 
