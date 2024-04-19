@@ -119,7 +119,7 @@ const Search = ({searchParams}: SearchProps) => {
         <select
           value={orderByDate}
           onChange={(e) => handleSortByDate(e.target.value)}
-          className="mt-2 px-4 py-2 border rounded-full bg-gray-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="flex h-10 w-1/4 rounded-md bg-neutral-700 border border-transparent px-3 py-3 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral-400 disabled:cursor-not-allowed disabled:opacity-50 focus-outline"
         >
           <option value="desc">Fecha de estreno (descendente)</option>
           <option value="asc">Fecha de estreno (ascendente)</option>
@@ -127,14 +127,14 @@ const Search = ({searchParams}: SearchProps) => {
         <select
           value={orderByName}
           onChange={(e) => handleSortByName(e.target.value)}
-          className="mt-2 px-4 py-2 border rounded-full bg-gray-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="mt-2 flex h-10 w-1/4 rounded-md bg-neutral-700 border border-transparent px-3 py-3 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral-400 disabled:cursor-not-allowed disabled:opacity-50 focus-outline"
         >
           <option value="alphaAsc">Nombre de canción (A-Z)</option>
           <option value="alphaDesc">Nombre de canción (Z-A)</option>
         </select>
       </div>
       <div className="mt-2 mb-7 px-6 ">
-      <h3 className='text-white text-2xl font-semibold'>Songs</h3>
+     
       <SearchContent songs={songs} error={error} />
       <h3 className='text-white text-2xl font-semibold mt-4'>Albums</h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 mt-4">
