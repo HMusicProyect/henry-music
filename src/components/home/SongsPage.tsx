@@ -4,7 +4,6 @@ import { Music } from '@/store/songs.store'
 import React from 'react'
 import SongItem from './SongItem';
 import useOnPlay from '@/store/hooks/useOnPlay';
-import Link from 'next/link';
 
 interface SongsPageProps {
     songs: Music[];

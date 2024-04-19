@@ -52,7 +52,6 @@ const Home: React.FC = () => {
                 View More
             </h2>
         </div>
-   
           <SongsPage songs={todos}/>
         
         <div className="mt-5 flex justify-between items-center">

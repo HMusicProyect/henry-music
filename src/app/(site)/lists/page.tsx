@@ -59,7 +59,7 @@ export default function Page({
 
       {/* <div className="mt-5 flex w-full justify-center">
         <Pagination totalPages={todos.length}
-         />
+        />
       </div> */}
     </div>
   );
