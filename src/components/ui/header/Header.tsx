@@ -40,7 +40,7 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
     const handlePremium = async () => {
         try {
           const response = await axios.post('http://localhost:3001/pay', {
-           
+           //enviar el usuario que hace el pago
           });
           
           console.log('Respuesta:', response.data);
