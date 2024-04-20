@@ -11,7 +11,7 @@ import { useSession, signOut } from 'next-auth/react'
 import AuthButton from "@/components/auth-button";
 import Image from 'next/image';
 import Link from 'next/link';
-
+import axios from "axios"
 
 interface HeaderProps{
     children: React.ReactNode;
@@ -35,6 +35,22 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
         setMessage('Error al cerrar sesión:');
         }
     };
+
+
+    const handlePremium = async () => {
+        try {
+          const response = await axios.post('http://localhost:3001/pay', {
+           
+          });
+          
+          console.log('Respuesta:', response.data);
+
+          window.location.href = response.data.url
+        } catch (error) {
+          // Si ocurre un error durante la solicitud, puedes manejarlo aquí
+          console.error('Error:', error);
+        }
+      };
 
 
     return (
@@ -103,6 +119,17 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
                                         </Link>
                                     )}
                                     </Menu.Item>
+                                    <Menu.Item>
+                      {({ active }) => (
+                        <Link
+                          href="#"
+                          className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
+                          onClick={handlePremium}
+                        >
+                          Premium
+                        </Link>
+                      )}
+                    </Menu.Item>
             {/* 
 
                                     <Menu.Item>
