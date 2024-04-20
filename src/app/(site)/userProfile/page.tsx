@@ -1,5 +1,7 @@
 "use client"
 
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 type User = {
@@ -11,6 +13,13 @@ type User = {
 
 
 const ProfilePage = () => {
+    const { data: session, status } = useSession();
+    const router = useRouter();
+
+    if(!session){
+        router.push('/');
+        return null;
+    }
     const [user, setUser] = useState<User>({
         photo: null,
         name: '',
