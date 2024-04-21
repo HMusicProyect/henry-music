@@ -1,32 +1,30 @@
 "use client"
 
 import { useSession } from 'next-auth/react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 type User = {
-    photo: File | null;
-    name: string;
-    email: string;
-    password: string;
+    image?: string;
+    name?: string;
+    email?: string;
+    password?: string;
 };
 
 
 const ProfilePage = () => {
     const { data: session, status } = useSession();
     const router = useRouter();
+    const userSession: User = session?.user!;
+
+    const [user, setUser] = useState<User>(userSession);
+    const [confirmPassword, setConfirmPassword] = useState('');
 
     if(!session){
         router.push('/');
         return null;
     }
-    const [user, setUser] = useState<User>({
-        photo: null,
-        name: '',
-        email: '',
-        password: '',
-    });
-    const [confirmPassword, setConfirmPassword] = useState('');
 
     const handlePhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files.length > 0) {
@@ -63,10 +61,12 @@ const ProfilePage = () => {
             <h1 className="text-2xl font-bold mb-5">Perfil de Usuario</h1>
             <div className="w-24 h-24 mb-4 relative">
                 <div className="bg-gray-500 opacity-50 absolute inset-0 rounded"></div>
-                <img 
+                <Image
                     className="rounded-full w-full h-full object-cover absolute inset-0" 
-                    src={user.photo || '/images/img-perfil-padron.jpg'} 
-                    alt="Foto de perfil" 
+                    src={`${user?.image}`}
+                    alt="img perfil"
+                    width={40}
+                    height={40}
                 />
             </div>
             <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">

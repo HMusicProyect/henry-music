@@ -1,29 +1,33 @@
 "use client"
 
-import { Fragment, useEffect, useState } from 'react'
-import { Disclosure, Menu, Transition } from '@headlessui/react'
+import { Fragment, use, useEffect, useState } from 'react'
+import { Menu, Transition } from '@headlessui/react'
 import { useRouter } from "next/navigation";
 import { twMerge } from 'tailwind-merge'
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Home, Search } from 'lucide-react';
 import Button from "./Button";
-import { useSession, signOut } from 'next-auth/react'
-import AuthButton from "@/components/auth/auth-button";
 import Image from 'next/image';
 import Link from 'next/link';
 import axios from "axios"
+import { useSession, signOut } from 'next-auth/react'
+import { Session } from 'next-auth';
+
 
 interface HeaderProps{
     children: React.ReactNode;
     className?: string;
 }
+
 const Header: React.FC<HeaderProps> = ({ children, className }) => {
     const router = useRouter();
-    const { data: session } = useSession();
+    const { data: session, status: loading } = useSession();
+    const user = session?.user;
     const [message, setMessage] = useState("");
 
+
     function classNames(...classes: string[]) {
-    return classes.filter(Boolean).join(' ')
+        return classes.filter(Boolean).join(' ')
     }
 
     const handleSignOut = async () => {
@@ -32,7 +36,7 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
         await signOut();
 
         } catch (error) {
-        setMessage('Error al cerrar sesión:');
+        console.error('Error al cerrar sesión:', error);
         }
     };
 
@@ -51,7 +55,6 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
           console.error('Error:', error);
         }
       };
-
 
     return (
         <div className={twMerge(`h-fit bg-gradient-to-b from-yellow-500 p-6`, className)}>
@@ -81,9 +84,14 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
                 <div className="flex justify-between items-center gap-x-4">
                     {session ? (
                         <>
-                            <AuthButton 
-                                page="/"
-                            />
+                            <Button
+                                onClick={handleSignOut}
+                                className={
+                                    "right-4 top-4 md:right-8 md:top-8"
+                                }
+                            >
+                                Sign Out
+                            </Button>
                             <Menu as="div" className="relative ml-3 bg-gradient-to-b from-transparent to-black rounded-full">
                                 <div>
                                 <Menu.Button className="relative m-1 flex rounded-full bg-transparent text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
@@ -91,7 +99,8 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
                                     <span className="sr-only">Open user menu</span>
                                     <Image
                                         className="h-10 w-10 rounded-full"
-                                        src={'/images/img-perfil-padron.jpg'}
+                                        // src={`${user?.image}` || '/images/default-profile.png'}
+                                        src={`${user?.image}`}
                                         alt="img perfil"
                                         width={40}
                                         height={40}

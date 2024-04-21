@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -13,19 +13,18 @@ import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 
 import { useRouter } from "next/navigation";
-import useUserStore from "@/store/useUserStore";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 
-interface IUser {
+interface ILoginUser {
   email: string;
   password: string;
 }
 
 export function UserLoginForm({ className, ...props }: UserAuthFormProps) {
 
-  const [data, setData] = useState<IUser>({
+  const [data, setData] = useState<ILoginUser>({
     email: "",
     password: "",
   });
@@ -36,6 +35,7 @@ export function UserLoginForm({ className, ...props }: UserAuthFormProps) {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+
   async function onSubmit(event: React.SyntheticEvent) {
     event.preventDefault();
     setIsLoading(true);
@@ -44,7 +44,6 @@ export function UserLoginForm({ className, ...props }: UserAuthFormProps) {
       ...data,
       redirect: false,
     });
-    console.log("res",res);
     if (res?.error) {
       console.error(res.error);
       if (res.error === 'not_verified') {
