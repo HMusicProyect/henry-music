@@ -62,7 +62,7 @@ const Home: React.FC = () => {
         </div>
         {/* Aquí puedes colocar la lógica para mostrar la lista de canciones */}
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 mt-4">
-          {getCurrentPageData().map((item, index) => (
+          {Array.isArray(getCurrentPageData()) && getCurrentPageData().map((item, index) => (
             <AlbumCard 
               key={index} 
               imageUrl={item.image} 

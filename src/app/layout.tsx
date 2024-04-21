@@ -1,6 +1,6 @@
 import { Figtree } from 'next/font/google'
 import "./globals.css";
-import SessionAuthProvider from '@/components/auth-provider';
+import SessionAuthProvider from '@/context/auth-provider';
 
 
 const inter = Figtree({ subsets: ["latin"] });
@@ -18,11 +18,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className}`}>
-          <SessionAuthProvider>
-        <main>
-            {children}
-        </main>
-          </SessionAuthProvider>
+        <SessionAuthProvider>
+          <main>
+              {children}
+          </main>
+        </SessionAuthProvider>
       </body>
     </html>
   );

@@ -8,7 +8,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Home, Search } from 'lucide-react';
 import Button from "./Button";
 import { useSession, signOut } from 'next-auth/react'
-import AuthButton from "@/components/auth-button";
+import AuthButton from "@/components/auth/auth-button";
 import Image from 'next/image';
 import Link from 'next/link';
 
