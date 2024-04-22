@@ -20,7 +20,7 @@ export default function AuthButton({ page }: { page: string }) {
     const isAuthenticated = status === "authenticated";
     const router = useRouter();
     if(session){
-        router.push('/');
+        router.push('/home');
     }
 
 

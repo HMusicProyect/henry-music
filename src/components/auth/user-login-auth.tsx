@@ -1,16 +1,12 @@
 "use client";
 import { cn } from "@/lib/utils";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
 
 import { signIn } from "next-auth/react";
-
-import { useToast } from "@/components/ui/use-toast";
-
-import { ToastAction } from "@/components/ui/toast";
 
 import { useRouter } from "next/navigation";
 
@@ -23,13 +19,11 @@ interface ILoginUser {
 }
 
 export function UserLoginForm({ className, ...props }: UserAuthFormProps) {
-
+  const [errors, setErrors] = useState<string[]>([]);
   const [data, setData] = useState<ILoginUser>({
     email: "",
     password: "",
   });
-
-  const { toast } = useToast();
 
   const router = useRouter();
 
@@ -40,27 +34,15 @@ export function UserLoginForm({ className, ...props }: UserAuthFormProps) {
     event.preventDefault();
     setIsLoading(true);
 
-    const res = await signIn<"credentials">("credentials", {
+    const res = await signIn("credentials", {
       ...data,
       redirect: false,
     });
     if (res?.error) {
-      console.error(res.error);
-      if (res.error === 'not_verified') {
-        // Redirige al usuario a la página de registro
-        router.push('/register');
-      } else {
-        toast({
-          title: "Ooops...",
-          description: res.error,
-          variant: "destructive",
-          action: (
-            <ToastAction altText="Tente Novamente">Tente Novamente</ToastAction>
-          ),
-        });
-      }
+      setErrors(res.error.split(","));
+      return;
     } else {
-      router.push("/");
+      router.push("/home");
     }
 
     // setTimeout(() => {
@@ -136,6 +118,15 @@ export function UserLoginForm({ className, ...props }: UserAuthFormProps) {
           </span>
         </div>
       </div>
+      {errors.length > 0 && (
+        <div className="alert alert-danger mt-2">
+          <ul className="mb-0">
+            {errors.map((error) => (
+              <li key={error}>{error}</li>
+            ))}
+          </ul>
+        </div>
+      )}
       
       <Button
         onClick={() => signIn("google", { callbackUrl: "/" })}

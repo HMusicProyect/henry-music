@@ -30,7 +30,7 @@ const SongItem: React.FC<SongsItemProps> = ({ data, onClick, id }) => {
                         src={data.image} 
                         alt='Image' 
                         layout='fill'
-                        onClick={() => router.push(`/lists/${id}`)} 
+                        onClick={() => router.push(`/home/lists/${id}`)} 
                     />
                 </div>
                 <div className='flex flex-col items-start w-full pt-4 gap-y-1'>

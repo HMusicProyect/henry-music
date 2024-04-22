@@ -10,7 +10,7 @@ declare module "next-auth" {
             password: string;
             rol: string;
             esta_verificado: boolean;
-            verification_token: string;
+            token: string;
         };
     }
 }

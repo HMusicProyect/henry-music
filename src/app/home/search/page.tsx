@@ -115,7 +115,7 @@ const Search = ({searchParams}: SearchProps) => {
         </h1>
       </Header>
       <div className="mt-2 mb-7 px-6 flex justify-between items-center">
-         <SearchInput />
+        <SearchInput />
         <select
           value={orderByDate}
           onChange={(e) => handleSortByDate(e.target.value)}
