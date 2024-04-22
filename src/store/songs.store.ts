@@ -1,23 +1,5 @@
+import { Music } from '@/lib/definitions';
 import { create } from 'zustand';
-
-export interface Artist {
-    name: string;
-}
-
-export interface Genre {
-    name: string;
-}
-
-export interface Music {
-    id?: number;
-    image: string;
-    name: string;
-    pathMusic?: string;
-    ArtistID?: number;
-    GenreID?: number;
-    Artist?: Artist;
-    Genre?: Genre;
-}
 
 
 export interface State {

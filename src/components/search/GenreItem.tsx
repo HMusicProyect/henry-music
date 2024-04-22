@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { colorDarkPallette } from '@/utils/ColorDarkPallette';
-import { Genre } from '@/store/genres.store';
+import { Genre } from '@/lib/definitions';
 
 interface GenreItemProps {
   genre: Genre;

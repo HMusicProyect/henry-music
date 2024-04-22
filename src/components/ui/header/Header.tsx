@@ -98,12 +98,12 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
                                     <span className="absolute -inset-1.5" />
                                     <span className="sr-only">Open user menu</span>
                                     <Image
-                                        className="h-10 w-10 rounded-full"
+                                        className="h-13 w-20 rounded-full"
                                         // src={`${user?.image}` || '/images/default-profile.png'}
                                         src={`${user?.image}`}
                                         alt="img perfil"
-                                        width={40}
-                                        height={40}
+                                        width={1000}
+                                        height={1000}
                                     />
                                 </Menu.Button>
                                 </div>

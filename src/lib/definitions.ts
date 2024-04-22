@@ -3,11 +3,11 @@
 // For simplicity of teaching, we're manually defining these types.
 // However, these types are generated automatically if you're using an ORM such as Prisma.
 export type User = {
-    id: string;
-    image: string;
-    name: string;
-    email: string;
-    password: string;
+    id?: string;
+    image?: string;
+    name?: string;
+    email?: string;
+    password?: string;
 };
 
 export type IAccessUser = User & {
@@ -15,6 +15,37 @@ export type IAccessUser = User & {
   rol: string;
   esta_verificado: boolean;
 };
+
+// Musicas ---
+export interface Artist {
+    id: number;
+    name: string;
+    image: string;
+}
+
+
+export interface Genre {
+    id: number;
+    name: string;
+}
+
+export interface Album {
+    id: number;
+    name: string;
+    image: string;
+}
+
+
+export interface Music {
+    id?: number;
+    image: string;
+    name: string;
+    pathMusic?: string;
+    ArtistID?: number;
+    GenreID?: number;
+    Artist?: Artist;
+    Genre?: Genre;
+}
 
 
 

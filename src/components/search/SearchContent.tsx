@@ -1,15 +1,15 @@
 "use client"
 import React, { useEffect, useState } from 'react';
-import useArtistStore, { Artist } from '@/store/artist.store';
-import useGenreStore, { Genre } from '@/store/genres.store';
-import useAlbumsStore, { Album } from '@/store/albums.store';
+import useArtistStore from '@/store/artist.store';
+import useGenreStore from '@/store/genres.store';
+import useAlbumsStore from '@/store/albums.store';
 import MediaItem from '../ui/sidebar/MediaItem';
 import Link from 'next/link';
 import GenreItem from './GenreItem';
 import ArtistItem from './ArtistItem';
 import AlbumCard from '../ui/sidebar/AlbumCard';
 import FilterBar from './FilterBar';
-import { Music } from '@/store/songs.store';
+import { Music } from '@/lib/definitions';
 
 interface SearchContentProps {
     songs: Music[];
@@ -56,7 +56,7 @@ const SearchContent: React.FC<SearchContentProps> = ({ songs, error }) => {
                 <div key={song.id} className='flex items-center gap-x-4 w-full'>
                     <Link href={`/lists/${song.id}`}>
                         <MediaItem
-                            onClick={() => handleItemClick(song.id)}
+                            onClick={() => handleItemClick(song?.id!)}
                             data={song}
                         />
                     </Link>
@@ -98,7 +98,7 @@ const SearchContent: React.FC<SearchContentProps> = ({ songs, error }) => {
                         <div key={song.id} className='flex items-center gap-x-4 w-full'>
                             <Link href={`/lists/${song.id}`}>
                                 <MediaItem
-                                    onClick={() => handleItemClick(song.id)}
+                                    onClick={() => handleItemClick(song.id!)}
                                     data={song}
                                 />
                             </Link>

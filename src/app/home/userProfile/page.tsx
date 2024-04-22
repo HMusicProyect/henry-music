@@ -147,7 +147,8 @@ const handlePasswordSubmit = async (event: React.FormEvent) => {
     const togglePasswordEdit = () => {
         setIsEditingPassword(!isEditingPassword);
     };
-
+    
+    if(userSession?.image === undefined) return <p>Cargando...</p>;
     const imageUrl = userSession?.image.replace('s96-c', 's1000-c');
 
     return (
