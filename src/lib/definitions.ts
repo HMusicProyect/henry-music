@@ -9,6 +9,7 @@ export type User = {
   password: string;
   access: boolean;
   image: string;
+  rol: string;
   esta_verificado: boolean;
 };
 
