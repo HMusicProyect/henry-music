@@ -10,7 +10,8 @@ const nextConfig = {
       'st3.depositphotos.com',
       'www.clipartkey.com',
       'www.accessselfstorage.com', 
-      'worldwildfilms.com'
+      'worldwildfilms.com',
+      'lh3.googleusercontent.com'
     ],
   },
 };

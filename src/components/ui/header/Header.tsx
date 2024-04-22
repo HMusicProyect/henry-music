@@ -43,18 +43,18 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
 
     const handlePremium = async () => {
         try {
-          const response = await axios.post('http://localhost:3001/pay', {
-           //enviar el usuario que hace el pago
-          });
-          
-          console.log('Respuesta:', response.data);
+            const response = await axios.post( 'http://localhost:3001/pay', {
+            //enviar el usuario que hace el pago
+            });
+            
+            console.log('Respuesta:', response.data);
 
-          window.location.href = response.data.url
+            window.location.href = response.data.url
         } catch (error) {
-          // Si ocurre un error durante la solicitud, puedes manejarlo aquí
-          console.error('Error:', error);
+            // Si ocurre un error durante la solicitud, puedes manejarlo aquí
+            console.error('Error:', error);
         }
-      };
+    };
 
     return (
         <div className={twMerge(`h-fit bg-gradient-to-b from-yellow-500 p-6`, className)}>

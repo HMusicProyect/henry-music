@@ -4,32 +4,29 @@ import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-
-type User = {
-    id?: string;
-    image?: string;
-    name?: string;
-    email?: string;
-    password?: string;
-};
+import { User } from '@/lib/definitions';
+import { UserForm } from '@/components/home/UserProfile/UserForm';
+import { UserInfo } from '@/components/home/UserProfile/UserInfo';
+import { PasswordChangeForm } from '@/components/home/UserProfile/PasswordChangeForm';
 
 
 const ProfilePage = () => {
     const { data: session, status } = useSession();
-    const router = useRouter();
-
-    
     const userSession: User = session?.user!;
-
+    
+    
+    const router = useRouter();
     const [user, setUser] = useState<User>(userSession);
     const [confirmPassword, setConfirmPassword] = useState('');
     const [currentPassword, setCurrentPassword] = useState('');
     const [passwordFieldsEnabled, setPasswordFieldsEnabled] = useState(false);
+    const [isEditingPassword, setIsEditingPassword] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
 
-    
-    if(!session && userSession === undefined){
-        return null;
-    }
+    if(status === "loading") return <p>Cargando...</p>;
+
+    if(!session) router.push('/home');
+
 
     const verifyCurrentPassword = async () => {
         try {
@@ -75,150 +72,141 @@ const ProfilePage = () => {
         setCurrentPassword(event.target.value);
     };
 
-
-const handleSubmit = async (event: React.FormEvent) => {
+const handlePasswordSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    console.log('user:', userSession?.id)
 
-    // Verifica si las contraseñas coinciden
+    if (!user) {
+        alert('No hay información de usuario disponible');
+        return;
+    }
+
+    if (user.password !== confirmPassword) {
+        alert('Las contraseñas no coinciden');
+        return;
+    }
+    console.log('user:', currentPassword, 'user.password ', user.password, 'userSession?.email', userSession?.email )
 
     try {
-        // Realiza una solicitud PUT a tu servidor para actualizar los datos del usuario
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users/${userSession?.email}`, {
+        const response = await fetch(`http://localhost:3001/users/${userSession?.id}/editPasword`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(user),
+            body: JSON.stringify({ 
+                password: currentPassword, 
+                email: userSession?.email, 
+                newPassword: user.password 
+            }),
         });
 
         if (!response.ok) {
-            throw new Error('Failed to update user');
+            throw new Error('Failed to update password');
         }
 
-        const data = await response.json();
-
-        // Actualiza el estado del usuario con los datos devueltos por el servidor
-        setUser(data);
-
-        alert('Usuario actualizado con éxito');
+        alert('Contraseña actualizada con éxito');
     } catch (error) {
-        console.error('Failed to update user:', error);
+        console.error('Failed to update password:', error);
     }
 };
 
+
+    const handleSubmit = async (event: React.FormEvent) => {
+        event.preventDefault();
+        console.log('user:', userSession?.id)
+
+    
+
+        try {
+            
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users/${userSession?.email}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(user),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update user');
+            }
+
+            const data = await response.json();
+
+            
+            setUser(data);
+
+            alert('Usuario actualizado con éxito');
+        } catch (error) {
+            console.error('Failed to update user:', error);
+        }
+    };
+
+    const toggleEdit = () => {
+        setIsEditing(!isEditing);
+    };
+    const togglePasswordEdit = () => {
+        setIsEditingPassword(!isEditingPassword);
+    };
+
+    const imageUrl = userSession?.image.replace('s96-c', 's1000-c');
+
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen py-2">
-            <h1 className="text-2xl font-bold mb-5">Perfil de Usuario</h1>
-            <div className="w-24 h-24 mb-4 relative">
-                <div className="bg-gray-500 opacity-50 absolute inset-0 rounded"></div>
-                    <Image
-                        className="rounded-full w-full h-full object-cover absolute inset-0" 
-                        src={user?.image || '/path/to/default/image.png'}
-                        alt="img perfil"
-                        width={40}
-                        height={40}
-                    />
-            </div>
-            <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-                <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="photo">
-                        Foto:
-                    </label>
-                    <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="file" 
-                        id="photo" 
-                        onChange={handlePhotoChange} 
-                    />
-                </div>
-                <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
-                        Nombre:
-                    </label>
-                    <input 
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
-                        type="text" 
-                        id="name" 
-                        value={user?.name} 
-                        onChange={handleNameChange} 
-                    />
-                </div>
-                <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
-                        Email:
-                    </label>
-                    <input 
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
-                        type="email" 
-                        id="email" 
-                        value={user?.email} 
-                        onChange={handleEmailChange} 
-                    />
-                </div>
-                <div className="mb-4">
-                <label 
-                    className="block text-gray-700 text-sm font-bold mb-2" 
-                    htmlFor="currentPassword"
-                >
-                    Contraseña actual:
-                </label>
-                <input 
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
-                    type="password" 
-                    id="currentPassword" 
-                    value={currentPassword} 
-                    onChange={handleCurrentPasswordChange} 
+    <div className="flex flex-col items-center justify-center min-h-screen py-2">
+        <h1 className="text-2xl font-bold mb-5">Perfil de Usuario</h1>
+        <div className="w-24 h-24 mb-4 relative">
+            <div className="bg-gray-500 opacity-50 absolute inset-0 rounded"></div>
+                <Image
+                    className="rounded-full w-full h-full object-cover absolute inset-0" 
+                    src={imageUrl}
+                    alt="img perfil"
+                    width={1000}
+                    height={1000}
+                    quality={100}
                 />
+        </div>
+
+        <div>
+            {!isEditingPassword && (
                 <button 
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                    onClick={verifyCurrentPassword}
+                    onClick={toggleEdit}
                 >
-                    Verificar contraseña
+                    {isEditing ? 'Ver Perfil' : 'Editar Perfil'}
                 </button>
-            </div>
-            <div className="mb-4">
-                <label 
-                    className="block text-gray-700 text-sm font-bold mb-2" 
-                    htmlFor="password"
-                >
-                    Nueva Contraseña:
-                </label>
-                <input 
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
-                    type="password" 
-                    id="password" 
-                    value={user?.password} 
-                    onChange={handlePasswordChange} 
-                    disabled={!passwordFieldsEnabled}
-                />
-            </div>
-            <div className="mb-6">
-                <label 
-                    className="block text-gray-700 text-sm font-bold mb-2" 
-                    htmlFor="confirmPassword"
-                >
-                    Confirmar Contraseña:
-                </label>
-                <input 
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
-                    type="password" 
-                    id="confirmPassword" 
-                    value={confirmPassword} 
-                    onChange={handleConfirmPasswordChange}
-                    disabled={!passwordFieldsEnabled}
-                />
-            </div>
-                <div className="flex items-center justify-between">
-                    <button 
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                        type="submit"
-                    >
-                        Guardar Cambios
-                    </button>
-                </div>
-            </form>
+            )}
+            <button 
+                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                onClick={togglePasswordEdit}
+            >
+                {isEditingPassword ? 'Cancelar Edición de Contraseña' : 'Editar Contraseña'}
+            </button>
         </div>
+        <div className="min-h-[500px]">
+            {
+                isEditingPassword ? (
+                    <PasswordChangeForm
+                        handleCurrentPasswordChange={handleCurrentPasswordChange}
+                        verifyCurrentPassword={verifyCurrentPassword}
+                        handlePasswordChange={handlePasswordChange}
+                        handleConfirmPasswordChange={handleConfirmPasswordChange}
+                        passwordFieldsEnabled={passwordFieldsEnabled}
+                        onSubmit={handlePasswordSubmit} 
+                    />
+                ) : isEditing ? (
+                    <UserForm
+                        user={userSession}
+                        onUserChange={setUser}
+                        onSubmit={handleSubmit}
+                        handlePhotoChange={handlePhotoChange}
+                        handleNameChange={handleNameChange}
+                        handleEmailChange={handleEmailChange}
+                    />
+                ) : (
+                    <UserInfo user={userSession}/>
+                )
+            }
+        </div>
+    </div>
     );
 };
 

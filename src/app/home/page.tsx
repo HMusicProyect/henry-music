@@ -51,7 +51,7 @@ const Home: React.FC = () => {
             </h2>
           </Link>
         </div>
-             <SongsPage songs={firstFourSongs}/>
+            <SongsPage songs={firstFourSongs}/>
         <div className="mt-5 flex justify-between items-center">
           <h2 className="text-white text-2xl font-semibold">Newest Albums</h2>
         </div>

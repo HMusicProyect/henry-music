@@ -5,7 +5,6 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
-import { User } from '@/lib/definitions';
 
 import { getSession, signIn, signOut } from "next-auth/react";
 
@@ -21,6 +20,7 @@ interface ILoginUser {
 
 export function UserLoginForm({ className, ...props }: UserAuthFormProps) {
   const [errors, setErrors] = useState<string[]>([]);
+
   const [data, setData] = useState<ILoginUser>({
     email: "",
     password: "",
@@ -42,22 +42,28 @@ export function UserLoginForm({ className, ...props }: UserAuthFormProps) {
     
     if (res?.error) {
       setErrors(res.error.split(","));
-      return;
+      alert('error al iniciar secion')
     }
 
-    const session = await getSession();
-    const user = session?.user;
-    if(user){
-      const userName = user.name.replace(/\s/g, '');
-  
-      if(user.esta_verificado === false){
-          signOut({ callbackUrl: `${window.location.origin}/verification/${userName}` });
-      } else {
-          router.push("/home");
+    if (res?.ok) {
+      const session = await getSession();
+      const user = session?.user;
+      // router.push("/home");
+      
+      if(user){
+          const userName = user.name.replace(/\s/g, '');
+        
+          if(user.esta_verificado === false){
+                signOut({ callbackUrl: `${window.location.origin}/verification/${userName}` });
+      } else if (user.esta_verificado === true) {
+            router.push("/home");
+        }
       }
-  
-      // setTimeout(() => {
     }
+
+
+    
+    // setTimeout(() => {
     //   setIsLoading(false);
     // }, 5000);
 
@@ -141,7 +147,7 @@ export function UserLoginForm({ className, ...props }: UserAuthFormProps) {
       )}
       
       <Button
-        onClick={() => signIn("google", { callbackUrl: "/" })}
+        onClick={() => signIn("google", { callbackUrl: "/home" })}
         variant="outline"
         type="button"
         disabled={isLoading}
