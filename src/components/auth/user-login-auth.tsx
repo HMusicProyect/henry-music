@@ -6,57 +6,63 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
 
-import { signIn } from "next-auth/react";
-
-import { useToast } from "@/components/ui/use-toast";
-
-import { ToastAction } from "@/components/ui/toast";
+import { getSession, signIn, signOut } from "next-auth/react";
 
 import { useRouter } from "next/navigation";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-interface IUser {
+
+interface ILoginUser {
   email: string;
   password: string;
 }
 
 export function UserLoginForm({ className, ...props }: UserAuthFormProps) {
+  const [errors, setErrors] = useState<string[]>([]);
 
-  const [data, setData] = useState<IUser>({
+  const [data, setData] = useState<ILoginUser>({
     email: "",
     password: "",
   });
-
-  const { toast } = useToast();
 
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+
   async function onSubmit(event: React.SyntheticEvent) {
     event.preventDefault();
     setIsLoading(true);
 
-    const res = await signIn<"credentials">("credentials", {
+    const res = await signIn("credentials", {
       ...data,
       redirect: false,
     });
-    console.log("res",res);
+    
     if (res?.error) {
-      console.error(res.error);
-      toast({
-        title: "Ooops...",
-        description: res.error,
-        variant: "destructive",
-        action: (
-          <ToastAction altText="Tente Novamente">Tente Novamente</ToastAction>
-        ),
-      });
-    } else {
-      router.push("/");
+      setErrors(res.error.split(","));
+      alert('error al iniciar secion')
     }
 
+    if (res?.ok) {
+      const session = await getSession();
+      const user = session?.user;
+      // router.push("/home");
+      
+      if(user){
+          const userName = user.name.replace(/\s/g, '');
+        
+          if(user.esta_verificado === false){
+                signOut({ callbackUrl: `${window.location.origin}/verification/${userName}` });
+      } else if (user.esta_verificado === true) {
+            router.push("/home");
+        }
+      }
+    }
+
+
+    
     // setTimeout(() => {
     //   setIsLoading(false);
     // }, 5000);
@@ -130,9 +136,18 @@ export function UserLoginForm({ className, ...props }: UserAuthFormProps) {
           </span>
         </div>
       </div>
+      {errors.length > 0 && (
+        <div className="alert alert-danger mt-2">
+          <ul className="mb-0">
+            {errors.map((error) => (
+              <li key={error}>{error}</li>
+            ))}
+          </ul>
+        </div>
+      )}
       
       <Button
-        onClick={() => signIn("github", { callbackUrl: "/" })}
+        onClick={() => signIn("google", { callbackUrl: "/home" })}
         variant="outline"
         type="button"
         disabled={isLoading}
