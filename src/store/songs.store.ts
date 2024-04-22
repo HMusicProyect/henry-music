@@ -9,7 +9,7 @@ export interface Genre {
 }
 
 export interface Music {
-    id: number;
+    id?: number;
     image: string;
     name: string;
     pathMusic?: string;
@@ -17,14 +17,15 @@ export interface Music {
     GenreID?: number;
     Artist?: Artist;
     Genre?: Genre;
-};
+}
+
 
 export interface State {
     todos: Music[];
     loading: boolean;
     error: string | null;
     getMusic: () => Promise<void>;
-    addMusic: (title: string) => Promise<void>;
+    addMusic: (musicData: Music) => Promise<void>; 
     deleteMusic: (id: number) => Promise<void>;
     searchMusic: (query: string) => Promise<void>;
     getMusicById: (id: number) => Promise<void>;
@@ -47,20 +48,20 @@ const useStore = create<State>((set) => ({
         }
     },
 
-    addMusic: async (title) => {
+    addMusic: async (musicData) => { 
         try {
             set({ loading: true, error: null });
-            // Lógica para agregar un nuevo Music a la API o cualquier otra fuente de datos
-            const newTodo = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/songs`, {
+            const newMusic = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/songs`, {
                 method: 'POST',
-                body: JSON.stringify({ title, completed: false }),
+                body: JSON.stringify(musicData),
                 headers: { 'Content-Type': 'application/json' },
             }).then((res) => res.json());
-            set((state) => ({ todos: [...state.todos, newTodo], loading: false }));
+            set((state) => ({ todos: [...state.todos, newMusic], loading: false }));
         } catch (error) {
-            set({ loading: false, error: 'Error al agregar el Music' });
+            set({ loading: false, error: 'Error al agregar la canción' });
         }
     },
+
 
     deleteMusic: async (id) => {
         try {

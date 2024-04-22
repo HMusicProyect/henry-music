@@ -1,5 +1,8 @@
 import { Figtree } from 'next/font/google'
 import "./globals.css";
+
+import ModalProvider from '@/providers/ModalProvider';
+import ToasterProvider from '@/providers/ToasterProvider';
 import SessionAuthProvider from '@/context/auth-provider';
 
 
@@ -18,11 +21,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className}`}>
-        <main>
-          <SessionAuthProvider>
-              {children}
-          </SessionAuthProvider>
-        </main>
+        <SessionAuthProvider>
+          <ToasterProvider />
+          <ModalProvider />
+          <main>
+            {children}
+          </main>
+        </SessionAuthProvider>
       </body>
     </html>
   );
