@@ -2,8 +2,8 @@ import { Metadata } from "next";
 
 import Link from "next/link";
 import { Command } from "lucide-react";
-import { UserLoginForm } from "@/components/user-login-auth";
-import AuthButton from "@/components/auth-button";
+import { UserLoginForm } from "@/components/auth/user-login-auth";
+import AuthButton from "@/components/auth/auth-button";
 
 export const metadata: Metadata = {
   title: "Autenticação",
@@ -18,7 +18,7 @@ export default async function Register() {
       <div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
         <div className="absolute inset-0 bg-zinc-900" />
           <Link
-            href={"/"}
+            href={"/home"}
           >
             <div className="relative z-20 flex items-center text-lg font-medium">
                 <Command className="mr-2 h-6 w-6" /> Henry-Music

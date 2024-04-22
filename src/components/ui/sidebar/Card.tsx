@@ -22,7 +22,7 @@ const clic = ()=>{
 }
     return (
         <div className={cardClasses}>
-            <Link href="/lists">
+            <Link href="/home/lists/">
                 {children}
             </Link>
         </div>

@@ -49,7 +49,7 @@ export default function TableList({
                     {invoice?.id}
                   </td>
                   <td className="px-6 py-3 dark:border-slate-500 ">
-                    <Link href={`/lists/${invoice.id}`}>
+                    <Link href={`/home/lists/${invoice.id}`}>
                       <div className="flex items-center text-sm">
                         <div className="relative mr-3 rounded-full md:block">
                           <MediaItem

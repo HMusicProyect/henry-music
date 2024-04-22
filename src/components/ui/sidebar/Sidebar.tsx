@@ -16,7 +16,7 @@ const Sidebar: React.FC<SidebarProps> = ({ children}) => {
     const { todos, getMusic } = useStore();
 
     useEffect(() => {
-      getMusic();
+        getMusic();
     }, []);
     const pathname = usePathname();
 
@@ -26,20 +26,20 @@ const Sidebar: React.FC<SidebarProps> = ({ children}) => {
         {
             icon: <Home />,
             label: 'Home',
-            active: pathname === '/',
-            href: '/'
+            active: pathname === '/home',
+            href: '/home'
         },
         {
             icon: <Search />,
             label: 'Search',
-            active: pathname === '/search',
-            href: '/search'
+            active: pathname === '/home/search',
+            href: '/home/search'
         },
         {
             icon: <List />,
             label: 'Lists',
-            active: pathname === '/lists',
-            href: '/lists'
+            active: pathname === '/home/lists',
+            href: '/home/lists'
         }
     ], [pathname]);
 

@@ -27,10 +27,10 @@ const SongItem: React.FC<SongsItemProps> = ({ data, onClick, id }) => {
                 <div className='relative aspect-square w-full h-full rounded-md overflow-hidden'>
                     <Image 
                         className='object-cover' 
-                        src={data.image} 
+                        src={data?.image} 
                         alt='Image' 
                         layout='fill'
-                        onClick={() => router.push(`/lists/${id}`)} 
+                        onClick={() => router.push(`/home/lists/${id}`)} 
                     />
                 </div>
                 <div className='flex flex-col items-start w-full pt-4 gap-y-1'>
@@ -39,7 +39,7 @@ const SongItem: React.FC<SongsItemProps> = ({ data, onClick, id }) => {
                 </div>
                 <div
                     className='absolute bottom-24 right-5'
-                    onClick={() =>onClick(data.id)} 
+                    onClick={() =>onClick(data.id!)} 
                 >
                     <PlayButton/>
                 </div>

@@ -1,14 +1,14 @@
 "use client"
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import useStore, { Music } from '@/store/songs.store';
 import { useSession } from 'next-auth/react';
 import Header from '@/components/ui/header/Header';
 import { FastAverageColor } from 'fast-average-color';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import { capitalizeWords } from '@/utils/CapitalizeWords';
 import { Play } from 'lucide-react';
+import usePlayer from '@/store/hooks/usePlayer';
 
 interface Props {
     id: number;
@@ -17,13 +17,9 @@ interface Props {
 export default function MusicPlayer({ params }: { params: Props }) {
     const { data: session, status } = useSession();
     const [headerBackgroundColor, setHeaderBackgroundColor] = useState<string>('');
-    
-    const isSessionLoading = status === 'loading';
-
-    //musicas
     const { todos, getMusicById } = useStore();
+    const player = usePlayer();
     const [currentSong, setCurrentSong] = useState<Music | null | undefined>(null);
-
     const id = params.id;
 
     useEffect(() => {
@@ -47,7 +43,14 @@ export default function MusicPlayer({ params }: { params: Props }) {
         }
     }, [currentSong]);
 
-    if (isSessionLoading) {
+    const handlePlayClick = () => {
+        if (currentSong) {
+            player.setId(currentSong.id.toString());
+            player.setIds(todos.map((song) => song.id.toString()));
+        }
+    };
+
+    if (status === 'loading') {
         return <div>Cargando...</div>;
     }
 
@@ -80,7 +83,8 @@ export default function MusicPlayer({ params }: { params: Props }) {
                                     {currentSong.Genre?.name}
                                 </p>
                                 <button
-                                    className='transition rounded-full flex items-center bg-green-500 p-4 drop-shadow-md translate translate-y-1/4 group-hover:opacity-100 group-hover:translate-y-0 hover:scale-110'
+                                    className='transition rounded-full flex items-center bg-yellow-500 p-4 drop-shadow-md translate translate-y-1/4 group-hover:opacity-100 group-hover:translate-y-0 hover:scale-110'
+                                    onClick={handlePlayClick}
                                 >
                                     <Play className="text-black" fill="black" size={25} />
                                 </button>

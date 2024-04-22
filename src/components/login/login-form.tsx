@@ -40,7 +40,7 @@ export default function LoginForm() {
         return;
       }
 
-      router.push("/");
+      router.push("/home");
   };
 
   return (
