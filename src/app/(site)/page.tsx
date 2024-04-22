@@ -7,32 +7,26 @@ import { data } from '@/components/ui/sidebar/data';
 import ListItem from "@/components/home/ListItem";
 import useStore from '@/store/songs.store';
 import SongsPage from '@/components/home/SongsPage';
+import Link from 'next/link';
+import useAlbumsStore from '@/store/albums.store';
 
 
 const Home: React.FC = () => {
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize] = useState(6); // Número de elementos por página
-
   const { todos, getMusic } = useStore();
+  const { albums, loading: albumsLoading, getAlbums } = useAlbumsStore();
 
   useEffect(() => {
     getMusic();
+    getAlbums();
   }, []);
 
-  // Función para calcular el índice de inicio y fin de la página actual
-  const startIndex = (currentPage - 1) * pageSize;
-  const endIndex = startIndex + pageSize;
 
-  // Función para obtener los datos de la página actual
-  const getCurrentPageData = () => {
-    return todos.slice(startIndex, endIndex);
-  };
+  const firstFourSongs = todos.slice(0, 4);
+  if ( albumsLoading) {
+    return <div>Loading...</div>;
+}
 
-  // Función para manejar el cambio de página
-  const handleChangePage = (page: number) => {
-    setCurrentPage(page);
-  };
 
   return (
     <div className="bg-neutral-900 rounded-lg h-full w-full overflow-hidden overflow-y-auto">
@@ -51,38 +45,20 @@ const Home: React.FC = () => {
       <div className="mt-2 mb-7 px-6">
         <div className="flex justify-between items-center">
           <h1 className="text-white text-2xl font-semibold">Newest Songs</h1>
-          <h2 className="text-xl">
-                View More
+          <Link href="/lists">
+            <h2 className="text-xl hover:bg-neutral-400/10 p-2 rounded-md cursor-pointer">
+                  View More
             </h2>
+          </Link>
         </div>
-          <SongsPage songs={todos}/>
-        
+             <SongsPage songs={firstFourSongs}/>
         <div className="mt-5 flex justify-between items-center">
-          <h1 className="text-white text-2xl font-semibold">Newest Albums</h1>
+          <h2 className="text-white text-2xl font-semibold">Newest Albums</h2>
         </div>
-        {/* Aquí puedes colocar la lógica para mostrar la lista de canciones */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 mt-4">
-          {getCurrentPageData().map((item, index) => (
-            <AlbumCard 
-              key={index} 
-              imageUrl={item.image} 
-              songName={item.name} 
-              artistName={item.Artist?.name} 
-            />
-          ))}
-        </div>
-        {/* Botones de paginación */}
-        <div className="flex justify-center mt-4">
-          {[...Array(Math.ceil(data.length / pageSize))].map((_, index) => (
-            <button
-              key={index}
-              onClick={() => handleChangePage(index + 1)}
-              className={`px-4 py-2 mx-1 border rounded-full bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${currentPage === index + 1 ? 'bg-blue-500' : ''
-                }`}
-            >
-              {index + 1}
-            </button>
-          ))}
+        <div className="flex  justify-center gap-3 items-center">
+            {albums.map((album, index) => (
+                <AlbumCard key={index} imageUrl={album.image} name={album.name} />
+            ))}
         </div>
       </div>
     </div>
