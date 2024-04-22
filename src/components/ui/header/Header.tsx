@@ -12,6 +12,8 @@ import AuthButton from "@/components/auth-button";
 import Image from 'next/image';
 import Link from 'next/link';
 import axios from "axios"
+import {User} from "@/lib/definitions"
+
 
 interface HeaderProps{
     children: React.ReactNode;
@@ -19,8 +21,12 @@ interface HeaderProps{
 }
 const Header: React.FC<HeaderProps> = ({ children, className }) => {
     const router = useRouter();
-    const { data: session } = useSession();
     const [message, setMessage] = useState("");
+    const { data: session } = useSession();
+    
+    const userSession: User = session?.user!;
+
+  
 
     function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
@@ -39,8 +45,12 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
 
     const handlePremium = async () => {
         try {
+            
+            console.log(userSession.email)
+            const usuario = userSession.email
           const response = await axios.post('http://localhost:3001/pay', {
            //enviar el usuario que hace el pago
+           name:usuario
           });
           
           console.log('Respuesta:', response.data);
