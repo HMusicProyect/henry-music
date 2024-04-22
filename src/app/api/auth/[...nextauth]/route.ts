@@ -2,34 +2,7 @@ import NextAuth from "next-auth";
 import { z } from 'zod';
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import type { User } from '@/lib/definitions';
-
-async function getUser(email: string, password: string): Promise<User> {
-    try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/login?email=${email}&password=${password}`);
-        if (!response.ok) {
-            throw new Error('Failed to fetch user.');
-        }
-        const user = await response.json();
-        if (user.error) throw user;
-        return user;
-    } catch (error) {
-        console.error('Failed to fetch user:', error);
-        throw new Error('Failed to fetch user.');
-    }
-}
-
-async function validateUser(user: User | undefined) {
-    if (!user) {
-        return null;
-    }
-
-    if (user.esta_verificado === false) {
-        throw { error: 'not_verified', message: 'User is not verified' };
-    }
-
-    return user;
-}
+import { getUser } from "@/lib/auth/user.auth";
 
 
 
@@ -54,9 +27,7 @@ const handler = NextAuth({
             if (parsedCredentials.success) {
                 const { email, password } = parsedCredentials.data;
                 const user = await getUser(email, password);
-                console.log('user:', user);
-                const validatedUser = await validateUser(user);
-                return validatedUser;
+                return user;
             }
             return null;
         },

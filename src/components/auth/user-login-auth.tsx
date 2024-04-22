@@ -5,8 +5,9 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
+import { User } from '@/lib/definitions';
 
-import { signIn } from "next-auth/react";
+import { getSession, signIn, signOut } from "next-auth/react";
 
 import { useRouter } from "next/navigation";
 
@@ -38,14 +39,25 @@ export function UserLoginForm({ className, ...props }: UserAuthFormProps) {
       ...data,
       redirect: false,
     });
+    
     if (res?.error) {
       setErrors(res.error.split(","));
       return;
-    } else {
-      router.push("/home");
     }
 
-    // setTimeout(() => {
+    const session = await getSession();
+    const user = session?.user;
+    if(user){
+      const userName = user.name.replace(/\s/g, '');
+  
+      if(user.esta_verificado === false){
+          signOut({ callbackUrl: `${window.location.origin}/verification/${userName}` });
+      } else {
+          router.push("/home");
+      }
+  
+      // setTimeout(() => {
+    }
     //   setIsLoading(false);
     // }, 5000);
 

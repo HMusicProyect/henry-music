@@ -32,7 +32,7 @@ const SearchContent: React.FC<SearchContentProps> = ({ songs, error }) => {
                 <h3 className='text-white text-2xl font-semibold mt-4'>Géneros</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 mt-4">
                     {defaultGenres.map((genre) => (
-                        <Link key={genre.id} href={`/genres/${genre.id}`}>
+                        <Link key={genre.id} href={`/home/genres/${genre.id}`}>
                             <div className="relative group flex flex-col items-center justify-center rounded-md overflow-hidden gap-x-4 bg-yellow-400/5 cursor-pointer hover:bg-yellow-400/10 transition p-3">
                                 {genre.name}
                             </div>
@@ -42,7 +42,7 @@ const SearchContent: React.FC<SearchContentProps> = ({ songs, error }) => {
                 <h3 className='text-white text-2xl font-semibold mt-4'>Artistas</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 mt-4">
                     {defaultArtists.map((artist) => (
-                        <Link key={artist.id} href={`/artists/${artist.id}`}>
+                        <Link key={artist.id} href={`/home/artists/${artist.id}`}>
                             <div className="relative group flex flex-col items-center justify-center rounded-md overflow-hidden gap-x-4 bg-orange-400/5 cursor-pointer hover:bg-orange-400/10 transition p-3">
                                 {artist.name}
                             </div>
@@ -61,7 +61,7 @@ const SearchContent: React.FC<SearchContentProps> = ({ songs, error }) => {
                 <h3 className='text-white text-2xl font-semibold mt-4'>Géneros</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 mt-4">
                     {defaultGenres.map((genre) => (
-                        <Link key={genre.id} href={`/genres/${genre.id}`}>
+                        <Link key={genre.id} href={`/home/genres/${genre.id}`}>
                             <div className="relative group flex flex-col items-center justify-center rounded-md overflow-hidden gap-x-4 bg-yellow-400/5 cursor-pointer hover:bg-yellow-400/10 transition p-3">
                                 {genre.name}
                             </div>
@@ -71,7 +71,7 @@ const SearchContent: React.FC<SearchContentProps> = ({ songs, error }) => {
                 <h3 className='text-white text-2xl font-semibold mt-4'>Artistas</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 mt-4">
                     {defaultArtists.map((artist) => (
-                        <Link key={artist.id} href={`/artists/${artist.id}`}>
+                        <Link key={artist.id} href={`/home/artists/${artist.id}`}>
                             <div className="relative group flex flex-col items-center justify-center rounded-md overflow-hidden gap-x-4 bg-orange-400/5 cursor-pointer hover:bg-orange-400/10 transition p-3">
                                 {artist.name}
                             </div>
@@ -88,7 +88,7 @@ const SearchContent: React.FC<SearchContentProps> = ({ songs, error }) => {
             
             {songs.map((song) => (
                 <div key={song.id} className='flex items-center gap-x-4 w-full'>
-                    <Link href={`/lists/${song.id}`}>
+                    <Link href={`/home/lists/${song.id}`}>
                         <MediaItem
                             onClick={() => handleItemClick(song.id)}
                             data={song}
