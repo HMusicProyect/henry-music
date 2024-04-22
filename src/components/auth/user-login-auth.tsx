@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -16,14 +16,15 @@ import { useRouter } from "next/navigation";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-interface IUser {
+
+interface ILoginUser {
   email: string;
   password: string;
 }
 
 export function UserLoginForm({ className, ...props }: UserAuthFormProps) {
 
-  const [data, setData] = useState<IUser>({
+  const [data, setData] = useState<ILoginUser>({
     email: "",
     password: "",
   });
@@ -34,6 +35,7 @@ export function UserLoginForm({ className, ...props }: UserAuthFormProps) {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+
   async function onSubmit(event: React.SyntheticEvent) {
     event.preventDefault();
     setIsLoading(true);
@@ -42,17 +44,21 @@ export function UserLoginForm({ className, ...props }: UserAuthFormProps) {
       ...data,
       redirect: false,
     });
-    console.log("res",res);
     if (res?.error) {
       console.error(res.error);
-      toast({
-        title: "Ooops...",
-        description: res.error,
-        variant: "destructive",
-        action: (
-          <ToastAction altText="Tente Novamente">Tente Novamente</ToastAction>
-        ),
-      });
+      if (res.error === 'not_verified') {
+        // Redirige al usuario a la página de registro
+        router.push('/register');
+      } else {
+        toast({
+          title: "Ooops...",
+          description: res.error,
+          variant: "destructive",
+          action: (
+            <ToastAction altText="Tente Novamente">Tente Novamente</ToastAction>
+          ),
+        });
+      }
     } else {
       router.push("/");
     }
@@ -132,7 +138,7 @@ export function UserLoginForm({ className, ...props }: UserAuthFormProps) {
       </div>
       
       <Button
-        onClick={() => signIn("github", { callbackUrl: "/" })}
+        onClick={() => signIn("google", { callbackUrl: "/" })}
         variant="outline"
         type="button"
         disabled={isLoading}

@@ -8,6 +8,8 @@ export type User = {
   email: string;
   password: string;
   access: boolean;
+  image: string;
+  esta_verificado: boolean;
 };
 
 export type Customer = {

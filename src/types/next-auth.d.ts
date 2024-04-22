@@ -1,15 +1,16 @@
-import nextAuth from "next-auth";
+import "next-auth";
 
 declare module "next-auth" {
     interface Session {
         user: {
-            role: string | undefined;
-            domain: string | undefined;
+            id: string;
+            image: string;
+            name: string;
+            email: string;
+            password: string;
+            rol: string;
+            esta_verificado: boolean;
+            verification_token: string;
         };
     }
-
-    interface User {
-        role: string | undefined;
-        domain: string | undefined;
-    };
 }

@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,7 @@ import { useStore } from '@/store/user.store';
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 interface IUser {
+  id?: string;
   name: string;
   email: string;
   password: string;
@@ -23,7 +24,7 @@ interface IUser {
 export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
   const { toast } = useToast();
 
-  const { postUser } = useStore(); 
+  const {verifyUser, postUser } = useStore(); 
   
   const router = useRouter();
 
@@ -35,13 +36,16 @@ export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+
   async function onSubmit(event: React.SyntheticEvent) {
     event.preventDefault();
     setIsLoading(true);
 
     const response = await postUser(data);
+    // const userId = response?.id;
 
     console.log("USER RESPONSE FORM", response);
+    console.log("USER: ", response);
 
     if (!response.ok) {
         const errorData = await response.json();
@@ -55,8 +59,11 @@ export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
         ),
       });
     } else {
-      console.log(response);
-      router.push("/login");
+      const user = await response.json();
+      console.log("USER", user);
+      await verifyUser(user.id);
+      const name = user?.name.replace(/\s+/g, '');
+      router.push(`/verification/${name}`);
     }
 
     // setTimeout(() => {
@@ -150,7 +157,7 @@ export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
             </div>
         </div>
         <Button
-            onClick={() => signIn("github", { callbackUrl: "/" })}
+            onClick={() => signIn("google", { callbackUrl: "/" })}
             variant="outline"
             type="button"
             disabled={isLoading}
@@ -158,9 +165,9 @@ export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
             {isLoading ? (
             <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
             ) : (
-            <Icons.gitHub className="mr-2 h-4 w-4" />
+            <Icons.google className="mr-2 h-4 w-4" />
             )}{" "}
-            Github
+            Google
         </Button>
         </div>
   );

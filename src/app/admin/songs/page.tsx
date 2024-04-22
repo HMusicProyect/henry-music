@@ -38,8 +38,8 @@ const Songs: React.FC = ({
           <h1 className="text-white text-3xl font-semibold">Songs Dashboard</h1>
         </div>
       </Header>
-      <div onClick={onClick} className="flex items-center justify-end px-6 pb-6 mt-5">
-        <button  className='flex gap-x-2 transition hover:bg-neutral-400/5 px-4 py-2 cursor-pointer rounded-md bg-neutral-900'>
+      <div  className="flex items-center justify-end px-6 pb-6 mt-5">
+        <button onClick={onClick} className='flex gap-x-2 transition hover:bg-neutral-400/5 px-4 py-2 cursor-pointer rounded-md bg-neutral-900'>
           Add Song
         <Plus fill='white' />
         </button>

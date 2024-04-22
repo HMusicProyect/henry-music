@@ -1,50 +1,85 @@
 "use client"
 
-import useUploadSongsModal from '@/store/hooks/useUploadSongModal'
-import {FieldValues, SubmitHandler, useForm} from 'react-hook-form'
-import React, { useState } from 'react'
+import useUploadSongsModal from '@/store/hooks/useUploadSongModal';
+import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
+import React, { useEffect, useState } from 'react';
 import Modal from './Modal';
 import { Input } from '@/components/ui/input';
 import Button from '@/components/ui/header/Button';
 import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
+import useAlbumsStore, { Album } from '@/store/albums.store';
+import useGenreStore, { Genre } from '@/store/genres.store';
+import useArtistStore, { Artist } from '@/store/artist.store';
+import SelectInput from './SelectInput';
+import useStore from '@/store/songs.store';
 
 const UploadSongsModal = () => {
   const uploadModal = useUploadSongsModal();
   const [isLoading, setIsLoading] = useState(false);
+  const { albums, getAlbums, loading: albumLoading, error: albumError } = useAlbumsStore();
+  const { genres, getGenres, loading: genreLoading, error: genreError } = useGenreStore();
+  const { artists, getArtists, loading: artistLoading, error: artistError } = useArtistStore();
+  const { addMusic } = useStore(); 
+  const router = useRouter();
 
-  const {register, handleSubmit, reset} = useForm<FieldValues>({
-      defaultValues:{
-        author:'',
-        title:'',
-        song: null,
-        image: null,
-      }
-  })
+  useEffect(() => {
+    getAlbums();
+    getGenres();
+    getArtists();
+  }, []);
+
+  const { register, handleSubmit, reset } = useForm<FieldValues>({
+    defaultValues: {
+      title: '',
+      pathMusic: '',
+      image: '',
+      albumId: '', 
+      genreId: '',
+      artistId: '',
+    }
+  });
 
   const onChange = (open: boolean) => {
-    if(!open){
+    if (!open) {
       reset();
       uploadModal.onClose()
     }
   }
 
   const onSubmit: SubmitHandler<FieldValues> = async (values) => {
-    try{
-      setIsLoading(true)
+    try {
+      setIsLoading(true);
 
-      const imageFile = values.image?.[0];
-      const songFile = values.song?.[0];
-
-      if(!imageFile || !songFile){
-        
+      if (!values.title || !values.pathMusic || !values.image || !values.albumId || !values.genreId || !values.artistId) {
+        toast.error('Todos los campos son requeridos');
+        return;
       }
-    }catch(error){
-      toast.error("Algo salió mal")
-      
-    }finally{
-      setIsLoading(false)
+
+
+      const { title, pathMusic, image, albumId, genreId, artistId } = values;
+      const newMusic = {
+        name: title,
+        pathMusic,
+        image,
+        AlbumsID: parseInt(albumId),
+        GenreID: parseInt(genreId),
+        ArtistID: parseInt(artistId),
+      };
+
+      await addMusic(newMusic);
+      router.refresh();
+      setIsLoading(false);
+      toast.success('Canción creada correctamente');
+      reset();
+      uploadModal.onClose();
+    } catch (error) {
+      toast.error("Algo salió mal");
+    } finally {
+      setIsLoading(false);
     }
   }
+
   return (
     <Modal
       title="Upload Modal Title"
@@ -62,42 +97,50 @@ const UploadSongsModal = () => {
           placeholder='Song Title'
         />
         <Input 
-          id='author'
+          id='Song Url'
           disabled={isLoading}
-          {...register('author', {required: true})}
-          placeholder='Song Author'
+          {...register('pathMusic', {required: true})}
+          placeholder='Song Url'
         />
-        <div>
-          <div className='pb-1'>
-              Select a song File
-          </div>
-          <Input 
-            id='song'
-            type='file'
-            disabled={isLoading}
-            accept='.mp3'
-            {...register('song', {required: true})}
-          />
-        </div>
-
-        <div>
-          <div className='pb-1'>
-              Select an Image
-          </div>
-          <Input 
-            id='image'
-            type='file'
-            disabled={isLoading}
-            accept='image/*'
-            {...register('image', {required: true})}
-          />
-        </div>
+        <Input 
+          id='image'
+          placeholder='Image Url'
+          disabled={isLoading}
+          {...register('image', {required: true})}
+        />
+         <SelectInput
+          id="albumId"
+          label="Álbum"
+          options={albums}
+          isLoading={isLoading || albumLoading}
+          error={albumError}
+          register={register}
+          required
+        />
+        <SelectInput
+          id="genreId"
+          label="Género"
+          options={genres}
+          isLoading={isLoading || genreLoading}
+          error={genreError}
+          register={register}
+          required
+        />
+        <SelectInput
+          id="artistId"
+          label="Artista"
+          options={artists}
+          isLoading={isLoading || artistLoading}
+          error={artistError}
+          register={register}
+          required
+        />
         <Button disabled={isLoading} type="submit">
           Create Song
         </Button>
       </form>
     </Modal>
-  )
+  );
 }
 
-export default UploadSongsModal
+export default UploadSongsModal;
