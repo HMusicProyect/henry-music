@@ -3,7 +3,7 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useMemo } from 'react';
 import { Home, Search, List } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
-import useStore, { Music } from '@/store/songs.store';
+import useStore from '@/store/songs.store';
 import usePlayer from '@/store/hooks/usePlayer';
 import Box from '../ui/sidebar/Box';
 import SidebarItem from '../ui/sidebar/SidebarItem';
