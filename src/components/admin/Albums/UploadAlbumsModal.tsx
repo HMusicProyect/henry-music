@@ -56,8 +56,8 @@ const UploadAlbumsModal = () => {
 
   return (
     <Modal
-      title="Upload Modal Title"
-      description='Upload Modal description'
+      title="Add New Album"
+      description="Fill in the details below to add a new album."
       isOpen={uploadModal.isOpen}
       onChange={onChange}
     >

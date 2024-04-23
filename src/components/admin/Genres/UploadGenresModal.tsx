@@ -13,7 +13,7 @@ import useGenreStore from '@/store/genres.store';
 const UploadGenresModal = () => {
   const uploadModal = useUploadGenresModal();
   const [isLoading, setIsLoading] = useState(false);
-  const { postGenre } = useGenreStore(); 
+  const { postGenre } = useGenreStore();
   const router = useRouter();
 
   const { register, handleSubmit, reset } = useForm<FieldValues>({
@@ -40,7 +40,7 @@ const UploadGenresModal = () => {
 
       const { name } = values;
       await postGenre(name);
-      
+
       router.refresh();
       setIsLoading(false);
       toast.success('Género creado correctamente');
@@ -55,18 +55,18 @@ const UploadGenresModal = () => {
 
   return (
     <Modal
-      title="Agregar Nuevo Genero"
-      description='Upload Modal description'
+      title="Agregar Nuevo Género"
+      description="Complete los detalles a continuación para agregar un nuevo género."
       isOpen={uploadModal.isOpen}
       onChange={onChange}
     >
       <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-y-4'>
-        <Input 
+        <Input
           id='name'
           disabled={isLoading}
-          {...register('name', {required: true})}
+          {...register('name', { required: true })}
           placeholder='Name of Genre'
-        />   
+        />
         <Button disabled={isLoading} type="submit">
           Create Genre
         </Button>

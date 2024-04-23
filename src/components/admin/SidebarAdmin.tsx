@@ -1,7 +1,7 @@
 "use client";
 import { usePathname } from 'next/navigation';
 import { useEffect, useMemo } from 'react';
-import { Home, Search, List } from 'lucide-react';
+import { Home, Search, List, Users, Music, DiscAlbum, Palette, AudioLines, Disc3 } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
 import useStore from '@/store/songs.store';
 import usePlayer from '@/store/hooks/usePlayer';
@@ -29,31 +29,31 @@ const SidebarAdmin: React.FC<SidebarProps> = ({ children }) => {
             href: '/admin'
         },
         {
-            icon: <Search />,
+            icon: <Users />,
             label: 'Users',
             active: pathname === '/admin/users',
             href: '/admin/users'
         },
         {
-            icon: <Search />,
+            icon: <Music />,
             label: 'Songs',
             active: pathname === '/admin/songs',
             href: '/admin/songs'
         },
         {
-            icon: <Search />,
+            icon: <DiscAlbum />,
             label: 'Albums',
             active: pathname === '/admin/albums',
             href: '/admin/albums'
         },
         {
-            icon: <List />,
+            icon: <Disc3 />,
             label: 'Artists',
             active: pathname === '/admin/artists',
             href: '/admin/artists'
         },
         {
-            icon: <List />,
+            icon: <AudioLines/>,
             label: 'Genres',
             active: pathname === '/admin/genres',
             href: '/admin/genres'
@@ -63,9 +63,8 @@ const SidebarAdmin: React.FC<SidebarProps> = ({ children }) => {
     return (
         <div className={twMerge(`flex h-full`, player.activeId && "h-[calc(100%-80px)]")}>
             <div className="hidden md:flex flex-col gap-y-2 bg-black h-full w-[300px] p-2">
-
                 <Box className="overflow-y-auto h-full">
-                    <div className="flex flex-col justify-between items-center gap-y-4 px-5 py-4">
+                    <div className="flex flex-col h-full justify-around items-center gap-y-4 px-5 py-4">
                         {routes.map((item) => (
                             <SidebarItem key={item.label} {...item} />
                         ))}

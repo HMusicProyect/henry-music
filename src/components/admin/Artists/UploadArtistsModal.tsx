@@ -57,7 +57,7 @@ const UploadArtistsModal = () => {
   return (
     <Modal
       title="Agregar Nuevo Artista"
-      description='Upload Modal description'
+      description="Complete los detalles a continuación para agregar un nuevo artista."
       isOpen={uploadModal.isOpen}
       onChange={onChange}
     >
