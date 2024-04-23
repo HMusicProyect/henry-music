@@ -11,7 +11,8 @@ const nextConfig = {
       'www.clipartkey.com',
       'www.accessselfstorage.com', 
       'worldwildfilms.com',
-      'lh3.googleusercontent.com'
+      'lh3.googleusercontent.com',
+      'hmusic-server-production.up.railway.app' 
     ],
   },
 };
