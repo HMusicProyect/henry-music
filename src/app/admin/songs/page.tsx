@@ -8,7 +8,7 @@ import OptionsDropdown from '@/components/ui/OptionDropdown';
 import { InvoicesTableSkeleton } from '@/components/ui/skeletons';
 import { useOptionsStore } from '@/store/hooks/useOptions';
 import useUploadSongsModal from '@/store/hooks/useUploadSongModal';
-import { Music } from '@/store/songs.store';
+import { Music } from '@/lib/definitions';
 import { Plus } from 'lucide-react';
 import React, { Suspense } from 'react'
 

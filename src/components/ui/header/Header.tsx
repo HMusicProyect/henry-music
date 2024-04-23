@@ -122,7 +122,7 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
                                     <Menu.Item>
                                     {({ active }) => (
                                         <Link
-                                        href={`/userProfile`}
+                                        href={`/home/userProfile`}
                                         className={
                                             classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
                                         >
@@ -133,7 +133,7 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
                                     <Menu.Item>
                                     {({ active }) => (
                                         <Link
-                                        href="#"
+                                        href="/home/any"
                                         className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
                                         onClick={handlePremium}
                                         >

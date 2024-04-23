@@ -7,7 +7,6 @@ const Genres: React.FC = () => {
       <Header className='from-rose-900'>
         <div className="mb-2">
           <h1 className="text-white text-3xl font-semibold">Genres Dashboard</h1>
-         
         </div>
       </Header>
       </div>

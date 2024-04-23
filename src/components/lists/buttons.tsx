@@ -1,6 +1,6 @@
 import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import useStore from '@/store/songs.Store'; 
+import useStore from '@/store/songs.store';
 
 export function CreateMusic() {
   return (

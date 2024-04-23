@@ -3,8 +3,9 @@ import React, { useEffect, useState } from 'react';
 import Header from '@/components/ui/header/Header';
 import SearchInput from '@/components/search/SearchInput';
 import SearchContent from '@/components/search/SearchContent';
-import useStore, { Music } from '@/store/songs.store';
+import useStore from '@/store/songs.store';
 import getSongByTitle from '@/store/actions/getSongsByTitle';
+import { Music } from '@/lib/definitions';
 
 
 interface SearchProps {

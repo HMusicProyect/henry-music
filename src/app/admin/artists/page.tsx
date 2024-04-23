@@ -7,7 +7,6 @@ const Artists: React.FC = () => {
       <Header className='from-red-900'>
         <div className="mb-2">
           <h1 className="text-white text-3xl font-semibold">Artists Dashboard</h1>
-         
         </div>
       </Header>
       </div>

@@ -42,17 +42,15 @@ export function UserLoginForm({ className, ...props }: UserAuthFormProps) {
     
     if (res?.error) {
       setErrors(res.error.split(","));
-      alert('error al iniciar secion')
+      setIsLoading(false);
     }
 
     if (res?.ok) {
       const session = await getSession();
       const user = session?.user;
-      // router.push("/home");
       
       if(user){
           const userName = user.name.replace(/\s/g, '');
-        
           if(user.esta_verificado === false){
                 signOut({ callbackUrl: `${window.location.origin}/verification/${userName}` });
       } else if (user.esta_verificado === true) {
@@ -60,12 +58,6 @@ export function UserLoginForm({ className, ...props }: UserAuthFormProps) {
         }
       }
     }
-
-
-    
-    // setTimeout(() => {
-    //   setIsLoading(false);
-    // }, 5000);
 
     setData({
       email: "",
@@ -100,6 +92,7 @@ export function UserLoginForm({ className, ...props }: UserAuthFormProps) {
               name="email"
               value={data.email}
               onChange={handleChange}
+              required
             />
           </div>
           <div className="grid gap-1">
@@ -116,6 +109,7 @@ export function UserLoginForm({ className, ...props }: UserAuthFormProps) {
               name="password"
               value={data.password}
               onChange={handleChange}
+              required
             />
           </div>
           <Button disabled={isLoading}>
@@ -126,6 +120,15 @@ export function UserLoginForm({ className, ...props }: UserAuthFormProps) {
           </Button>
         </div>
       </form>
+      {errors.length > 0 && (
+        <div className="flex justify-center items-center mt-2">
+          <ul className="mb-0 text-red-500">
+            {errors.map((error) => (
+              <li key={error}>{error}</li>
+            ))}
+          </ul>
+        </div>
+      )}
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
           <span className="w-full border-t" />
@@ -136,15 +139,8 @@ export function UserLoginForm({ className, ...props }: UserAuthFormProps) {
           </span>
         </div>
       </div>
-      {errors.length > 0 && (
-        <div className="alert alert-danger mt-2">
-          <ul className="mb-0">
-            {errors.map((error) => (
-              <li key={error}>{error}</li>
-            ))}
-          </ul>
-        </div>
-      )}
+
+
       
       <Button
         onClick={() => signIn("google", { callbackUrl: "/home" })}

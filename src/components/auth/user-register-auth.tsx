@@ -11,24 +11,19 @@ import { ToastAction } from "@/components/ui/toast";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { useStore } from '@/store/user.store'; 
+import { User } from "@/lib/definitions";
+import { validateUser } from "@/lib/auth/user.auth";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-interface IUser {
-  id?: string;
-  name: string;
-  email: string;
-  password: string;
-}
 
 export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
+
   const { toast } = useToast();
-
   const {verifyUser, postUser } = useStore(); 
-  
   const router = useRouter();
-
-  const [data, setData] = useState<IUser>({
+  const [error, setError] = useState<string | null>(null);
+  const [data, setData] = useState<User>({
     name: "",
     email: "",
     password: "",
@@ -41,15 +36,19 @@ export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
     event.preventDefault();
     setIsLoading(true);
 
-    const response = await postUser(data);
-    // const userId = response?.id;
+    const error = validateUser(data);
+    if (error) {
+        setError(error);
+        setIsLoading(false);
+        return;
+    }
 
-    console.log("USER RESPONSE FORM", response);
-    console.log("USER: ", response);
+    const response = await postUser(data);
 
     if (!response.ok) {
         const errorData = await response.json();
         console.log("ERROR DATA", errorData);
+        setIsLoading(false);
       toast({
         title: "Oooops...",
         description: errorData.error,
@@ -61,14 +60,10 @@ export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
     } else {
       const user = await response.json();
       console.log("USER", user);
-      await verifyUser(user.id);
+      verifyUser(user.id);
       const name = user?.name.replace(/\s+/g, '');
       router.push(`/verification/${name}`);
     }
-
-    // setTimeout(() => {
-    //   setIsLoading(false);
-    // }, 5000);
 
     setData({
       name: "",
@@ -157,7 +152,7 @@ export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
             </div>
         </div>
         <Button
-            onClick={() => signIn("google", { callbackUrl: "/" })}
+            onClick={() => signIn("google", { callbackUrl: "/home" })}
             variant="outline"
             type="button"
             disabled={isLoading}

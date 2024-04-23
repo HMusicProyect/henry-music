@@ -7,10 +7,9 @@ const Users: React.FC = () => {
       <Header className='from-green-900'>
         <div className="mb-2">
           <h1 className="text-white text-3xl font-semibold">User Dashboard</h1>
-         
         </div>
       </Header>
-      </div>
+    </div>
   )
 }
 
