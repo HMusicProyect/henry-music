@@ -22,7 +22,8 @@ export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
   const { toast } = useToast();
   const {verifyUser, postUser } = useStore(); 
   const router = useRouter();
-  const [error, setError] = useState<string | null>(null);
+  const [errors, setErrors] = useState<string[]>([]);
+
   const [data, setData] = useState<User>({
     name: "",
     email: "",
@@ -38,7 +39,7 @@ export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
 
     const error = validateUser(data);
     if (error) {
-        setError(error);
+        setErrors([error]);
         setIsLoading(false);
         return;
     }
@@ -141,6 +142,15 @@ export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
             </Button>
             </div>
         </form>
+        {errors.length > 0 && (
+        <div className="flex justify-center items-center mt-2">
+          <ul className="mb-0 text-red-500">
+            {errors.map((error) => (
+              <li key={error}>{error}</li>
+            ))}
+          </ul>
+        </div>
+      )}
         <div className="relative">
             <div className="absolute inset-0 flex items-center">
             <span className="w-full border-t" />
