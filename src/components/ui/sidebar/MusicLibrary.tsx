@@ -1,10 +1,10 @@
 "use client"
 
-import { Music } from '@/store/songs.store';
 import { Plus, Library } from 'lucide-react';
 import MediaItem from './MediaItem';
 import usePlayer from '@/store/hooks/usePlayer';
 import useOnPlay from '@/store/hooks/useOnPlay';
+import { Music } from '@/lib/definitions';
 
 interface MusicLibraryProps {
     songs: Music[];
