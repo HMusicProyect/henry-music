@@ -43,13 +43,12 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
     const handlePremium = async () => {
         try {
             const usuario = userSession.email
+            console.log(usuario)
             const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pay`, {
-            //enviar el usuario que hace el pago
-            name:usuario
+            email:usuario
             });
             window.location.href = response.data.url
         } catch (error) {
-            // Si ocurre un error durante la solicitud, puedes manejarlo aquí
             console.error('Error:', error);
         }
     };
