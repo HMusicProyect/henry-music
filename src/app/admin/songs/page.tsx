@@ -6,9 +6,9 @@ import Header from '@/components/ui/header/Header'
 import { Input } from '@/components/ui/input';
 import OptionsDropdown from '@/components/ui/OptionDropdown';
 import { InvoicesTableSkeleton } from '@/components/ui/skeletons';
+import { Music } from '@/lib/definitions';
 import { useOptionsStore } from '@/store/hooks/useOptions';
 import useUploadSongsModal from '@/store/hooks/useUploadSongModal';
-import { Music } from '@/lib/definitions';
 import { Plus } from 'lucide-react';
 import React, { Suspense } from 'react'
 

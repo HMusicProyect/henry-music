@@ -2,17 +2,17 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import PlayButton from '../home/PlayButton';
-import { Artist } from '@/lib/definitions';
+import { Artist } from '@/store/artist.store';
 
 interface ArtistItemProps {
-    artist: Artist; // Ajusta el tipo de acuerdo a la estructura de tu objeto de artista
+    artist: Artist;
     index: number;
 }
 
 const ArtistItem: React.FC<ArtistItemProps> = ({ artist, index }) => {
     return (
         <Link href={`/artists/${artist.id}`}>
-            <div className="relative group flex flex-col items-center justify-center rounded-md overflow-hidden gap-x-4 bg-orange-400/5 cursor-pointer hover:bg-orange-400/10 transition p-3">
+            <div className="mt-4 relative group flex flex-col items-center justify-center rounded-md overflow-hidden gap-x-4 bg-orange-400/5 cursor-pointer hover:bg-orange-400/10 transition p-3">
                 <div className='relative aspect-square w-full h-full rounded-md overflow-hidden'>
                     <Image
                         className='object-cover'
