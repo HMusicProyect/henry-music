@@ -7,7 +7,6 @@ import { Input } from '@/components/ui/input';
 import Button from '@/components/ui/header/Button';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
-
 import useUploadGenresModal from '@/store/hooks/useUploadGenresModal';
 import useGenreStore from '@/store/genres.store';
 
