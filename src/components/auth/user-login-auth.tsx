@@ -1,12 +1,12 @@
 "use client";
 import { cn } from "@/lib/utils";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
 
-import { getSession, signIn, signOut } from "next-auth/react";
+import { SignInResponse, getSession, signIn, signOut } from "next-auth/react";
 
 import { useRouter } from "next/navigation";
 
@@ -20,6 +20,7 @@ interface ILoginUser {
 
 export function UserLoginForm({ className, ...props }: UserAuthFormProps) {
   const [errors, setErrors] = useState<string[]>([]);
+  const [res, setRes] = useState<SignInResponse | {}>({});
 
   const [data, setData] = useState<ILoginUser>({
     email: "",
@@ -31,40 +32,42 @@ export function UserLoginForm({ className, ...props }: UserAuthFormProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
 
-  async function onSubmit(event: React.SyntheticEvent) {
-    event.preventDefault();
-    setIsLoading(true);
+async function onSubmit(event: React.SyntheticEvent) {
+  event.preventDefault();
+  setIsLoading(true);
 
-    const res = await signIn("credentials", {
-      ...data,
-      redirect: false,
-    });
-    
-    if (res?.error) {
-      setErrors(res.error.split(","));
-      setIsLoading(false);
-    }
+  const response = await signIn("credentials", {
+    ...data,
+    redirect: false,
+  });
 
-    if (res?.ok) {
+  if (response?.error) {
+    setErrors(response.error.split(","));
+    setIsLoading(false);
+  }
+
+  if (response) {
+    setRes(response);
+  }
+}
+useEffect(() => {
+  async function checkSession() {
+    if ('ok' in res && res.ok) {
       const session = await getSession();
       const user = session?.user;
-      
-      if(user){
-          const userName = user.name.replace(/\s/g, '');
-          if(user.esta_verificado === false){
-                signOut({ callbackUrl: `${window.location.origin}/verification/${userName}` });
-      } else if (user.esta_verificado === true) {
-            router.push("/home");
+      if (user) {
+        const userName = user.name.replace(/\s/g, '');
+        if (user.esta_verificado === false) {
+          signOut({ callbackUrl: `${window.location.origin}/verification/${userName}` });
+        } else if (user.esta_verificado === true) {
+          router.push("/home");
         }
       }
     }
-
-    setData({
-      email: "",
-      password: "",
-    });
-    setIsLoading(false);
   }
+
+  checkSession();
+}, [res]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setData((prev) => {
@@ -109,6 +112,7 @@ export function UserLoginForm({ className, ...props }: UserAuthFormProps) {
               name="password"
               value={data.password}
               onChange={handleChange}
+              autoComplete="current-password" // Cambia 'autocomplete' a 'autoComplete'
               required
             />
           </div>

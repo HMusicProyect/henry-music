@@ -5,13 +5,13 @@ import { InvoicesTableSkeleton } from '@/components/ui/skeletons';
 import { Suspense } from 'react';
 import Header from '@/components/ui/header/Header';
 import useOnPlay from '@/store/hooks/useOnPlay';
-import { Music } from '@/store/songs.store';
 import Player from '@/components/ui/player';
 import { Input } from '@/components/ui/input';
 import OptionsDropdown from '@/components/ui/OptionDropdown';
 import TableList from '@/components/lists/TableList';
 import TableCompact from '@/components/lists/TableCompact';
 import { useOptionsStore } from '@/store/hooks/useOptions';
+import { Music } from '@/lib/definitions';
 
 export default function Page({
   searchParams,

@@ -1,14 +1,35 @@
 // userUtils.ts
-import { User } from '@/lib/definitions';
+
+export type User = {
+    id: string;
+    image?: string;
+    name?: string;
+    email?: string;
+    password?: string;
+};
+
+export type ValidationUser = {
+    id?: string;
+    image?: string;
+    name?: string;
+    email?: string;
+    password?: string;
+};
 
 export async function getUser(email: string, password: string): Promise<User> {
-        try {
+    try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/login?email=${email}&password=${password}`);
         if (!response.ok) {
             throw new Error('Failed to fetch user.');
         }
         const user = await response.json();
         if (user.error) throw user;
+
+        // Asegúrate de que el id siempre sea una cadena
+        if (user.id === undefined) {
+            user.id = '';
+        }
+
         return user;
     } catch (error) {
         console.error('Failed to fetch user:', error);
@@ -35,7 +56,7 @@ export const validatePassword = (password: string) => {
 };
 
 
-export const validateUser = (user: User) => {
+export const validateUser = (user: ValidationUser) => {
     if (!user.password) {
         return "La contraseña es requerida";
     }

@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
-import React, { useEffect, useState } from "react";
+import React, {useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -20,9 +20,10 @@ interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
 
   const { toast } = useToast();
-  const {verifyUser, postUser } = useStore(); 
+  const {user ,verifyUser, postUser } = useStore(); 
   const router = useRouter();
-  const [error, setError] = useState<string | null>(null);
+  const [errors, setErrors] = useState<string[]>([]);
+
   const [data, setData] = useState<User>({
     name: "",
     email: "",
@@ -37,8 +38,9 @@ export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
     setIsLoading(true);
 
     const error = validateUser(data);
+
     if (error) {
-        setError(error);
+        setErrors([error]);
         setIsLoading(false);
         return;
     }
@@ -47,7 +49,6 @@ export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
 
     if (!response.ok) {
         const errorData = await response.json();
-        console.log("ERROR DATA", errorData);
         setIsLoading(false);
       toast({
         title: "Oooops...",
@@ -59,10 +60,11 @@ export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
       });
     } else {
       const user = await response.json();
-      console.log("USER", user);
-      verifyUser(user.id);
+    if(user.id){
+      await verifyUser(user.id);
       const name = user?.name.replace(/\s+/g, '');
       router.push(`/verification/${name}`);
+    }
     }
 
     setData({
@@ -141,6 +143,15 @@ export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
             </Button>
             </div>
         </form>
+        {errors.length > 0 && (
+        <div className="flex justify-center items-center mt-2">
+          <ul className="mb-0 text-red-500">
+            {errors.map((error) => (
+              <li key={error}>{error}</li>
+            ))}
+          </ul>
+        </div>
+      )}
         <div className="relative">
             <div className="absolute inset-0 flex items-center">
             <span className="w-full border-t" />

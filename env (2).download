@@ -1,0 +1,7 @@
+NEXT_PUBLIC_BACKEND_URL=http://localhost:3001
+NEXTAUTH_SECRET=your-secret-string
+
+NODE_ENV=development
+NEXTAUTH_URL=http://localhost:3000
+GOOGLE_CLIENT_ID=1025070809050-5jods7hf0hooi3g490fgsqedqdtr8s5f.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=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

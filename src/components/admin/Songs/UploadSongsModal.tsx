@@ -8,11 +8,12 @@ import { Input } from '@/components/ui/input';
 import Button from '@/components/ui/header/Button';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
-import useAlbumsStore, { Album } from '@/store/albums.store';
-import useGenreStore, { Genre } from '@/store/genres.store';
-import useArtistStore, { Artist } from '@/store/artist.store';
-import SelectInput from '../ui/SelectInput';
+import useAlbumsStore from '@/store/albums.store';
+import useGenreStore from '@/store/genres.store';
+import useArtistStore from '@/store/artist.store';
+
 import useStore from '@/store/songs.store';
+import SelectInput from '../ui/SelectInput';
 
 const UploadSongsModal = () => {
   const uploadModal = useUploadSongsModal();
@@ -68,6 +69,7 @@ const UploadSongsModal = () => {
       };
 
       await addMusic(newMusic);
+      
       router.refresh();
       setIsLoading(false);
       toast.success('Canción creada correctamente');
@@ -108,7 +110,7 @@ const UploadSongsModal = () => {
           disabled={isLoading}
           {...register('image', {required: true})}
         />
-         <SelectInput
+        <SelectInput
           id="albumId"
           label="Álbum"
           options={albums}

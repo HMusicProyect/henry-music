@@ -1,6 +1,7 @@
 "use client"
 
-import { Music } from "@/store/songs.store";
+
+import { Music } from "@/lib/definitions";
 import { capitalizeWords } from "@/utils/CapitalizeWords";
 import Image from "next/image";
 
@@ -14,7 +15,7 @@ const MediaItem: React.FC<MediaItemProps> = ({ data, onClick }) => {
     const capitalizedMusicName = capitalizeWords(data.name);
     const handleClick = () => {
         if (onClick) {
-            return onClick(data.id)
+            return onClick(data.id!)
         }
 
         //TODO reproducir la musica
@@ -26,7 +27,7 @@ const MediaItem: React.FC<MediaItemProps> = ({ data, onClick }) => {
         >
             <div className="relative rounded-md min-h-[48px] min-w-[48px] overflow-hidden">
                 <Image 
-                    fill 
+                    layout='fill' 
                     src={data.image} 
                     alt="Media Item" 
                     className="object-cover" 

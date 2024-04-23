@@ -29,7 +29,7 @@ const SongsPage: React.FC<SongsPageProps> = ({ songs }) => {
                     key={item.id}
                     onClick={(id: number) => onPlay(id.toString())}
                     data={item}
-                    id={item.id}
+                    id={item.id!}
                 />
             ))}
         </div>

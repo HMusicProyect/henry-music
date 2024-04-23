@@ -44,12 +44,15 @@ export const useStore = create<Store>((set, get) => ({
     const state = get();
     return state.users.find((user) => user.id === id);
   },
+  
   verifyUser: async (id: string) => {
+
     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/verification?id=${id}`);
     if(!response) return response;
     
     if (response.ok) {
       const updatedUser = await response.json();
+
       set((state) => ({
         user: state.user.id === id ? updatedUser : state.user
       }));

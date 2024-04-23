@@ -1,6 +1,4 @@
 "use client"
-
-import { Music } from '@/store/songs.store'
 import React, { useEffect, useState } from 'react'
 import MediaItem from './sidebar/MediaItem';
 import { Play, Pause, StepBack, StepForward, Volume1, Volume2 } from 'lucide-react';
@@ -11,6 +9,7 @@ import {ModalComponent} from '@/components/ui/Modal/Modal';
 import { useSession } from 'next-auth/react';
 import { useRouter } from "next/navigation";
 import Link from 'next/link';
+import { Music } from '@/lib/definitions';
 
 interface PlayerContentProps {
     song: Music;

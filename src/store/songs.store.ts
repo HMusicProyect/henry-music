@@ -48,10 +48,9 @@ const useStore = create<State>((set) => ({
     deleteMusic: async (id) => {
         try {
             set({ loading: true, error: null });
-            // Lógica para eliminar un Music de la API o cualquier otra fuente de datos
             await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/songs/${id}`, { method: 'DELETE' });
             set((state) => ({
-                todos: state.todos.filter((Music) => Music.id !== id),
+                todos: state.todos.filter((Music) => Music?.id !== id),
                 loading: false,
             }));
         } catch (error) {
@@ -75,7 +74,6 @@ const useStore = create<State>((set) => ({
             const music = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/songs/${id}`)
                 .then((res) => res.json());
             set({ todos: [music], loading: false });
-            console.log();
         } catch (error) {
             set({ loading: false, error: 'Error al buscar la canción' });
         }

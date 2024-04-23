@@ -1,7 +1,6 @@
 "use client";
 import { useEffect } from 'react';
 import useStore from '@/store/songs.store';
-import Link from 'next/link';
 import { capitalizeWords } from '@/utils/CapitalizeWords';
 
 export default function TableSongsCompact({

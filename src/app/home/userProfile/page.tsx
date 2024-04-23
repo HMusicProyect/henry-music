@@ -22,6 +22,7 @@ const ProfilePage = () => {
     const [passwordFieldsEnabled, setPasswordFieldsEnabled] = useState(false);
     const [isEditingPassword, setIsEditingPassword] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
+    const [message, setMessage]= useState<string[]>([]);
 
     if(status === "loading") return <p>Cargando...</p>;
 
@@ -30,17 +31,15 @@ const ProfilePage = () => {
 
     const verifyCurrentPassword = async () => {
         try {
-            // Realiza una solicitud POST a tu servidor para verificar la contraseña
             const {email, password} = userSession;
-            console.log('password:', password)
-            console.log('currentPassword:', currentPassword)
 
             if(password === currentPassword){
                 setPasswordFieldsEnabled(true);
             } else {
-                alert('La contraseña actual es incorrecta');
+                setMessage(['La contraseña actual es incorrecta']);
             }
         } catch (error) {
+            setMessage(['Error al verificar la contraseña actual']);
             console.error('Failed to verify password:', error);
         }
     };
@@ -57,9 +56,9 @@ const ProfilePage = () => {
         setUser(prevUser => ({ ...prevUser, name: event.target.value }));
     };
 
-    const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setUser(prevUser => ({ ...prevUser, email: event.target.value }));
-    };
+    // const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    //     setUser(prevUser => ({ ...prevUser, email: event.target.value }));
+    // };
 
     const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setUser(prevUser => ({ ...prevUser, password: event.target.value }));
@@ -76,18 +75,17 @@ const handlePasswordSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
     if (!user) {
-        alert('No hay información de usuario disponible');
+        setMessage(['No hay información de usuario disponible']);
         return;
     }
 
     if (user.password !== confirmPassword) {
-        alert('Las contraseñas no coinciden');
+        setMessage(['Las contraseñas no coinciden']);
         return;
     }
-    console.log('user:', currentPassword, 'user.password ', user.password, 'userSession?.email', userSession?.email )
 
     try {
-        const response = await fetch(`http://localhost:3001/users/${userSession?.id}/editPasword`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users/${userSession?.id}/editPasword`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -100,11 +98,13 @@ const handlePasswordSubmit = async (event: React.FormEvent) => {
         });
 
         if (!response.ok) {
+            setMessage(['Error al actualizar la contraseña']);
             throw new Error('Failed to update password');
         }
 
-        alert('Contraseña actualizada con éxito');
+        setMessage(['Contraseña actualizada con éxito']);
     } catch (error) {
+        setMessage(['Error al actualizar la contraseña']);
         console.error('Failed to update password:', error);
     }
 };
@@ -112,10 +112,6 @@ const handlePasswordSubmit = async (event: React.FormEvent) => {
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        console.log('user:', userSession?.id)
-
-    
-
         try {
             
             const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users/${userSession?.email}`, {
@@ -127,6 +123,7 @@ const handlePasswordSubmit = async (event: React.FormEvent) => {
             });
 
             if (!response.ok) {
+                setMessage(['Error al actualizar el usuario']);
                 throw new Error('Failed to update user');
             }
 
@@ -135,7 +132,7 @@ const handlePasswordSubmit = async (event: React.FormEvent) => {
             
             setUser(data);
 
-            alert('Usuario actualizado con éxito');
+            setMessage(['Usuario actualizado con éxito']);
         } catch (error) {
             console.error('Failed to update user:', error);
         }
@@ -160,12 +157,9 @@ const handlePasswordSubmit = async (event: React.FormEvent) => {
                     className="rounded-full w-full h-full object-cover absolute inset-0" 
                     src={imageUrl}
                     alt="img perfil"
-                    width={1000}
-                    height={1000}
-                    quality={100}
+                    layout='fill' 
                 />
         </div>
-
         <div>
             {!isEditingPassword && (
                 <button 
@@ -200,13 +194,22 @@ const handlePasswordSubmit = async (event: React.FormEvent) => {
                         onSubmit={handleSubmit}
                         handlePhotoChange={handlePhotoChange}
                         handleNameChange={handleNameChange}
-                        handleEmailChange={handleEmailChange}
+                        // handleEmailChange={handleEmailChange}
                     />
                 ) : (
                     <UserInfo user={userSession}/>
                 )
             }
         </div>
+        {message.length > 0 && (
+            <div className="flex justify-center items-center mt-2">
+            <ul className="mb-0 text-red-500">
+                {message.map((error) => (
+                <li key={error}>{error}</li>
+                ))}
+            </ul>
+            </div>
+        )}
     </div>
     );
 };

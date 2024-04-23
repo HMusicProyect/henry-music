@@ -6,7 +6,7 @@ import { twMerge } from 'tailwind-merge';
 import Box from './Box';
 import SidebarItem from './SidebarItem';
 import MusicLibrary from './MusicLibrary';
-import useStore, { Music } from '@/store/songs.store';
+import useStore from '@/store/songs.store';
 import usePlayer from '@/store/hooks/usePlayer';
 
 interface SidebarProps {

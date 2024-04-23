@@ -1,14 +1,13 @@
 "use client"
 
-import { Fragment, useEffect, useState } from 'react'
-import { Disclosure, Menu, Transition } from '@headlessui/react'
+import { Fragment, useState } from 'react'
+import { Menu, Transition } from '@headlessui/react'
 import { useRouter } from "next/navigation";
 import { twMerge } from 'tailwind-merge'
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Home, Search } from 'lucide-react';
 import Button from "./Button";
 import { useSession, signOut } from 'next-auth/react'
-import AuthButton from '@/components/auth/auth-button';
 import Image from 'next/image';
 import Link from 'next/link';
 import axios from "axios"
@@ -25,8 +24,6 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
     const { data: session } = useSession();
     
     const userSession: User = session?.user!;
-
-  
 
     function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
@@ -45,16 +42,11 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
 
     const handlePremium = async () => {
         try {
-            
-            console.log(userSession.email)
             const usuario = userSession.email
             const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pay`, {
             //enviar el usuario que hace el pago
             name:usuario
             });
-            
-            console.log('Respuesta:', response.data);
-
             window.location.href = response.data.url
         } catch (error) {
             // Si ocurre un error durante la solicitud, puedes manejarlo aquí
@@ -91,9 +83,12 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
                 <div className="flex justify-between items-center gap-x-4">
                     {session ? (
                         <>
-                            <AuthButton 
-                                page="/"
-                            />
+                            <Button
+                                onClick={handleSignOut}
+                                className="bg-white px-6 py-2"
+                            >
+                                Log in
+                            </Button>
                             <Menu as="div" className="relative ml-3 bg-gradient-to-b from-transparent to-black rounded-full">
                                 <div>
                                 <Menu.Button className="relative m-1 flex rounded-full bg-transparent text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
@@ -101,11 +96,10 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
                                     <span className="sr-only">Open user menu</span>
                                     <Image
                                         className="h-13 w-20 rounded-full"
-                                        // src={`${user?.image}` || '/images/default-profile.png'}
                                         src={`${userSession?.image}` || `/images/default-profile.png`}
                                         alt="img perfil"
-                                        width={1000}
-                                        height={1000}
+                                        width={100}
+                                        height={100}
                                     />
                                 </Menu.Button>
                                 </div>
