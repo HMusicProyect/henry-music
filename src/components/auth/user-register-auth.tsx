@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
-import React, { useEffect, useState } from "react";
+import React, {useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -38,6 +38,7 @@ export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
     setIsLoading(true);
 
     const error = validateUser(data);
+
     if (error) {
         setErrors([error]);
         setIsLoading(false);

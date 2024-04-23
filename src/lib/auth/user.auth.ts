@@ -8,6 +8,14 @@ export type User = {
     password?: string;
 };
 
+export type ValidationUser = {
+    id?: string;
+    image?: string;
+    name?: string;
+    email?: string;
+    password?: string;
+};
+
 export async function getUser(email: string, password: string): Promise<User> {
     try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/login?email=${email}&password=${password}`);
@@ -48,7 +56,7 @@ export const validatePassword = (password: string) => {
 };
 
 
-export const validateUser = (user: User) => {
+export const validateUser = (user: ValidationUser) => {
     if (!user.password) {
         return "La contraseña es requerida";
     }
