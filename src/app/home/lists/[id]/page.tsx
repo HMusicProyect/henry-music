@@ -46,8 +46,8 @@ export default function MusicPlayer({ params }: { params: Props }) {
 
     const handlePlayClick = () => {
         if (currentSong) {
-            player.setId(currentSong.id.toString());
-            player.setIds(todos.map((song) => song.id.toString()));
+            player.setId(currentSong.id!.toString());
+            player.setIds(todos.map((song) => song.id!.toString()));
         }
     };
 
