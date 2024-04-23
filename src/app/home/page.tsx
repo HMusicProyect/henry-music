@@ -45,7 +45,7 @@ const Home: React.FC = () => {
       <div className="mt-2 mb-7 px-6">
         <div className="flex justify-between items-center">
           <h1 className="text-white text-2xl font-semibold">Newest Songs</h1>
-          <Link href="/lists">
+          <Link href="/home/lists">
             <h2 className="text-xl hover:bg-neutral-400/10 p-2 rounded-md cursor-pointer">
                   View More
             </h2>

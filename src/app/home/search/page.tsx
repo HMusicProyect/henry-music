@@ -3,10 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Header from '@/components/ui/header/Header';
 import SearchInput from '@/components/search/SearchInput';
 import SearchContent from '@/components/search/SearchContent';
-import useStore from '@/store/songs.store';
-import getSongByTitle from '@/store/actions/getSongsByTitle';
-import { Music } from '@/lib/definitions';
-
+import getSongByTitle, { SearchResults } from '@/store/actions/getSongsByTitle';
 
 interface SearchProps {
   searchParams: {
@@ -15,43 +12,31 @@ interface SearchProps {
 }
 
 const Search = ({ searchParams }: SearchProps) => {
-
-  const { todos, getMusic } = useStore();
-  const [songs, setSongs] = useState<Music[]>([]);
+  const [searchResults, setSearchResults] = useState<SearchResults | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const loadSongsByTitle = async () => {
+    const loadSearchResults = async () => {
       try {
-        const fetchedSongs = await getSongByTitle(searchParams.title);
-        setSongs(fetchedSongs);
-        
-        // Si no se encuentran resultados en la búsqueda, establecer el mensaje de error
-        if (fetchedSongs.length === 0) {
+        const data = await getSongByTitle(searchParams.title);
+        setSearchResults(data);
+        if (!data || Object.values(data).every(val => !val || val.length === 0)) {
           setError('No se encontraron resultados para: ' + searchParams.title);
         } else {
           setError(null);
         }
       } catch (error) {
-        setError('Error al cargar las canciones');
+        setError('Error al cargar los resultados de búsqueda');
       }
     };
-  
-    // Solo cargar canciones si hay un título de canción proporcionado
-    if (searchParams?.title?.trim() !== '') {
-      loadSongsByTitle();
+
+    if (searchParams.title && searchParams.title.trim() !== '') {
+      loadSearchResults();
     } else {
-      // Si no hay ningún título de canción, vacía la lista de canciones y elimina cualquier mensaje de error
-      setSongs([]);
+      setSearchResults(null);
       setError(null);
     }
-  }, [searchParams.title, getMusic]);
-  
-
-  useEffect(() => {
-    getMusic();
-  }, []);
-
+  }, [searchParams.title]);
 
   return (
     <div className="bg-neutral-900 rounded-lg h-full w-full overflow-hidden overflow-y-auto">
@@ -63,12 +48,18 @@ const Search = ({ searchParams }: SearchProps) => {
       <div className="mt-2 mb-7 px-6 flex justify-between items-center">
         <SearchInput />
       </div>
+      {!searchResults && (
+        <div className="text-white text-2xl font-semibold flex items-center justify-center min-h-[40vh]">
+          <p>
+            ¡Comienza tu camino con H-Music!
+          </p>
+        </div>
+      )}
       <div className="mt-2 mb-7 px-6 ">
-        <SearchContent songs={songs} error={error} />
+        {searchResults && <SearchContent searchResults={searchResults} searchParams={searchParams} error={error} />}
       </div>
     </div>
   );
 };
 
 export default Search;
-

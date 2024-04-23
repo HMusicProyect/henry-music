@@ -1,7 +1,7 @@
+"use client"
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import qs from 'query-string'
-
 import useDebounce from '@/store/hooks/useDebounce';
 import { Input } from '../ui/input';
 

@@ -3,7 +3,7 @@
 import useUploadSongsModal from '@/store/hooks/useUploadSongModal';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import React, { useEffect, useState } from 'react';
-import Modal from './Modal';
+import Modal from '../ui/Modal';
 import { Input } from '@/components/ui/input';
 import Button from '@/components/ui/header/Button';
 import toast from 'react-hot-toast';
@@ -11,8 +11,9 @@ import { useRouter } from 'next/navigation';
 import useAlbumsStore from '@/store/albums.store';
 import useGenreStore from '@/store/genres.store';
 import useArtistStore from '@/store/artist.store';
-import SelectInput from './SelectInput';
+
 import useStore from '@/store/songs.store';
+import SelectInput from '../ui/SelectInput';
 
 const UploadSongsModal = () => {
   const uploadModal = useUploadSongsModal();

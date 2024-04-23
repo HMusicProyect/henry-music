@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import PlayButton from '../home/PlayButton';
-import { Artist } from '@/lib/definitions';
+import { Artist } from '@/store/artist.store';
 
 interface ArtistItemProps {
     artist: Artist;
