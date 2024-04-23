@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from 'react';
-import useStore, { Music } from '@/store/songs.store';
+import useStore from '@/store/songs.store';
 import { useSession } from 'next-auth/react';
 import Header from '@/components/ui/header/Header';
 import { FastAverageColor } from 'fast-average-color';
@@ -9,6 +9,7 @@ import Image from 'next/image';
 import { capitalizeWords } from '@/utils/CapitalizeWords';
 import { Play } from 'lucide-react';
 import usePlayer from '@/store/hooks/usePlayer';
+import { Music } from '@/lib/definitions';
 
 interface Props {
     id: number;
