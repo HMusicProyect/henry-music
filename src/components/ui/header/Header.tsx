@@ -8,7 +8,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Home, Search } from 'lucide-react';
 import Button from "./Button";
 import { useSession, signOut } from 'next-auth/react'
-import AuthButton from "@/components/auth-button";
+import AuthButton from '@/components/auth/auth-button';
 import Image from 'next/image';
 import Link from 'next/link';
 import axios from "axios"
@@ -48,19 +48,19 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
             
             console.log(userSession.email)
             const usuario = userSession.email
-          const response = await axios.post('http://localhost:3001/pay', {
-           //enviar el usuario que hace el pago
-           name:usuario
-          });
-          
-          console.log('Respuesta:', response.data);
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pay`, {
+            //enviar el usuario que hace el pago
+            name:usuario
+            });
+            
+            console.log('Respuesta:', response.data);
 
-          window.location.href = response.data.url
+            window.location.href = response.data.url
         } catch (error) {
-          // Si ocurre un error durante la solicitud, puedes manejarlo aquí
-          console.error('Error:', error);
+            // Si ocurre un error durante la solicitud, puedes manejarlo aquí
+            console.error('Error:', error);
         }
-      };
+    };
 
 
     return (
@@ -102,7 +102,7 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
                                     <Image
                                         className="h-13 w-20 rounded-full"
                                         // src={`${user?.image}` || '/images/default-profile.png'}
-                                        src={`${user?.image}`}
+                                        src={`${userSession?.image}` || `/images/default-profile.png`}
                                         alt="img perfil"
                                         width={1000}
                                         height={1000}
@@ -131,16 +131,16 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
                                     )}
                                     </Menu.Item>
                                     <Menu.Item>
-                      {({ active }) => (
-                        <Link
-                          href="#"
-                          className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
-                          onClick={handlePremium}
-                        >
-                          Premium
-                        </Link>
-                      )}
-                    </Menu.Item>
+                                    {({ active }) => (
+                                        <Link
+                                        href="#"
+                                        className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
+                                        onClick={handlePremium}
+                                        >
+                                        Premium
+                                        </Link>
+                                    )}
+                                    </Menu.Item>
             {/* 
 
                                     <Menu.Item>
