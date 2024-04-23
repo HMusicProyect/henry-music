@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import PlayButton from '../home/PlayButton';
-import { Artist } from '@/store/artist.store';
+import { Artist } from '@/lib/definitions';
 
 interface ArtistItemProps {
     artist: Artist; // Ajusta el tipo de acuerdo a la estructura de tu objeto de artista

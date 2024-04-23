@@ -7,7 +7,6 @@ const Albums: React.FC = () => {
       <Header className='from-purple-900'>
         <div className="mb-2">
           <h1 className="text-white text-3xl font-semibold">Albums Dashboard</h1>
-         
         </div>
       </Header>
       </div>

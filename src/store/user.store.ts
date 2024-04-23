@@ -1,10 +1,7 @@
+import { User } from '@/lib/definitions';
 import { create } from 'zustand';
 
-type User = {
-  id?: string;
-  name: string;
-  email: string;
-};
+
 
 type Store = {
   user: User;
@@ -17,11 +14,13 @@ type Store = {
 
 export const useStore = create<Store>((set, get) => ({
   users: [],
+
   user: {
     id: '',
     name: '',
     email: ''
   },
+  
   fetchUsers: async () => {
     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users`);
     const users = await response.json();

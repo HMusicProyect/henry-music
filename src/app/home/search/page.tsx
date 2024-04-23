@@ -37,7 +37,7 @@ const Search = ({ searchParams }: SearchProps) => {
     };
   
     // Solo cargar canciones si hay un título de canción proporcionado
-    if (searchParams.title.trim() !== '') {
+    if (searchParams?.title?.trim() !== '') {
       loadSongsByTitle();
     } else {
       // Si no hay ningún título de canción, vacía la lista de canciones y elimina cualquier mensaje de error

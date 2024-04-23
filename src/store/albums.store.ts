@@ -1,10 +1,6 @@
+import { Album } from '@/lib/definitions';
 import { create } from 'zustand';
 
-export interface Album {
-    id: number;
-    name: string;
-    image: string;
-}
 
 export interface State {
     albums: Album[];
