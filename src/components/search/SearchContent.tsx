@@ -54,7 +54,7 @@ const SearchContent: React.FC<SearchContentProps> = ({ songs, error }) => {
         case 'Songs':
             filteredContent = songs.map((song) => (
                 <div key={song.id} className='flex items-center gap-x-4 w-full'>
-                    <Link href={`/lists/${song.id}`}>
+                    <Link href={`/home/lists/${song.id}`}>
                         <MediaItem
                             onClick={() => handleItemClick(song?.id!)}
                             data={song}
@@ -96,7 +96,7 @@ const SearchContent: React.FC<SearchContentProps> = ({ songs, error }) => {
                     <h3 className='text-white text-2xl font-semibold'>Songs</h3>
                     {songs.map((song) => (
                         <div key={song.id} className='flex items-center gap-x-4 w-full'>
-                            <Link href={`/lists/${song.id}`}>
+                            <Link href={`/home/lists/${song.id}`}>
                                 <MediaItem
                                     onClick={() => handleItemClick(song.id!)}
                                     data={song}
