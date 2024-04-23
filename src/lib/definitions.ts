@@ -37,7 +37,7 @@ export interface Album {
 
 
 export interface Music {
-    id?: number;
+    id: number;
     image: string;
     name: string;
     pathMusic?: string;

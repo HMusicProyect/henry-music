@@ -1,9 +1,9 @@
-import { Music } from '@/store/songs.store';
 import Image from 'next/image';
 import React from 'react'
 import PlayButton from './PlayButton';
 import { useRouter } from 'next/navigation';
 import { capitalizeWords } from '@/utils/CapitalizeWords';
+import { Music } from '@/lib/definitions';
 
 
 

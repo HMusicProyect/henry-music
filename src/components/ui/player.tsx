@@ -7,23 +7,23 @@ import PlayerContent from './PlayerContent';
 
 
 const Player = () => {
-  const player = usePlayer();
-  const { todos } = useStore();
+    const player = usePlayer();
+    const { todos } = useStore();
 
-  const numericId = player.activeId && parseInt(player.activeId, 10);
-  const activeSong = todos.find(song => song.id === numericId);
+    const numericId = player.activeId && parseInt(player.activeId, 10);
+    const activeSong = Array.isArray(todos) ? todos.find(song => song.id === numericId) : undefined;
 
-  return (
-      <div className='fixed bottom-0 bg-black w-full py-2 px-4'>
-          {activeSong && (
-              <PlayerContent 
-                  key={activeSong.id} 
-                  song={activeSong}
-                  songUrl={activeSong.pathMusic}
-              />
-          )}
-      </div>
-  );
+    return (
+        <div className='fixed bottom-0 bg-black w-full py-2 px-4'>
+            {activeSong && (
+                <PlayerContent 
+                    key={activeSong.id} 
+                    song={activeSong}
+                    songUrl={activeSong.pathMusic}
+                />
+            )}
+        </div>
+    );
 }
 
 export default Player

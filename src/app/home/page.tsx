@@ -56,9 +56,9 @@ const Home: React.FC = () => {
           <h2 className="text-white text-2xl font-semibold">Newest Albums</h2>
         </div>
         <div className="flex  justify-center gap-3 items-center">
-            {albums.map((album, index) => (
-                <AlbumCard key={index} imageUrl={album.image} name={album.name} />
-            ))}
+          {Array.isArray(albums) && albums.map((album, index) => (
+              <AlbumCard key={index} imageUrl={album.image} name={album.name} />
+          ))}
         </div>
       </div>
     </div>
