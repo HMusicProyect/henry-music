@@ -21,7 +21,6 @@ const SongItem: React.FC<SongsItemProps> = ({ data, onClick, id }) => {
     return (
         <>
             <div
-                // onClick={() => session ? onClick(data.id) : null} 
                 className='relative group flex flex-col items-center justify-center rounded-md overflow-hidden gap-x-4 bg-neutral-400/5 cursor-pointer hover:bg-neutral-400/10 transition p-3'
             >
                 <div className='relative aspect-square w-full h-full rounded-md overflow-hidden'>
@@ -30,6 +29,8 @@ const SongItem: React.FC<SongsItemProps> = ({ data, onClick, id }) => {
                         src={data?.image} 
                         alt='Image' 
                         layout='fill'
+                        sizes="100vw"
+                        priority 
                         onClick={() => router.push(`/home/lists/${id}`)} 
                     />
                 </div>

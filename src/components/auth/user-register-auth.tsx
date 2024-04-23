@@ -20,7 +20,7 @@ interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
 
   const { toast } = useToast();
-  const {verifyUser, postUser } = useStore(); 
+  const {user ,verifyUser, postUser } = useStore(); 
   const router = useRouter();
   const [errors, setErrors] = useState<string[]>([]);
 
@@ -48,7 +48,6 @@ export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
 
     if (!response.ok) {
         const errorData = await response.json();
-        console.log("ERROR DATA", errorData);
         setIsLoading(false);
       toast({
         title: "Oooops...",
@@ -60,10 +59,11 @@ export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
       });
     } else {
       const user = await response.json();
-      console.log("USER", user);
-      verifyUser(user.id);
+    if(user.id){
+      await verifyUser(user.id);
       const name = user?.name.replace(/\s+/g, '');
       router.push(`/verification/${name}`);
+    }
     }
 
     setData({

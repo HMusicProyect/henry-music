@@ -8,7 +8,6 @@ interface CardProps {
 }
 
 const Card: React.FC<CardProps> = ({ children, className }) => {
-   
     const cardClasses = twMerge(
         'bg-gray-800', 
         'border-gray-700', 
