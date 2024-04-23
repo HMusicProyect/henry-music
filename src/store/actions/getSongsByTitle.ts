@@ -1,4 +1,5 @@
-import { Music } from "../songs.store";
+import { Music } from "@/lib/definitions";
+
 
 const getSongByTitle = async (title: string): Promise<Music[]> => {
     try {

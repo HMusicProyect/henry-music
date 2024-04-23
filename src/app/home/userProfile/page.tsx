@@ -85,7 +85,7 @@ const handlePasswordSubmit = async (event: React.FormEvent) => {
     }
 
     try {
-        const response = await fetch(`http://localhost:3001/users/${userSession?.id}/editPasword`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users/${userSession?.id}/editPasword`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

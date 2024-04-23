@@ -1,7 +1,7 @@
 "use client"
 
-import { Fragment, useEffect, useState } from 'react'
-import { Disclosure, Menu, Transition } from '@headlessui/react'
+import { Fragment, useState } from 'react'
+import { Menu, Transition } from '@headlessui/react'
 import { useRouter } from "next/navigation";
 import { twMerge } from 'tailwind-merge'
 import { ChevronLeft, ChevronRight } from 'lucide-react';
