@@ -82,19 +82,13 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
                 <div className="flex justify-between items-center gap-x-4">
                     {session ? (
                         <>
-                            <Button
-                                onClick={handleSignOut}
-                                className="bg-white px-6 py-2"
-                            >
-                                Log in
-                            </Button>
                             <Menu as="div" className="relative ml-3 bg-gradient-to-b from-transparent to-black rounded-full">
                                 <div>
                                 <Menu.Button className="relative m-1 flex rounded-full bg-transparent text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                                     <span className="absolute -inset-1.5" />
                                     <span className="sr-only">Open user menu</span>
                                     <Image
-                                        className="h-13 w-20 rounded-full"
+                                        className="h-11 w-11 rounded-full"
                                         src={`${userSession?.image}` || `/images/default-profile.png`}
                                         alt="img perfil"
                                         width={100}
