@@ -22,6 +22,7 @@
     "axios": "^1.6.8",
     "bcrypt": "^5.1.1",
     "class-variance-authority": "^0.7.0",
+    "cloudinary": "^2.2.0",
     "clsx": "^2.1.0",
     "fast-average-color": "^9.4.0",
     "lucide-react": "^0.367.0",

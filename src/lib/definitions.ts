@@ -15,6 +15,10 @@ export type IAccessUser = User & {
   rol: string;
   esta_verificado: boolean;
 };
+export type UserWithPhoto = User & {
+    photo?: FormData;
+};
+
 
 // Musicas ---
 export interface Artist {

@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { User } from '@/lib/definitions';
+import { UserWithPhoto } from '@/lib/definitions';
 import { UserForm } from '@/components/home/UserProfile/UserForm';
 import { UserInfo } from '@/components/home/UserProfile/UserInfo';
 import { PasswordChangeForm } from '@/components/home/UserProfile/PasswordChangeForm';
@@ -12,15 +12,20 @@ import { PasswordChangeForm } from '@/components/home/UserProfile/PasswordChange
 
 const ProfilePage = () => {
     const { data: session, status } = useSession();
-    const userSession: User = session?.user!;
+    const userSession: UserWithPhoto = session?.user!;
     
     
     const router = useRouter();
-    const [user, setUser] = useState<User>(userSession);
+
+    const [user, setUser] = useState<UserWithPhoto>(userSession);
+    
     const [confirmPassword, setConfirmPassword] = useState('');
     const [currentPassword, setCurrentPassword] = useState('');
     const [passwordFieldsEnabled, setPasswordFieldsEnabled] = useState(false);
     const [isEditingPassword, setIsEditingPassword] = useState(false);
+    const [imageURL, setImageURL] = useState<string | null>(null);
+    
+
     const [isEditing, setIsEditing] = useState(false);
     const [message, setMessage]= useState<string[]>([]);
 
@@ -47,18 +52,23 @@ const ProfilePage = () => {
     const handlePhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files.length > 0) {
             const file = event.target.files[0];
-            setUser(prevUser => ({ ...prevUser, photo: file }));
+            setImageURL(URL.createObjectURL(file));
+
+            if(file !== undefined){
+                const fileData = new FormData();
+                fileData.append('photo', file);
+                console.log('fileData', fileData);
+                setUser(prevUser => ({ ...prevUser, photo: fileData }));
+            }
         }
     };
 
 
     const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setUser(prevUser => ({ ...prevUser, name: event.target.value }));
+        const { value, name } = event.target;
+        setUser(prevUser => ({ ...prevUser, name: value }));
     };
 
-    // const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    //     setUser(prevUser => ({ ...prevUser, email: event.target.value }));
-    // };
 
     const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setUser(prevUser => ({ ...prevUser, password: event.target.value }));
@@ -109,34 +119,64 @@ const handlePasswordSubmit = async (event: React.FormEvent) => {
     }
 };
 
+    //Foto de perfil
+    const handlePhotoSubmit = async (event: React.FormEvent) => {
+        event.preventDefault();
+        console.log('userPhoto', user.photo);
+        
+
+        const response = await fetch(`/api/upload`, {
+            method: 'POST',
+            body: user.photo,
+
+        })
+        const dataPhoto = await response.json();
+
+        console.log(dataPhoto.url);
+        if(dataPhoto.url !== undefined && dataPhoto.url !== null){
+            return dataPhoto.url;
+        }
+    };
+
+
+    // envio a la api
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
+
+        if (!user.image || !user.name) {
+            setMessage(['No hay información de usuario disponible']);
+            return;
+        }
+        const photoUrl =  await handlePhotoSubmit(event);
+        console.log('imagen salva', photoUrl);
+
         try {
-            
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users/${userSession?.email}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users/editNameAndPic/${userSession.email}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(user),
+                body: JSON.stringify({ 
+                    name: user.name,
+                    image: photoUrl, 
+                }),
             });
-
             if (!response.ok) {
-                setMessage(['Error al actualizar el usuario']);
-                throw new Error('Failed to update user');
+                setMessage(['Error al actualizar la información del usuario']);
+                throw new Error('Failed to update user information');
             }
 
-            const data = await response.json();
-
-            
-            setUser(data);
-
-            setMessage(['Usuario actualizado con éxito']);
+            setMessage(['Información de usuario actualizada con éxito']);
+            setUser(prevUser => ({ ...prevUser, image: photoUrl }));
         } catch (error) {
-            console.error('Failed to update user:', error);
+
+            setMessage(['Error al actualizar la información del usuario']);
+            console.error('Failed to update user information:', error);
         }
-    };
+
+    }
+
 
     const toggleEdit = () => {
         setIsEditing(!isEditing);
@@ -145,8 +185,9 @@ const handlePasswordSubmit = async (event: React.FormEvent) => {
         setIsEditingPassword(!isEditingPassword);
     };
     
-    if(userSession?.image === undefined) return <p>Cargando...</p>;
-    const imageUrl = userSession?.image.replace('s96-c', 's1000-c');
+    if(user?.image === undefined) return <p>Cargando...</p>;
+
+    const imageUrl = user?.image.replace('s96-c', 's1000-c');
 
     return (
     <div className="flex flex-col items-center justify-center min-h-screen py-2">
@@ -189,8 +230,10 @@ const handlePasswordSubmit = async (event: React.FormEvent) => {
                     />
                 ) : isEditing ? (
                     <UserForm
-                        user={userSession}
+                        imageURL={imageURL}
+                        user={user}
                         onUserChange={setUser}
+                        // onSubmit={handleSubmit}
                         onSubmit={handleSubmit}
                         handlePhotoChange={handlePhotoChange}
                         handleNameChange={handleNameChange}

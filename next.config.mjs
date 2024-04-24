@@ -12,7 +12,8 @@ const nextConfig = {
       'www.accessselfstorage.com', 
       'worldwildfilms.com',
       'lh3.googleusercontent.com',
-      'hmusic-server-production.up.railway.app' 
+      'hmusic-server-production.up.railway.app',
+      'res.cloudinary.com',
     ],
   },
 };
