@@ -13,7 +13,8 @@ const nextConfig = {
       'lh3.googleusercontent.com',
       'hmusic-server-production.up.railway.app',
       'res.cloudinary.com',
-      'www.clipartkey.com'
+      'www.clipartkey.com',
+      'https://hmusic-server.up.railway.app/',
     ],
   },
 };
