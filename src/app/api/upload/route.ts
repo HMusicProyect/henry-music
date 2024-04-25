@@ -4,33 +4,34 @@ import { writeFile } from "fs/promises";
 import path, { resolve } from "path";
 import { rejects } from "assert";
 
-type CloudinaryResponse = {
+interface CloudinaryResponse {
     secure_url: string;
-};
+}
 
 cloudinary.config({ 
     cloud_name: `${process.env.CLOUDINARY_CLOUD_NAME}`, 
     api_key: `${process.env.CLOUDINARY_API_KEY}`, 
     api_secret: `${process.env.CLOUDINARY_API_SECRET}`, 
 });
+
 export async function POST(request: Request, response: Response){
     const data = await request.formData();
+
     const image = data.get('photo');
-    
-    if(!data || !image){
+    const sound = data.get('audio');
+
+    if((!image && sound == undefined) || (!sound && image == null)){
         return NextResponse.json({
             message: 'error uploaded',
             status: 400,
         });
     }
 
-    if(image instanceof File){
+    // -- Imagen --
+    if(image instanceof File && image !== undefined){
         const bytes = await image.arrayBuffer();
         const buffer = Buffer.from(bytes);
 
-        //guardar en un archivo
-        // const filePath = path.join(process.cwd(), 'public', image.name);
-        // await writeFile(filePath, buffer);
 
         const response = await new Promise<CloudinaryResponse | undefined>((resolve, reject) => {
             cloudinary.uploader.upload_stream({}, (error, result) => {
@@ -46,9 +47,34 @@ export async function POST(request: Request, response: Response){
                 status: 500,
             });
         }
-        console.log(response)
         return NextResponse.json({
-            message: 'file uploaded',
+            message: 'image uploaded',
+            url: response.secure_url,
+            status: 200,
+        });
+    }
+
+    // -- Sonido --
+    if(sound instanceof File && sound !== undefined){
+        const bytes = await sound.arrayBuffer();
+        const base64Audio = Buffer.from(bytes).toString('base64');
+
+        const response = await new Promise<CloudinaryResponse | undefined>((resolve, reject) => {
+            cloudinary.uploader.upload(`data:audio/mpeg;base64,${base64Audio}`, { resource_type: 'video' }, (error, result) => {
+                if (error) reject(error);
+                else resolve(result);
+            });
+        });
+
+        if (!response) {
+            return NextResponse.json({
+                message: 'error uploading file to Cloudinary',
+                status: 500,
+            });
+        }
+
+        return NextResponse.json({
+            message: 'audio uploaded',
             url: response.secure_url,
             status: 200,
         });
