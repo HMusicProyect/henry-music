@@ -16,7 +16,8 @@ export type IAccessUser = User & {
   esta_verificado: boolean;
 };
 export type UserWithPhoto = User & {
-    photo?: FormData;
+    photo?: File;
+    audio?: File;
 };
 
 

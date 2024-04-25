@@ -8,6 +8,7 @@ import { UserWithPhoto } from '@/lib/definitions';
 import { UserForm } from '@/components/home/UserProfile/UserForm';
 import { UserInfo } from '@/components/home/UserProfile/UserInfo';
 import { PasswordChangeForm } from '@/components/home/UserProfile/PasswordChangeForm';
+import { handlePhotoSubmit } from '@/store/actions/postCloudinary';
 
 
 const ProfilePage = () => {
@@ -52,16 +53,38 @@ const ProfilePage = () => {
     const handlePhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files.length > 0) {
             const file = event.target.files[0];
+            console.log('file', file);
+
             setImageURL(URL.createObjectURL(file));
 
             if(file !== undefined){
-                const fileData = new FormData();
-                fileData.append('photo', file);
-                console.log('fileData', fileData);
-                setUser(prevUser => ({ ...prevUser, photo: fileData }));
+                setUser(prevUser => ({ ...prevUser, photo: file }));
             }
         }
     };
+
+
+    const handleAudioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files && event.target.files.length > 0) {
+            const file = event.target.files[0];
+            console.log('file', file);
+            console.log('file', file.type);
+          // Comprueba si el archivo es un mp3
+        if ((file.type !== 'audio/mpeg') && (file.type !== 'audio/mp3') ) {
+            console.error('El archivo no es un audio mp3 o mpeg');
+            return;
+        }
+
+            setUser(prevUser => ({ ...prevUser, audio: file}));
+        }
+    };
+
+
+
+
+
+
+
 
 
     const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -119,24 +142,6 @@ const handlePasswordSubmit = async (event: React.FormEvent) => {
     }
 };
 
-    //Foto de perfil
-    const handlePhotoSubmit = async (event: React.FormEvent) => {
-        event.preventDefault();
-        console.log('userPhoto', user.photo);
-        
-
-        const response = await fetch(`/api/upload`, {
-            method: 'POST',
-            body: user.photo,
-
-        })
-        const dataPhoto = await response.json();
-
-        console.log(dataPhoto.url);
-        if(dataPhoto.url !== undefined && dataPhoto.url !== null){
-            return dataPhoto.url;
-        }
-    };
 
 
     // envio a la api
@@ -148,7 +153,8 @@ const handlePasswordSubmit = async (event: React.FormEvent) => {
             setMessage(['No hay información de usuario disponible']);
             return;
         }
-        const photoUrl =  await handlePhotoSubmit(event);
+        const photoUrl =  await handlePhotoSubmit(user);
+        //  const resData =  await handlePhotoSubmit(data);
         console.log('imagen salva', photoUrl);
 
         try {
@@ -201,6 +207,7 @@ const handlePasswordSubmit = async (event: React.FormEvent) => {
                     layout='fill' 
                 />
         </div>
+
         <div>
             {!isEditingPassword && (
                 <button 
