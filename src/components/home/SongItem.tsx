@@ -5,8 +5,6 @@ import { useRouter } from 'next/navigation';
 import { capitalizeWords } from '@/utils/CapitalizeWords';
 import { Music } from '@/lib/definitions';
 
-
-
 export interface SongsItemProps {
     id: number;
     data: Music;
