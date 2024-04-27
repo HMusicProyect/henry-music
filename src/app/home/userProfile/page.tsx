@@ -9,6 +9,7 @@ import { UserForm } from '@/components/home/UserProfile/UserForm';
 import { UserInfo } from '@/components/home/UserProfile/UserInfo';
 import { PasswordChangeForm } from '@/components/home/UserProfile/PasswordChangeForm';
 import { handlePhotoSubmit } from '@/store/actions/postCloudinary';
+import { updateUserInfo } from '@/components/home/UserProfile/updateUserInfo';
 
 
 const ProfilePage = () => {
@@ -143,45 +144,53 @@ const handlePasswordSubmit = async (event: React.FormEvent) => {
 };
 
 
-
     // envio a la api
+    const clearUnchangedFields = (user: UserWithPhoto, userSession: UserWithPhoto) => {
+        if (user.name === userSession.name) {
+            user.name = '';
+        }
+
+        if (user.image === userSession.image) {
+            user.image = '';
+        }
+    };
+
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
+        clearUnchangedFields(user, userSession);
 
-        if (!user.image || !user.name) {
+        if (!user.image && !user.name) {
             setMessage(['No hay información de usuario disponible']);
             return;
         }
-        const photoUrl =  await handlePhotoSubmit(user);
-        //  const resData =  await handlePhotoSubmit(data);
-        console.log('imagen salva', photoUrl);
 
+        let photoUrl = user.image;
+        let updatedUser = { ...user };
+
+            
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users/editNameAndPic/${userSession.email}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ 
-                    name: user.name,
-                    image: photoUrl, 
-                }),
-            });
-            if (!response.ok) {
-                setMessage(['Error al actualizar la información del usuario']);
-                throw new Error('Failed to update user information');
+            // si la imagen existe  ejecuta la funcion handlePhotoSubmit
+            if (user.image !== '') {
+                photoUrl = await handlePhotoSubmit(user);
+                updatedUser = { ...user, image: photoUrl };
             }
+            console.log('updatedUser', updatedUser);
+
+            const res = await updateUserInfo(updatedUser, userSession);
+            
+            console.log('res', res);
+
+            setUser(prevUser => ({ ...prevUser, image: photoUrl }));
 
             setMessage(['Información de usuario actualizada con éxito']);
-            setUser(prevUser => ({ ...prevUser, image: photoUrl }));
-        } catch (error) {
 
+
+        } catch (error) {
             setMessage(['Error al actualizar la información del usuario']);
             console.error('Failed to update user information:', error);
         }
-
-    }
+    };
 
 
     const toggleEdit = () => {
