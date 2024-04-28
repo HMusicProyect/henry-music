@@ -2,8 +2,7 @@ import NextAuth from "next-auth";
 import { z } from 'zod';
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { getUser } from "@/lib/auth/user.auth";
-
+import { authorize, getUser, postAuthorize } from "@/lib/auth/user.auth";
 
 
 
@@ -33,14 +32,25 @@ const handler = NextAuth({
         },
         }),
     ],
+    
     callbacks: {
-        async jwt({ token, user }) {
-        return { ...token, ...user };
+        async jwt({ token, user, account }) {
+            if (account?.provider) {
+                token.provider = account.provider;
+                if (account?.provider === 'google') {
+                    try {
+                        await postAuthorize(user, account.provider);
+                    } catch (error) {
+                        console.error(error);
+                    }
+                }
+            }
+            return { ...token, ...user };
         },
         async session({ session, token }) {
-        session.user = token as any;
-        console.log('session', session);
-        return session;
+            session.user = token as any;
+            console.log('session', session);
+            return session;
         },
     },
     pages: {

@@ -65,3 +65,35 @@ export const validateUser = (user: ValidationUser) => {
     }
     return validatePassword(user.password);
 };
+
+
+
+
+export async function postAuthorize(credentials: any, provider: string) {
+    const { name, email, password } = credentials;
+    
+    try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(
+                { 
+                    name: credentials.name, 
+                    email:credentials.email, 
+                    provider: provider,
+                    password: credentials.id
+                }) // Enviar solo estos datos
+        });
+
+        if (!response.ok) {
+            throw new Error(`API response status: ${response.status}`);
+        }
+
+        return await response.json(); // Devolver la respuesta de la API
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}

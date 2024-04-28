@@ -1,5 +1,4 @@
 "use client"
-import Modal from '@/components/admin/ui/Modal';
 import { PasswordChangeForm } from '@/components/home/UserProfile/PasswordChangeForm';
 import { UserForm } from '@/components/home/UserProfile/UserForm';
 import UserProfile from '@/components/home/UserProfile/UserInfo';
@@ -125,25 +124,28 @@ const ProfilePage = () => {
                 </div>
 
                 {/* detalles del perfil */}
-                <div>
-                    {!isEditingPassword && (
+                { session?.user?.provider !== 'google' && 
+                    <div>
+                        {!isEditingPassword && (
+                            <button 
+                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                onClick={toggleEdit}
+                            >
+                                {isEditing ? 'Ver Perfil' : 'Editar Perfil'}
+                            </button>
+                        )}
                         <button 
-                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                            onClick={toggleEdit}
+                            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                            onClick={togglePasswordEdit}
                         >
-                            {isEditing ? 'Ver Perfil' : 'Editar Perfil'}
+                            {isEditingPassword ? 'Cancelar Edición de Contraseña' : 'Editar Contraseña'}
                         </button>
-                    )}
-                    <button 
-                        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                        onClick={togglePasswordEdit}
-                    >
-                        {isEditingPassword ? 'Cancelar Edición de Contraseña' : 'Editar Contraseña'}
-                    </button>
-                </div>
+                    </div>
+                    
+                }
                 <div>
                     {
-                        isEditingPassword ? (
+                        session?.user?.provider !== 'google' &&  isEditingPassword ? (
                             <PasswordChangeForm 
                                 handleCurrentPasswordChange={() => {}}
                                 verifyCurrentPassword={() => {}}
@@ -153,7 +155,7 @@ const ProfilePage = () => {
                                 onSubmit={() => {}}
                             />
                             
-                        ) : isEditing ? (
+                        ) : session?.user?.provider !== 'google' && isEditing ? (
                             <UserForm
                                 user={editProfile}
                                 onSubmit={handleSubmit}

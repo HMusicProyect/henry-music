@@ -11,6 +11,7 @@ declare module "next-auth" {
             rol: string;
             esta_verificado: boolean;
             token: string;
+            provider?: string; 
         };
     }
 }
