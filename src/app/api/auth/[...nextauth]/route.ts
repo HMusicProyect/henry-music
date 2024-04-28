@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import { z } from 'zod';
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { authorize, getUser, postAuthorize } from "@/lib/auth/user.auth";
+import { getUser, postAuthorize } from "@/lib/auth/user.auth";
 
 
 
