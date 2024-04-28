@@ -1,17 +1,22 @@
 // updateUserInfo.ts
-import { UserWithPhoto } from '@/lib/definitions';
+import { FilePair, UserWithPhoto } from '@/lib/definitions';
+import { handlePhotoSubmit } from '@/store/actions/postCloudinary';
 
 
-const verifyUser = (user: UserWithPhoto) => {
+
+
+const  verifyUser = async (user: UserWithPhoto) => {
     // Crear un objeto que contenga solo las propiedades que deseas actualizar
-    const updateData: any = {};
+    const updateData: UserWithPhoto = {};
 
     if(user.name !== undefined && user.name !== null && user.name !== ''){
         updateData.name = user.name;
     }
 
-    if (user.image !== undefined && user.image !== null && user.image !== '') {
-        updateData.image = user.image;
+    if (user.photo !== undefined ) {
+        const filePair: FilePair = { photo: user.photo };
+        const photoUrl =  await handlePhotoSubmit(filePair);
+        updateData.image = photoUrl.url;
     }
 
     if(Object.keys(updateData).length === 0){
@@ -24,12 +29,14 @@ const verifyUser = (user: UserWithPhoto) => {
 
 export const updateUserInfo = async (user: UserWithPhoto, userSession: any) => {
 
-    const updateData = verifyUser(user);
+    const updateData = await verifyUser(user);
+
+    console.log('updateData', updateData);
     
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users/editNameAndPic/${userSession.email}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users/editNameAndPic/${userSession.id}`, {
         method: 'PUT',
         headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify(updateData),
     });

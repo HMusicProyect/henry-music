@@ -10,12 +10,10 @@ export const handlePhotoSubmit = async (file: FilePair) => {
 
     if(file.photo !== undefined && file.photo){
         formData.append('photo', file.photo);
-        console.log('photo', formData);
     }
 
     if (file.audio !== undefined && file.audio) {
         formData.append('audio', file.audio);
-        console.log('audio', formData);
     }
 
     if(formData !== undefined && formData !== null){
@@ -23,9 +21,7 @@ export const handlePhotoSubmit = async (file: FilePair) => {
             method: 'POST',
             body: formData,
         })
-
         const filePair = await response.json();
-        console.log('filePair', filePair);
         return filePair;
     }
     

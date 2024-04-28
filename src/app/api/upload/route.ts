@@ -47,6 +47,7 @@ export async function POST(request: Request, response: Response){
                 status: 500,
             });
         }
+
         return NextResponse.json({
             message: 'image uploaded',
             url: response.secure_url,
@@ -56,6 +57,7 @@ export async function POST(request: Request, response: Response){
 
     // -- Sonido --
     if(sound instanceof File && sound !== undefined){
+        console.log('sound', sound);
         const bytes = await sound.arrayBuffer();
         const base64Audio = Buffer.from(bytes).toString('base64');
 

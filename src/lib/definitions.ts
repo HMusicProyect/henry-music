@@ -24,6 +24,12 @@ export type UserWithPhoto = User & {
     audio?: File;
 };
 
+export interface FilePair {
+    photo?: File;
+    audio?: File;
+}
+
+
 
 // Musicas ---
 export interface Artist {

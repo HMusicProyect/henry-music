@@ -1,34 +1,44 @@
-// UserInfo.tsx
-import Image from 'next/image';
-import { User } from '@/lib/definitions';
+import { UserWithPhoto } from "@/lib/definitions";
 
-type UserInfoProps = {
-    user: User;
-};
+interface UserProfileProps {
+    session: UserWithPhoto;
+}
 
-export const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
-    return(
-        <div className="max-w-lg mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-md px-8 py-10 flex flex-col items-center">
-            <h1 className="text-xl font-bold text-center text-gray-700 dark:text-gray-200 mb-8">Perfil de Usuario</h1>
-            <div className="w-full flex flex-col gap-4">
-                <div className="flex items-start flex-col justify-start">
-                    <label className="text-sm text-gray-700 dark:text-gray-200 mr-2" htmlFor="name">
-                        Nombre:
-                    </label>
-                    <p className="w-full px-3 text-gray-700 dark:bg-gray-900 py-2 rounded-md border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-500">
-                        {user?.name}
-                    </p>
+
+const UserProfile:  React.FC<UserProfileProps> = ({session}) => {
+    return (
+        <div>
+            <div className="text-center mt-12">
+                <h3 className="text-xl font-semibold leading-normal mb-2 text-black mb-2">
+                    {session?.name}
+                </h3>
+                <div className="text-sm leading-normal mt-0 mb-2 text-black font-bold uppercase">
+                    <i className="fas fa-map-marker-alt mr-2 text-lg text-black"></i>
+                    {session?.email}
                 </div>
-                <div className="flex items-start flex-col justify-start">
-                    <label className="text-sm text-gray-700 dark:text-gray-200 mr-2" htmlFor="email">
-                        Email:
-                    </label>
-                    <p className="w-full px-3 text-gray-700 dark:bg-gray-900 py-2 rounded-md border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-500">
-                        {user?.email}
-                    </p>
+                <div className="mb-2 text-black mt-10">
+                    <i className="fas fa-briefcase mr-2 text-lg text-black"></i>
+                    {session?.rol}
                 </div>
-                <div className="min-h-[100px]"></div> {/* Añade un espacio vacío para que UserInfo tenga el mismo tamaño que UserForm */}
+                {/* <div className="mb-2 text-black">
+                    <i className="fas fa-university mr-2 text-lg text-black"></i>
+                    University of Computer Science
+                </div> */}
             </div>
+
+            {/* <div className="mt-10 py-10 border-t border-blueGray-200 text-center">
+                <div className="flex flex-wrap justify-center">
+                    <div className="w-full lg:w-9/12 px-4">
+                        <p className="mb-4 text-lg leading-relaxed text-black">
+                        </p>
+                        <a href="javascript:void(0);" className="font-normal text-black">
+                            Show more
+                        </a>
+                    </div>
+                </div>
+            </div> */}
         </div>
-    )
+    );
 };
+
+export default UserProfile;

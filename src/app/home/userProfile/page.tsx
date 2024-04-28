@@ -1,197 +1,72 @@
 "use client"
-
+import Modal from '@/components/admin/ui/Modal';
+import { PasswordChangeForm } from '@/components/home/UserProfile/PasswordChangeForm';
+import { UserForm } from '@/components/home/UserProfile/UserForm';
+import UserProfile from '@/components/home/UserProfile/UserInfo';
+import { updateUserInfo } from '@/components/home/UserProfile/updateUserInfo';
+import { ModalComponent } from '@/components/ui/Modal/Modal';
+import { UserWithPhoto } from '@/lib/definitions';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { UserWithPhoto } from '@/lib/definitions';
-import { UserForm } from '@/components/home/UserProfile/UserForm';
-import { UserInfo } from '@/components/home/UserProfile/UserInfo';
-import { PasswordChangeForm } from '@/components/home/UserProfile/PasswordChangeForm';
-import { handlePhotoSubmit } from '@/store/actions/postCloudinary';
-import { updateUserInfo } from '@/components/home/UserProfile/updateUserInfo';
+import React, { useState } from 'react';
+
 
 
 const ProfilePage = () => {
     const { data: session, status } = useSession();
+
     const userSession: UserWithPhoto = session?.user!;
-    
-    
-    const router = useRouter();
 
-    const [user, setUser] = useState<UserWithPhoto>(userSession);
-    
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [currentPassword, setCurrentPassword] = useState('');
+    const [editProfile, setEditProfile] = useState<UserWithPhoto>({ name: '', photo: undefined });
     const [passwordFieldsEnabled, setPasswordFieldsEnabled] = useState(false);
-    const [isEditingPassword, setIsEditingPassword] = useState(false);
-    const [imageURL, setImageURL] = useState<string | null>(null);
     
-
+    const [isEditingPassword, setIsEditingPassword] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
+    const [imageURL, setImageURL] = useState<string | null>(null);
     const [message, setMessage]= useState<string[]>([]);
+    const [ isModalOpen, setIsModalOpen ] = useState(false);
+    
 
     if(status === "loading") return <p>Cargando...</p>;
 
-    if(!session) router.push('/home');
-
-
-    const verifyCurrentPassword = async () => {
-        try {
-            const {email, password} = userSession;
-
-            if(password === currentPassword){
-                setPasswordFieldsEnabled(true);
-            } else {
-                setMessage(['La contraseña actual es incorrecta']);
-            }
-        } catch (error) {
-            setMessage(['Error al verificar la contraseña actual']);
-            console.error('Failed to verify password:', error);
-        }
+    const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setEditProfile(prevState => ({ ...prevState, name: event.target.value }));
     };
 
     const handlePhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files.length > 0) {
             const file = event.target.files[0];
-            console.log('file', file);
-
             setImageURL(URL.createObjectURL(file));
-
             if(file !== undefined){
-                setUser(prevUser => ({ ...prevUser, photo: file }));
+                setEditProfile(prevState => ({ ...prevState, photo: file }));
             }
         }
     };
 
-
-    const handleAudioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (event.target.files && event.target.files.length > 0) {
-            const file = event.target.files[0];
-            console.log('file', file);
-            console.log('file', file.type);
-          // Comprueba si el archivo es un mp3
-        if ((file.type !== 'audio/mpeg') && (file.type !== 'audio/mp3') ) {
-            console.error('El archivo no es un audio mp3 o mpeg');
-            return;
-        }
-
-            setUser(prevUser => ({ ...prevUser, audio: file}));
-        }
-    };
-
-
-
-
-
-
-
-
-
-    const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { value, name } = event.target;
-        setUser(prevUser => ({ ...prevUser, name: value }));
-    };
-
-
-    const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setUser(prevUser => ({ ...prevUser, password: event.target.value }));
-    };
-
-    const handleConfirmPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setConfirmPassword(event.target.value);
-    };
-    const handleCurrentPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setCurrentPassword(event.target.value);
-    };
-
-const handlePasswordSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-
-    if (!user) {
-        setMessage(['No hay información de usuario disponible']);
-        return;
-    }
-
-    if (user.password !== confirmPassword) {
-        setMessage(['Las contraseñas no coinciden']);
-        return;
-    }
-
-    try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users/${userSession?.id}/editPasword`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ 
-                password: currentPassword, 
-                email: userSession?.email, 
-                newPassword: user.password 
-            }),
-        });
-
-        if (!response.ok) {
-            setMessage(['Error al actualizar la contraseña']);
-            throw new Error('Failed to update password');
-        }
-
-        setMessage(['Contraseña actualizada con éxito']);
-    } catch (error) {
-        setMessage(['Error al actualizar la contraseña']);
-        console.error('Failed to update password:', error);
-    }
-};
-
-
-    // envio a la api
-    const clearUnchangedFields = (user: UserWithPhoto, userSession: UserWithPhoto) => {
-        if (user.name === userSession.name) {
-            user.name = '';
-        }
-
-        if (user.image === userSession.image) {
-            user.image = '';
-        }
-    };
 
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        clearUnchangedFields(user, userSession);
 
-        if (!user.image && !user.name) {
-            setMessage(['No hay información de usuario disponible']);
-            return;
+        try {
+            const response = await updateUserInfo(editProfile, userSession);
+            console.log('response', response);
+
+        if (response.status !== 'success') {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        let photoUrl = user.image;
-        let updatedUser = { ...user };
-
-            
-        try {
-            // si la imagen existe  ejecuta la funcion handlePhotoSubmit
-            if (user.image !== '') {
-                photoUrl = await handlePhotoSubmit(user);
-                updatedUser = { ...user, image: photoUrl };
-            }
-            console.log('updatedUser', updatedUser);
-
-            const res = await updateUserInfo(updatedUser, userSession);
-            
-            console.log('res', res);
-
-            setUser(prevUser => ({ ...prevUser, image: photoUrl }));
-
-            setMessage(['Información de usuario actualizada con éxito']);
-
+        const data = response.data;
+        setMessage(['Información de usuario actualizada con éxito']);
+        setIsModalOpen(true);
+        console.log('response', data);
 
         } catch (error) {
             setMessage(['Error al actualizar la información del usuario']);
+            setIsModalOpen(true);
             console.error('Failed to update user information:', error);
         }
     };
-
 
     const toggleEdit = () => {
         setIsEditing(!isEditing);
@@ -199,78 +74,215 @@ const handlePasswordSubmit = async (event: React.FormEvent) => {
     const togglePasswordEdit = () => {
         setIsEditingPassword(!isEditingPassword);
     };
-    
-    if(user?.image === undefined) return <p>Cargando...</p>;
 
-    const imageUrl = user?.image.replace('s96-c', 's1000-c');
+    if(userSession?.image === undefined) return <p>Cargando...</p>;
+
+    const handleModalClose = () => {
+        setIsModalOpen(false);
+        setMessage(['']);
+        setImageURL(null);
+    };
 
     return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-2">
-        <h1 className="text-2xl font-bold mb-5">Perfil de Usuario</h1>
-        <div className="w-24 h-24 mb-4 relative">
-            <div className="bg-gray-500 opacity-50 absolute inset-0 rounded"></div>
-                <Image
-                    className="rounded-full w-full h-full object-cover absolute inset-0" 
-                    src={imageUrl}
-                    alt="img perfil"
-                    layout='fill' 
-                />
-        </div>
+        <section className="pt-16 bg-blueGray-50">
+        <div className="w-full lg:w-4/12 px-4 mx-auto">
+        <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg mt-16">
+            <div className="px-6">
+            <div className="flex flex-wrap justify-center">
+                <div className="w-full px-4 flex justify-center">
+                    <div className="flex justify-center">
+                        <Image
+                            className="rounded-full mx-auto absolute -top-20 w-32 h-32 shadow-md border-4 border-white transition duration-200 transform hover:scale-110"
+                            src={userSession?.image!}
+                            alt="" 
+                            width={128}
+                            height={128}
+                        />
+                    </div>
+                    </div>
+                        <div className="w-full px-4 text-center mt-20">
+                            <div className="flex justify-center py-4 lg:pt-4 pt-8">
+                                <div className="mr-4 p-3 text-center">
+                                    <span className="text-xl font-bold block uppercase tracking-wide text-black">
+                                        22
+                                    </span>
+                                    <span className="text-sm text-black">Friends</span>
+                                </div>
+                                <div className="mr-4 p-3 text-center">
+                                    <span className="text-xl font-bold block uppercase tracking-wide text-black">
+                                        10
+                                    </span>
+                                    <span className="text-sm text-black">Cansiones</span>
+                                </div>
+                                <div className="lg:mr-4 p-3 text-center">
+                                    <span className="text-xl font-bold block uppercase tracking-wide text-black">
+                                        89
+                                    </span>
+                                    <span className="text-sm text-black">playlis</span>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+
+                {/* detalles del perfil */}
+                <div>
+                    {!isEditingPassword && (
+                        <button 
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                            onClick={toggleEdit}
+                        >
+                            {isEditing ? 'Ver Perfil' : 'Editar Perfil'}
+                        </button>
+                    )}
+                    <button 
+                        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        onClick={togglePasswordEdit}
+                    >
+                        {isEditingPassword ? 'Cancelar Edición de Contraseña' : 'Editar Contraseña'}
+                    </button>
+                </div>
+                <div>
+                    {
+                        isEditingPassword ? (
+                            <PasswordChangeForm 
+                                handleCurrentPasswordChange={() => {}}
+                                verifyCurrentPassword={() => {}}
+                                handlePasswordChange={() => {}}
+                                handleConfirmPasswordChange={() => {}}
+                                passwordFieldsEnabled={passwordFieldsEnabled}
+                                onSubmit={() => {}}
+                            />
+                            
+                        ) : isEditing ? (
+                            <UserForm
+                                user={editProfile}
+                                onSubmit={handleSubmit}
+                                handlePhotoChange={handlePhotoChange}
+                                handleNameChange={handleNameChange}
+                                imageURL={imageURL}
+                                onUserChange={setEditProfile}
+                            />
+                            ) : (
+                            <UserProfile session={userSession} />
+                        )
+                    }
+                </div>
+
+            </div>
 
         <div>
-            {!isEditingPassword && (
-                <button 
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                    onClick={toggleEdit}
-                >
-                    {isEditing ? 'Ver Perfil' : 'Editar Perfil'}
-                </button>
-            )}
-            <button 
-                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                onClick={togglePasswordEdit}
+            <ModalComponent
+                isModalOpen={isModalOpen}
+                setIsModalOpen={setIsModalOpen}
             >
-                {isEditingPassword ? 'Cancelar Edición de Contraseña' : 'Editar Contraseña'}
-            </button>
+                <div className="flex items-center justify-center rounded-[20px] ">
+                    <div 
+                        className="
+                        flex 
+                        flex-col 
+                        items-center 
+                        bg-white 
+                        text-center 
+                        rounded-xl p-8 
+                        space-y-4 
+                        w-80
+                        bg-gradient-to-b from-green-800 to-black
+                        "
+                    >
+                        <button 
+                            className="self-end text-gray-400 w-6 h-6 focus:outline-none"
+                            onClick={handleModalClose}
+                        >
+                            ✖
+                        </button>
+                            <div>
+                                {message.length > 0 && (
+                                    <div className="flex justify-center items-center mt-2">
+                                    <ul className="mb-0 text-red-500">
+                                        {message.map((error) => (
+                                        <li key={error}>
+                                            <h1 className="mb-10 text-lg">
+                                                {error}
+                                            </h1>
+                                        </li>
+                                        ))}
+                                    </ul>
+                                    </div>
+                                )}
+                            </div>
+                        <button
+                            onClick={handleModalClose}
+                            className="bg-red-500 text-white rounded-md w-48 py-3 text-sm focus:outline-none shadow-md"
+                        >
+                            Ok
+                        </button>
+                    </div>
+                </div>
+            </ModalComponent>
         </div>
-        <div className="min-h-[500px]">
-            {
-                isEditingPassword ? (
-                    <PasswordChangeForm
-                        handleCurrentPasswordChange={handleCurrentPasswordChange}
-                        verifyCurrentPassword={verifyCurrentPassword}
-                        handlePasswordChange={handlePasswordChange}
-                        handleConfirmPasswordChange={handleConfirmPasswordChange}
-                        passwordFieldsEnabled={passwordFieldsEnabled}
-                        onSubmit={handlePasswordSubmit} 
-                    />
-                ) : isEditing ? (
-                    <UserForm
-                        imageURL={imageURL}
-                        user={user}
-                        onUserChange={setUser}
-                        // onSubmit={handleSubmit}
-                        onSubmit={handleSubmit}
-                        handlePhotoChange={handlePhotoChange}
-                        handleNameChange={handleNameChange}
-                        // handleEmailChange={handleEmailChange}
-                    />
-                ) : (
-                    <UserInfo user={userSession}/>
-                )
-            }
         </div>
-        {message.length > 0 && (
-            <div className="flex justify-center items-center mt-2">
-            <ul className="mb-0 text-red-500">
-                {message.map((error) => (
-                <li key={error}>{error}</li>
-                ))}
-            </ul>
-            </div>
-        )}
-    </div>
+        <div>
+            {message.length > 0 && (
+                <div className="flex justify-center items-center mt-2">
+                <ul className="mb-0 text-red-500">
+                    {message.map((error) => (
+                    <li key={error}>
+                        <h1 className="mb-10 text-lg">
+                            {error}
+                        </h1>
+                    </li>
+                    ))}
+                </ul>
+                </div>
+            )}
+        </div>
+
+        </div>
+            <footer className="relative bg-transparent pt-8 pb-6 mt-8">
+                <div className="container mx-auto px-4">
+                    <div className="flex flex-wrap items-center md:justify-between justify-center">
+                        <div className="w-full md:w-6/12 px-4 mx-auto text-center">
+                            <div className="text-sm text-white font-semibold py-1">
+                                Contactanos 
+                                <a href="https://www.creative-tim.com/product/notus-js" className="text-white hover:text-white" target="_blank">Necesitas ayuda?</a>  
+                                <a href="https://www.creative-tim.com" className="text-white hover:text-white" target="_blank"> Somos H-Music</a>.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </section>
     );
 };
 
 export default ProfilePage;
+
+
+{/* 
+         <form onSubmit={handleSubmit}>
+             <label>
+                 Nombre:
+                 <input
+                     type="text" 
+                     value={editProfile.name} 
+                     onChange={handleNameChange} 
+                 />
+             </label>
+             <br />
+             <label>
+                 Foto de perfil:
+                 <input 
+                     type="file" 
+                     onChange={handlePhotoChange} 
+                 />
+             </label>
+             <br />
+             <button 
+                 type="submit"
+             >
+                 Guardar cambios
+             </button>
+         </form>
+
+
+          */}
