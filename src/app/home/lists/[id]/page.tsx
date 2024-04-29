@@ -10,6 +10,13 @@ import { capitalizeWords } from '@/utils/CapitalizeWords';
 import { Play } from 'lucide-react';
 import usePlayer from '@/store/hooks/usePlayer';
 import { Music } from '@/lib/definitions';
+import FormReview from '@/components/lists/id/formReview';
+import MediaItem from '@/components/ui/sidebar/MediaItem';
+import Link from 'next/link';
+import useSongByGenre from '@/store/actions/getSongsByGenre';
+import useReviewsStore from '@/store/reviews.store';
+import useGetSongById from '@/store/actions/getSongById';
+
 
 interface Props {
     id: number;
@@ -17,19 +24,32 @@ interface Props {
 
 export default function MusicPlayer({ params }: { params: Props }) {
     const { data: session, status } = useSession();
+    const { getSongReviews, reviews, loading } = useReviewsStore();
     const [headerBackgroundColor, setHeaderBackgroundColor] = useState<string>('');
-    const { todos, getMusicById } = useStore();
+    const { song, getMusicById } = useGetSongById();
+    const { musicGenre, getSongsByGenre } = useSongByGenre()
     const player = usePlayer();
     const [currentSong, setCurrentSong] = useState<Music | null | undefined>(null);
     const id = params.id;
 
     useEffect(() => {
-        getMusicById(id);
+        if (id) {
+            getMusicById(id);
+        }
     }, [id]);
 
     useEffect(() => {
-        setCurrentSong(todos[0]);
-    }, [todos]);
+        if (song.length > 0) {
+            const initialSong = song.find(song => song != null);
+            setCurrentSong(initialSong || null);
+        }
+    }, [song]);
+
+    useEffect(() => {
+        if (currentSong && currentSong.GenreID) {
+            getSongsByGenre(currentSong.GenreID);
+        }
+    }, [currentSong]);
 
     useEffect(() => {
         if (currentSong && currentSong.image) {
@@ -44,11 +64,21 @@ export default function MusicPlayer({ params }: { params: Props }) {
         }
     }, [currentSong]);
 
+    useEffect(() => {
+        if (currentSong) {
+            getSongReviews(currentSong.id!);
+        }
+    }, [currentSong]);
+
+
     const handlePlayClick = () => {
         if (currentSong) {
             player.setId(currentSong.id!.toString());
-            player.setIds(todos.map((song) => song.id!.toString()));
+            player.setIds(song.map((song) => song.id!.toString()));
         }
+    };
+    const handleReviewSubmit = () => {
+        getSongReviews(currentSong!.id!);
     };
 
     if (status === 'loading') {
@@ -89,13 +119,52 @@ export default function MusicPlayer({ params }: { params: Props }) {
                                 >
                                     <Play className="text-black" fill="black" size={25} />
                                 </button>
+                                {currentSong && <p className='mt-8'>Now playing: {currentSong.name}</p>}
                             </div>
                         </div>
-
-                        {currentSong && <p className='mt-5'>Now playing: {currentSong.name}</p>}
                     </div>
                 </div>
             )}
+
+            <div className='px-6 mt-8 mb-7 flex flex-col'>
+                <div className='w-full rounded-md bg-neutral-400/5 p-8 min-h-56 flex-col gap-y-4 border-white flex'>
+                    <h2 className='text-center'>All Reviews</h2>
+                    {reviews.length > 0 ? (
+                        reviews.map((review) => (
+                            <div key={review.id}>
+                                <p>{review.content}</p>
+                                <p>Punctuation: {review.punctuation}</p>
+                            </div>
+                        ))
+                    ) : (
+                        <p>No reviews available for this song</p>
+                    )}
+
+                </div>
+            </div>
+            <div className='mt-8 mb-7 px-6 flex gap-x-16'>
+                <div className='w-1/2'>
+                    <FormReview
+                        currentSongId={currentSong?.id || 0}
+                        userId={session?.user?.id || ''}
+                        onReviewSubmit={handleReviewSubmit}
+                    />
+                </div>
+                <div className='w-1/2 flex flex-col gap-8'>
+                    <h2 className='text-left'>Explore songs of the same genre</h2>
+                    {musicGenre.map((song) => (
+                        <Link
+                            href={`/home/lists/${song.id}`}
+                            key={song.id}
+                        >
+                            <MediaItem
+                                data={song}
+                            />
+                        </Link>
+                    ))}
+                </div>
+
+            </div>
         </div>
     );
 }
