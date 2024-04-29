@@ -73,10 +73,10 @@ const Verification = () => {
     </h1>
     <p className="mb-4 text-lg text-gray-700">
       {message}
-    </p>
+    </p>{isFetchSuccessful ? <></> :
     <button className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600" onClick={handleReSendEmail} >
       Reenviar Email
-    </button>
+    </button>}
     {isFetchSuccessful && 
       <button 
         onClick={handleLoginRedirect}
