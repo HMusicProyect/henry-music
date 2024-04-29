@@ -54,7 +54,7 @@ useEffect(() => {
   async function checkSession() {
     if ('ok' in res && res.ok) {
       const session = await getSession();
-      const user = session?.user;
+      const user = session?.user.user;
       if (user) {
         const userName = user.name.replace(/\s/g, '');
         if (user.esta_verificado === false) {

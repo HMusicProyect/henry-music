@@ -46,7 +46,10 @@ export const useStore = create<Store>((set, get) => ({
   },
   
   verifyUser: async (id: string, url: string) => {
+
     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/verification?id=${id}&url=${url}`);
+
+    
     if(!response) return response;
     
     if (response.ok) {

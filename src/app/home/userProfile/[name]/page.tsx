@@ -17,7 +17,7 @@ const ProfilePage = () => {
     const searchParams = useSearchParams();
     const router = useRouter();
     
-    const userSession: UserWithPhoto = session?.user!;
+    const userSession: UserWithPhoto = session?.user.user!;
 
     const [editProfile, setEditProfile] = useState<UserWithPhoto>({ name: '', photo: undefined });
     const [passwordFieldsEnabled, setPasswordFieldsEnabled] = useState(false);
