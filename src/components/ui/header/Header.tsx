@@ -21,15 +21,13 @@ interface HeaderProps{
 const Header: React.FC<HeaderProps> = ({ children, className }) => {
     const router = useRouter();
     const [message, setMessage] = useState("");
+
     const { data: session } = useSession();
 
-    
-    
-    const userSession: User = session?.user!;
+    const userSession: User = session?.user.user!;
+    console.log(userSession?.image)
 
     const userToken = session?.user.jti || session?.user.token;
-
-    console.log(userToken)
 
     function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
@@ -115,7 +113,7 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
                                     <Menu.Item>
                                     {({ active }) => (
                                         <Link
-                                        href={`/home/userProfile/${session?.user.name}?id=${session?.user.name}&token=${userToken}`}
+                                        href={`/home/userProfile/${userSession.name}?id=${userSession.name}&token=${userToken}`}
                                         className={
                                             classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
                                         >
