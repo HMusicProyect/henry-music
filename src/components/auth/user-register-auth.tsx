@@ -31,6 +31,7 @@ export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
   });
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const url = 'verification'
 
 
   async function onSubmit(event: React.SyntheticEvent) {
@@ -61,7 +62,7 @@ export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
     } else {
       const user = await response.json();
     if(user.id){
-      await verifyUser(user.id);
+      await verifyUser(user.id, url);
       const name = user?.name.replace(/\s+/g, '');
       router.push(`/verification/${name}`);
     }

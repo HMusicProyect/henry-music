@@ -12,6 +12,7 @@ declare module "next-auth" {
             esta_verificado: boolean;
             token: string;
             provider?: string; 
+            jti?: string;
         };
     }
 }

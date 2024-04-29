@@ -3,11 +3,14 @@ import { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 const Verification = () => {
+
   const router = useRouter();
-  const pathname = usePathname();
+
   const searchParams = useSearchParams();
+  
   const id = searchParams.get('id');
   const token = searchParams.get('token');
+
   const [message, setMessage] = useState('');
   const [isFetchSuccessful, setIsFetchSuccessful] = useState(false);
 

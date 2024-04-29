@@ -7,13 +7,16 @@ import { ModalComponent } from '@/components/ui/Modal/Modal';
 import { UserWithPhoto } from '@/lib/definitions';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
+import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useState } from 'react';
 
 
 
 const ProfilePage = () => {
     const { data: session, status } = useSession();
-
+    const searchParams = useSearchParams();
+    const router = useRouter();
+    
     const userSession: UserWithPhoto = session?.user!;
 
     const [editProfile, setEditProfile] = useState<UserWithPhoto>({ name: '', photo: undefined });
@@ -24,9 +27,19 @@ const ProfilePage = () => {
     const [imageURL, setImageURL] = useState<string | null>(null);
     const [message, setMessage]= useState<string[]>([]);
     const [ isModalOpen, setIsModalOpen ] = useState(false);
-    
+
+
 
     if(status === "loading") return <p>Cargando...</p>;
+    const userToken = session?.user.jti || session?.user.token;
+    const id = searchParams.get('id');
+    const token = searchParams.get('token');
+
+    
+    if(userToken !== token) {
+        router.push('/home');
+    }
+
 
     const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setEditProfile(prevState => ({ ...prevState, name: event.target.value }));
@@ -124,9 +137,9 @@ const ProfilePage = () => {
                 </div>
 
                 {/* detalles del perfil */}
-                { session?.user?.provider !== 'google' && 
+                
                     <div>
-                        {!isEditingPassword && (
+                        {session?.user?.provider !== 'google' &&  !isEditingPassword && (
                             <button 
                                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                                 onClick={toggleEdit}
@@ -142,7 +155,6 @@ const ProfilePage = () => {
                         </button>
                     </div>
                     
-                }
                 <div>
                     {
                         session?.user?.provider !== 'google' &&  isEditingPassword ? (
