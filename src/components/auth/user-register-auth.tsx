@@ -64,7 +64,7 @@ export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
     if(user.id){
       await verifyUser(user.id, url);
       const name = user?.name.replace(/\s+/g, '');
-      router.push(`/verification/${name}`);
+      router.push(`/verification/${name}?id=${user.id}`);
     }
     }
 

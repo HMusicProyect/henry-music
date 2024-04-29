@@ -1,12 +1,18 @@
 "use client";
 import { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { useStore } from "@/store/user.store";
+import { Button } from "@/components/ui/button";
+
 
 const Verification = () => {
 
   const router = useRouter();
 
   const searchParams = useSearchParams();
+
+  const { verifyUser  } = useStore();
   
   const id = searchParams.get('id');
   const token = searchParams.get('token');
@@ -46,6 +52,19 @@ const Verification = () => {
     router.push('/login');
   };
   
+  let url = "verification";
+  const handleReSendEmail = async (e:any) => {
+    e.preventDefault();
+    if(id == null || url == null ) return;
+      try {
+         await verifyUser(id, url)
+          setMessage('Email reenviado');
+        }
+      catch (error) {
+          setMessage('hubo un error');
+          throw error
+      }
+  };
 
   return (
   <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
@@ -55,6 +74,9 @@ const Verification = () => {
     <p className="mb-4 text-lg text-gray-700">
       {message}
     </p>
+    <button className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600" onClick={handleReSendEmail} >
+      Reenviar Email
+    </button>
     {isFetchSuccessful && 
       <button 
         onClick={handleLoginRedirect}
