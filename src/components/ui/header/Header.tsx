@@ -93,7 +93,7 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
                                     <span className="sr-only">Open user menu</span>
                                     <Image
                                         className="h-11 w-11 rounded-full"
-                                        src={`${userSession?.image}` || `/images/default-profile.png`}
+                                        src={`${userSession?.image!}` || `/images/default-profile.png`}
                                         alt="img perfil"
                                         width={100}
                                         height={100}
@@ -113,7 +113,7 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
                                     <Menu.Item>
                                     {({ active }) => (
                                         <Link
-                                        href={`/home/userProfile/${userSession.name}?id=${userSession.name}&token=${userToken}`}
+                                        href={`/home/userProfile/${userSession?.name}?id=${userSession?.id}&token=${userToken}`}
                                         className={
                                             classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
                                         >
