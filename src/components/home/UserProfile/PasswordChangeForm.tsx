@@ -1,81 +1,30 @@
 // PasswordChangeForm.tsx
 import React from 'react';
+import ResetPasswordForm from './password/ResetPasswordForm';
 
 type PasswordChangeFormProps = {
-    handleCurrentPasswordChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-    verifyCurrentPassword: () => void;
-    handlePasswordChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-    handleConfirmPasswordChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-    passwordFieldsEnabled: boolean;
-    onSubmit: (event: React.FormEvent) => void; 
+    handleSubmit: (formValues: any) => void;
+    passwordError: string;
+    setPasswordError: (passwordError: string) => void;
+    passwordCriteria: any;
 };
 
 export const PasswordChangeForm: React.FC<PasswordChangeFormProps> = ({
-    handleCurrentPasswordChange,
-    verifyCurrentPassword,
-    handlePasswordChange,
-    handleConfirmPasswordChange,
-    passwordFieldsEnabled,
-    onSubmit,
+    handleSubmit,
+    passwordError,
+    setPasswordError,
+    passwordCriteria,
+    
 }) => (
-    <>
-    <form onSubmit={onSubmit}> 
-        <div className="mb-4">
-            <label 
-                className="block text-gray-700 text-sm font-bold mb-2" 
-                htmlFor="currentPassword"
-            >
-                Contraseña actual:
-            </label>
-            <input 
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
-                type="password" 
-                id="currentPassword" 
-                onChange={handleCurrentPasswordChange} 
-            />
-            <button 
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                onClick={verifyCurrentPassword}
-            >
-                Verificar contraseña
-            </button>
+        <div className="bg-black flex items-center justify-center h-screen">
+            <div className="bg-white p-8 rounded-lg shadow-lg max-w-sm w-full">
+                <p className="text-sm text-gray-600 mb-6">Update password htmlFor enhanced account security.</p>
+                <ResetPasswordForm
+                    onSubmit={handleSubmit}
+                    passwordError={passwordError}
+                    setPasswordError={setPasswordError}
+                    passwordCriteria={passwordCriteria}
+                />
+            </div>
         </div>
-        <div className="mb-4">
-            <label 
-                className="block text-gray-700 text-sm font-bold mb-2" 
-                htmlFor="password"
-            >
-                Nueva Contraseña:
-            </label>
-            <input 
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
-                type="password" 
-                id="password" 
-                onChange={handlePasswordChange} 
-                disabled={!passwordFieldsEnabled}
-            />
-        </div>
-        <div className="mb-6">
-            <label 
-                className="block text-gray-700 text-sm font-bold mb-2" 
-                htmlFor="confirmPassword"
-            >
-                Confirmar Contraseña:
-            </label>
-            <input 
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
-                type="password" 
-                id="confirmPassword" 
-                onChange={handleConfirmPasswordChange}
-                disabled={!passwordFieldsEnabled}
-            />
-        </div>
-        <button 
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            type="submit" // Asegúrate de que el botón sea de tipo "submit" para que pueda enviar el formulario
-        >
-            Cambiar Contraseña
-        </button>
-    </form>
-    </>
 );

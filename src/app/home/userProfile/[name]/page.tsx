@@ -1,9 +1,11 @@
 "use client"
-import { PasswordChangeForm } from '@/components/home/UserProfile/PasswordChangeForm';
+
 import { UserForm } from '@/components/home/UserProfile/UserForm';
 import UserProfile from '@/components/home/UserProfile/UserInfo';
+import ResetPassword from '@/components/home/UserProfile/resetPasswordPage/ResetPasswordPage';
 import { updateUserInfo } from '@/components/home/UserProfile/updateUserInfo';
 import { ModalComponent } from '@/components/ui/Modal/Modal';
+import { User } from '@/lib/auth/user.auth';
 import { UserWithPhoto } from '@/lib/definitions';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
@@ -17,8 +19,7 @@ const ProfilePage = () => {
     const searchParams = useSearchParams();
     const router = useRouter();
     
-    const userSession = session?.user.provider === 'google' ? session?.user! : session?.user.user!;
-
+    
     const [editProfile, setEditProfile] = useState<UserWithPhoto>({ name: '', photo: undefined });
     const [passwordFieldsEnabled, setPasswordFieldsEnabled] = useState(false);
     
@@ -28,19 +29,20 @@ const ProfilePage = () => {
     const [message, setMessage]= useState<string[]>([]);
     const [ isModalOpen, setIsModalOpen ] = useState(false);
 
-
-
-    if(status === "loading") return <p>Cargando...</p>;
-    const userToken = session?.user.jti || session?.user.token;
-    
-    const id = searchParams.get('id');
-    const token = searchParams.get('token');
-
-    
-    if(userToken !== token) {
+    if(!session){
         router.push('/home');
     }
 
+    if(status === "loading") return <p>Cargando...</p>;
+
+    const userSession: User = session?.user.provider === 'google' ? session?.user! : session?.user.user!;
+
+    const userToken = session?.user.jti || session?.user.token;
+
+    
+    const id = searchParams.get('id');
+
+    const token = searchParams.get('token');
 
     const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setEditProfile(prevState => ({ ...prevState, name: event.target.value }));
@@ -96,6 +98,8 @@ const ProfilePage = () => {
         setImageURL(null);
     };
 
+    //password
+
     return (
         <section className="pt-16 bg-blueGray-50">
         <div className="w-full lg:w-4/12 px-4 mx-auto">
@@ -148,24 +152,22 @@ const ProfilePage = () => {
                                 {isEditing ? 'Ver Perfil' : 'Editar Perfil'}
                             </button>
                         )}
-                        <button 
-                            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                            onClick={togglePasswordEdit}
-                        >
-                            {isEditingPassword ? 'Cancelar Edición de Contraseña' : 'Editar Contraseña'}
-                        </button>
+                        {session?.user?.provider !== 'google' &&  (
+                            <button 
+                                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                onClick={togglePasswordEdit}
+                            >
+                                {isEditingPassword ? 'Cancelar Edición de Contraseña' : 'Editar Contraseña'}
+                            </button>
+                        )}
                     </div>
                     
                 <div>
                     {
-                        session?.user?.provider !== 'google' &&  isEditingPassword ? (
-                            <PasswordChangeForm 
-                                handleCurrentPasswordChange={() => {}}
-                                verifyCurrentPassword={() => {}}
-                                handlePasswordChange={() => {}}
-                                handleConfirmPasswordChange={() => {}}
-                                passwordFieldsEnabled={passwordFieldsEnabled}
-                                onSubmit={() => {}}
+                        session?.user?.provider !== 'google' && isEditingPassword && id && token ?(
+                            <ResetPassword
+                                id={id}
+                                token={token}
                             />
                             
                         ) : session?.user?.provider !== 'google' && isEditing ? (
@@ -178,7 +180,9 @@ const ProfilePage = () => {
                                 onUserChange={setEditProfile}
                             />
                             ) : (
-                            <UserProfile session={userSession} />
+                                <>
+                                    <UserProfile session={userSession} />
+                                </>
                         )
                     }
                 </div>

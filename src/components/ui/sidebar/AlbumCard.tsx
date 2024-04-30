@@ -13,7 +13,7 @@ const AlbumCard: React.FC<AlbumProps> = ({ imageUrl, name, artistName }) => {
         <Card className="mt-8 w-64 bg-yellow-800 transition duration-400 ease-in-out hover:bg-yellow-700" >
             <div className="relative h-48 w-full">
                 <Image
-                    src={imageUrl}
+                    src={`${imageUrl}` || `/images/default-profile.png`}
                     alt="Album cover"
                     className="object-cover rounded-t-lg"
                     width={500} 
