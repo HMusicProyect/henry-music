@@ -24,6 +24,9 @@ interface Props {
 
 export default function MusicPlayer({ params }: { params: Props }) {
     const { data: session, status } = useSession();
+    
+    const userSession = session?.user.provider === 'google' ? session?.user! : session?.user.user!;
+
     const { getSongReviews, reviews, loading } = useReviewsStore();
     const [headerBackgroundColor, setHeaderBackgroundColor] = useState<string>('');
     const { song, getMusicById } = useGetSongById();
@@ -146,7 +149,7 @@ export default function MusicPlayer({ params }: { params: Props }) {
                 <div className='w-1/2'>
                     <FormReview
                         currentSongId={currentSong?.id || 0}
-                        userId={session?.user?.id || ''}
+                        userId={userSession?.id || ''}
                         onReviewSubmit={handleReviewSubmit}
                     />
                 </div>

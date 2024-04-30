@@ -24,8 +24,7 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
 
     const { data: session } = useSession();
 
-    const userSession: User = session?.user.user!;
-    console.log(userSession?.image)
+    const userSession: User = session?.user.provider === 'google' ? session?.user! : session?.user.user!;
 
     const userToken = session?.user.jti || session?.user.token;
 
@@ -35,7 +34,6 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
 
     const handleSignOut = async () => {
         try {
-        // Cerrar sesión utilizando NextAuth
         await signOut();
 
         } catch (error) {
@@ -47,7 +45,6 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
     const handlePremium = async () => {
         try {
             const usuario = userSession.email
-            console.log(usuario)
             const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pay`, {
             email:usuario
             });
@@ -93,7 +90,7 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
                                     <span className="sr-only">Open user menu</span>
                                     <Image
                                         className="h-11 w-11 rounded-full"
-                                        src={`${userSession?.image!}` || `/images/default-profile.png`}
+                                        src={`${userSession?.image}` || `/images/default-profile.png`}
                                         alt="img perfil"
                                         width={100}
                                         height={100}

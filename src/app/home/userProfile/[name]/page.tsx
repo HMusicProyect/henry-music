@@ -17,7 +17,7 @@ const ProfilePage = () => {
     const searchParams = useSearchParams();
     const router = useRouter();
     
-    const userSession: UserWithPhoto = session?.user.user!;
+    const userSession = session?.user.provider === 'google' ? session?.user! : session?.user.user!;
 
     const [editProfile, setEditProfile] = useState<UserWithPhoto>({ name: '', photo: undefined });
     const [passwordFieldsEnabled, setPasswordFieldsEnabled] = useState(false);
@@ -32,6 +32,7 @@ const ProfilePage = () => {
 
     if(status === "loading") return <p>Cargando...</p>;
     const userToken = session?.user.jti || session?.user.token;
+    
     const id = searchParams.get('id');
     const token = searchParams.get('token');
 
