@@ -1,8 +1,6 @@
 // pages/reset-password.tsx
 'use client';
 import { useSearchParams, useRouter } from 'next/navigation';
-import ResetPassword from '@/components/home/UserProfile/resetPasswordPage/ResetPasswordPage';
-import { useState } from 'react';
 
 
 const ResetPasswordPage = () => {
@@ -14,10 +12,12 @@ const ResetPasswordPage = () => {
     return (
         <div>
             {id && token ? (
-                <ResetPassword
-                    id={id}
-                    token={token}
-                />
+                <>
+                    {/* <ResetPassword
+                        id={id}
+                        token={token}
+                    /> */}
+                </>
             ):(
                 <div className="flex items-center justify-center min-h-screen text-center">
                     <p>Invalid link</p>
