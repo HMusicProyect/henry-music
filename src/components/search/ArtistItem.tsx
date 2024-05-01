@@ -11,7 +11,7 @@ interface ArtistItemProps {
 
 const ArtistItem: React.FC<ArtistItemProps> = ({ artist, index }) => {
     return (
-        <Link href={`/home/artists/${artist.id}`}>
+        <Link href={`/home/artists/${artist.name}`}>
             <div className="relative group flex flex-col items-center justify-center rounded-md overflow-hidden gap-x-4 bg-orange-400/5 cursor-pointer hover:bg-orange-400/10 transition p-3">
                 <div className='relative aspect-square w-full h-full rounded-md overflow-hidden'>
                     <Image
