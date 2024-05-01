@@ -112,13 +112,14 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
         setIsModalOpen(false);
         setMessage('');
     };
+    
 
     return (
             <>
                 <div className='grid grid-cols-2 md:grid-cols-3 h-full'>
                         <div className='flex w-full justify-start'>
                             <div className='flex items-center gap-x-4'>
-                                <MediaItem data={song} />
+                                <MediaItem data={song} onClick={() => router.push(`/home/lists/${song.id}`)} />
                             </div>
                         </div>
                         <div className='hidden h-full md:flex justify-center items-center w-full max-w-[722px] gap-x-6'>
