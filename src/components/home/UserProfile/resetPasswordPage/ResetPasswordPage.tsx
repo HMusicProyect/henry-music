@@ -1,8 +1,6 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import PasswordCriteria from "../password/PasswordCriteria";
 import ResetPasswordForm from "../password/ResetPasswordForm";
-import { useRouter } from 'next/router'
-import { useSession } from 'next-auth/react'
 
 interface FormValues {
     email: string;
@@ -13,11 +11,20 @@ interface FormValues {
 interface ResetPasswordProps {
     id: string;
     token: string;
+    setSuccessMessage: Dispatch<SetStateAction<string[]>>;
+    setIsModalOpen: (isOpen: boolean) => void;
+    setMessageType: Dispatch<SetStateAction<'success' | 'error' | ''>>;
 }
 
 
 
-const ResetPassword: React.FC<ResetPasswordProps> = ({ id, token })=> {
+const ResetPassword: React.FC<ResetPasswordProps> = ({ 
+    id, 
+    token, 
+    setSuccessMessage, 
+    setIsModalOpen, 
+    setMessageType 
+})=> {
 
     const [passwordError, setPasswordError] = useState<string>('');
 
@@ -27,9 +34,6 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ id, token })=> {
         number: false,
     });
 
-    const {data: session} = useSession();
-    const user = session?.user;
-    const jwtToken = user?.token;
 
     const handleSubmit = async (formValues: FormValues) => {
         console.log(formValues)
@@ -37,7 +41,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ id, token })=> {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `${jwtToken}`,
+                'Authorization': `${token}`,
             },
             body: JSON.stringify({
                 email: formValues.email,
@@ -48,7 +52,15 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ id, token })=> {
         });
 
         const data = await response.json();
-        console.log(data)
+        if (response.ok) {
+            setSuccessMessage(['Contraseña cambiada con éxito']);
+            setMessageType('success');
+            setIsModalOpen(true);
+        } else {
+            setSuccessMessage(['Error al cambiar la contraseña']);
+            setMessageType('error');
+            setIsModalOpen(true);
+        }
     };
 
     return (
@@ -60,8 +72,10 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ id, token })=> {
                     passwordError={passwordError}
                     setPasswordError={setPasswordError}
                     passwordCriteria={passwordCriteria}
+                    setPasswordCriteria={setPasswordCriteria}
                 />
             </div>
+            
         </div>
     );
 };

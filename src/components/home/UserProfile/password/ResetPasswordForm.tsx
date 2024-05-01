@@ -18,9 +18,14 @@ interface ResetPasswordFormProps {
         uppercase: boolean;
         number: boolean;
     };
+    setPasswordCriteria: React.Dispatch<React.SetStateAction<{
+        length: boolean;
+        uppercase: boolean;
+        number: boolean;
+    }>>;
 }
 
-const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({ onSubmit, passwordError, setPasswordError, passwordCriteria }) => {
+const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({ onSubmit, passwordError, setPasswordError, passwordCriteria, setPasswordCriteria }) => {
     const [formValues, setFormValues] = useState<FormValues>({
         email: '',
         password: '',
@@ -34,14 +39,27 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({ onSubmit, passwor
     }, [formValues.newPassword, confirmPassword, setPasswordError]);
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = event.target;
         setFormValues({
             ...formValues,
-            [event.target.name]: event.target.value,
+            [name]: value,
         });
+
+        if (name === 'newPassword') {
+            checkPasswordCriteria(value);
+        }
     };
 
     const handleConfirmPasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
         setConfirmPassword(event.target.value);
+    };
+
+    const checkPasswordCriteria = (password: string) => {
+        setPasswordCriteria({
+            length: password.length >= 8,
+            uppercase: /[A-Z]/.test(password),
+            number: /\d/.test(password),
+        });
     };
 
     const handleSubmit = (event: FormEvent) => {

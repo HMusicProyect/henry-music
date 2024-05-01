@@ -24,20 +24,22 @@ const ProfilePage = () => {
     const [passwordFieldsEnabled, setPasswordFieldsEnabled] = useState(false);
     
     const [isEditingPassword, setIsEditingPassword] = useState(false);
+
     const [isEditing, setIsEditing] = useState(false);
     const [imageURL, setImageURL] = useState<string | null>(null);
+
     const [message, setMessage]= useState<string[]>([]);
+    const [messageType, setMessageType] = useState<'success' | 'error' | ''>('');
     const [ isModalOpen, setIsModalOpen ] = useState(false);
 
-    if(!session){
+    if(status === "loading"){
+        return <p>Cargando...</p>;
+    } else if(!session){
         router.push('/home');
     }
 
-    if(status === "loading") return <p>Cargando...</p>;
 
     const userSession: User = session?.user.provider === 'google' ? session?.user! : session?.user.user!;
-
-    const userToken = session?.user.jti || session?.user.token;
 
     
     const id = searchParams.get('id');
@@ -65,19 +67,20 @@ const ProfilePage = () => {
 
         try {
             const response = await updateUserInfo(editProfile, userSession);
-            console.log('response', response);
 
         if (response.status !== 'success') {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
         const data = response.data;
+
         setMessage(['Información de usuario actualizada con éxito']);
+        setMessageType('success');
         setIsModalOpen(true);
-        console.log('response', data);
 
         } catch (error) {
             setMessage(['Error al actualizar la información del usuario']);
+            setMessageType('error');
             setIsModalOpen(true);
             console.error('Failed to update user information:', error);
         }
@@ -168,6 +171,9 @@ const ProfilePage = () => {
                             <ResetPassword
                                 id={id}
                                 token={token}
+                                setSuccessMessage={setMessage}
+                                setIsModalOpen={setIsModalOpen}
+                                setMessageType={setMessageType}
                             />
                             
                         ) : session?.user?.provider !== 'google' && isEditing ? (
@@ -217,11 +223,11 @@ const ProfilePage = () => {
                             <div>
                                 {message.length > 0 && (
                                     <div className="flex justify-center items-center mt-2">
-                                    <ul className="mb-0 text-red-500">
-                                        {message.map((error) => (
-                                        <li key={error}>
-                                            <h1 className="mb-10 text-lg">
-                                                {error}
+                                    <ul className={`mb-0 text-lg ${messageType === 'success' ? 'text-green-500' : 'text-red-500'}`}>
+                                        {message.map((msg) => (
+                                        <li key={msg}>
+                                            <h1 className="mb-10">
+                                                {msg}
                                             </h1>
                                         </li>
                                         ))}
@@ -275,33 +281,3 @@ const ProfilePage = () => {
 };
 
 export default ProfilePage;
-
-
-{/* 
-         <form onSubmit={handleSubmit}>
-             <label>
-                 Nombre:
-                 <input
-                     type="text" 
-                     value={editProfile.name} 
-                     onChange={handleNameChange} 
-                 />
-             </label>
-             <br />
-             <label>
-                 Foto de perfil:
-                 <input 
-                     type="file" 
-                     onChange={handlePhotoChange} 
-                 />
-             </label>
-             <br />
-             <button 
-                 type="submit"
-             >
-                 Guardar cambios
-             </button>
-         </form>
-
-
-          */}
