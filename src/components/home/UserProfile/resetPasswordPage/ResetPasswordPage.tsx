@@ -2,6 +2,7 @@ import { useState } from "react";
 import PasswordCriteria from "../password/PasswordCriteria";
 import ResetPasswordForm from "../password/ResetPasswordForm";
 import { useRouter } from 'next/router'
+import { useSession } from 'next-auth/react'
 
 interface FormValues {
     email: string;
@@ -14,6 +15,8 @@ interface ResetPasswordProps {
     token: string;
 }
 
+
+
 const ResetPassword: React.FC<ResetPasswordProps> = ({ id, token })=> {
 
     const [passwordError, setPasswordError] = useState<string>('');
@@ -24,13 +27,17 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ id, token })=> {
         number: false,
     });
 
+    const {data: session} = useSession();
+    const user = session?.user;
+    const jwtToken = user?.token;
+
     const handleSubmit = async (formValues: FormValues) => {
         console.log(formValues)
         const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users/${id}/editPasword`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
+                'Authorization': `${jwtToken}`,
             },
             body: JSON.stringify({
                 email: formValues.email,
