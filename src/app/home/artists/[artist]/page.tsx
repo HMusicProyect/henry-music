@@ -7,6 +7,7 @@ import useStore from '@/store/songs.store';
 import { Music } from "@/lib/definitions";
 import Link from "next/link";
 import { capitalizeWords } from "@/utils/CapitalizeWords";
+import router from "next/router";
 
 interface ArtistProps {
     params: {
@@ -55,6 +56,7 @@ const Artist: React.FC<ArtistProps> = ({ params: { artist } }) => {
                                 alt='Image'
                                 width={200} 
                                 height={200} 
+                                
                             />
                         </div>
                         <div className='flex flex-col items-start w-full pt-4 gap-y-1'>
@@ -76,7 +78,7 @@ const Artist: React.FC<ArtistProps> = ({ params: { artist } }) => {
                   className="text-white transition-transform duration-300 ease-in-out transform hover:bg-neutral-400/10 rounded-md bg-neutral-950"
                 >
                   <td className="px-4 py-3 text-md font-semibold dark:border-slate-500 ">
-                  <Link href={`/lists/${invoice.id}`}>
+                  <Link href={`/home/lists/${invoice.id}`}>
                       <div className="flex items-center text-sm">
                         <div className="relative mr-3 rounded-full md:block">
                       {invoice?.id}
@@ -84,9 +86,9 @@ const Artist: React.FC<ArtistProps> = ({ params: { artist } }) => {
                       </div>
                     </Link>
                   </td>
-                  <img src={invoice.image} alt={invoice.name} className="w-12 h-12 object-cover mt-3 transform translate-y-4"/>
+                  <img src={invoice.image} alt={invoice.name} className="w-12 h-12 object-cover mt-3 transform translate-y-4" />
                   <td className="px-4 py-3 text-sm dark:text-gray-200 dark:border-slate-600 ">
-                    <Link href={`/lists/${invoice.id}`}>
+                    <Link href={`/home/lists/${invoice.id}`}>
                     <div className="flex items-center text-sm">
                         <div className="relative mr-3 rounded-full md:block">
                         {capitalizeWords(invoice.name)}
@@ -95,7 +97,7 @@ const Artist: React.FC<ArtistProps> = ({ params: { artist } }) => {
                     </Link>
                   </td>
                   <td className="px-4 py-3 text-sm dark:text-gray-200 dark:border-slate-600 ">
-                    <Link href={`/lists/${invoice.id}`}>
+                    <Link href={`/home/lists/${invoice.id}`}>
                     <div className="flex items-center text-sm">
                         <div className="relative mr-3 rounded-full md:block">
                         {invoice.Artist?.name}
@@ -104,7 +106,7 @@ const Artist: React.FC<ArtistProps> = ({ params: { artist } }) => {
                     </Link>
                   </td>
                   <td className="px-4 py-3 text-sm dark:text-gray-200 dark:border-slate-600 ">
-                    <Link href={`/lists/${invoice.id}`}>
+                    <Link href={`/home/lists/${invoice.id}`}>
                     <div className="flex items-center text-sm">
                         <div className="relative mr-3 rounded-full md:block">
                         {invoice.Genre?.name}
