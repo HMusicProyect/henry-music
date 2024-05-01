@@ -11,9 +11,9 @@ interface FormValues {
 interface ResetPasswordProps {
     id: string;
     token: string;
-    setSuccessMessage: Dispatch<SetStateAction<string[]>>;
-    setIsModalOpen: (isOpen: boolean) => void;
-    setMessageType: Dispatch<SetStateAction<'success' | 'error' | ''>>;
+    setSuccessMessage?: Dispatch<SetStateAction<string[]>>;
+    setIsModalOpen?: (isOpen: boolean) => void;
+    setMessageType?: Dispatch<SetStateAction<'success' | 'error' | ''>>;
 }
 
 
