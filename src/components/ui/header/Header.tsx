@@ -26,7 +26,7 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
 
     const userSession: User = session?.user.provider === 'google' ? session?.user! : session?.user.user!;
 
-    const userToken = session?.user.jti || session?.user.token;
+    const userToken = session?.user.provider === 'google' ? session?.user.jti! : session?.user.token;
 
     function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')

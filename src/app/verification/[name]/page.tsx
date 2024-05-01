@@ -53,11 +53,12 @@ const Verification = () => {
   };
   
   let url = "verification";
+  
   const handleReSendEmail = async (e:any) => {
     e.preventDefault();
     if(id == null || url == null ) return;
       try {
-         await verifyUser(id, url)
+          await verifyUser(id, url)
           setMessage('Email reenviado');
         }
       catch (error) {

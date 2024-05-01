@@ -30,8 +30,6 @@ const  verifyUser = async (user: UserWithPhoto) => {
 export const updateUserInfo = async (user: UserWithPhoto, userSession: any) => {
 
     const updateData = await verifyUser(user);
-
-    console.log('updateData', updateData);
     
     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users/editNameAndPic/${userSession.id}`, {
         method: 'PUT',

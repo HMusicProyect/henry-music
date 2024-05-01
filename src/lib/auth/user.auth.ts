@@ -33,7 +33,7 @@ export async function getUser(email: string, password: string): Promise<User> {
         return user;
     } catch (error) {
         console.error('Failed to fetch user:', error);
-        throw new Error('Failed to fetch user.');
+        throw new Error('Failed to fetch user.', error!);
     }
 }
 
@@ -84,7 +84,7 @@ export async function postAuthorize(credentials: any, provider: string) {
                     email:credentials.email, 
                     provider: provider,
                     password: credentials.id
-                }) // Enviar solo estos datos
+                })
         });
 
         if (!response.ok) {
