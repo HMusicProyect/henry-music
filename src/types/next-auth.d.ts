@@ -13,6 +13,7 @@ declare module "next-auth" {
                 rol: string;
                 token: string;
                 expires: string;
+                esta_verificado : boolean;
             };
     }
 }
