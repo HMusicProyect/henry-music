@@ -8,6 +8,7 @@ import { Music } from "@/lib/definitions";
 import Link from "next/link";
 import { capitalizeWords } from "@/utils/CapitalizeWords";
 import router from "next/router";
+import Header from "@/components/ui/header/Header";
 
 interface ArtistProps {
     params: {
@@ -45,7 +46,14 @@ const Artist: React.FC<ArtistProps> = ({ params: { artist } }) => {
     }
     
     return (
-        <div className="flex justify-center items-center min-h-screen">
+      <>
+     
+      <Header children={undefined}/>
+      <div className="flex justify-center items-center min-h-screen" style={{ marginTop: '-50px' }}>
+
+           
+    
+    
             <div className="max-w-lg">
                 {artistData && (
                    <div className="relative group flex flex-col items-center justify-center rounded-md overflow-hidden gap-x-4 bg-orange-400/5 cursor-pointer hover:bg-orange-400/10 transition p-3 mr-4 mt-2" style={{ transform: 'translateY(8px)' }}>
@@ -119,6 +127,7 @@ const Artist: React.FC<ArtistProps> = ({ params: { artist } }) => {
         </ul>
 
         </div>
+        </>
     );
 }
 
