@@ -8,7 +8,7 @@ import useStore from '@/store/actions/modifyRol';
 const Pay = () => {
 
 const {data: session} = useSession();
-const email = session?.user?.user?.email;
+const email = session?.user?.email;
 
 const { modifyRole } = useStore();
 

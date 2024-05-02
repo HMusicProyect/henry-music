@@ -25,7 +25,7 @@ interface Props {
 export default function MusicPlayer({ params }: { params: Props }) {
     const { data: session, status } = useSession();
     
-    const userSession = session?.user.provider === 'google' ? session?.user! : session?.user.user!;
+    const userSession = session?.user!;
 
     const { getSongReviews, reviews, loading } = useReviewsStore();
     const [headerBackgroundColor, setHeaderBackgroundColor] = useState<string>('');

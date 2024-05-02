@@ -75,9 +75,13 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({ onSubmit, passwor
             <InputField id="confirm-password" type="password" name="confirmPassword" value={confirmPassword} onChange={handleConfirmPasswordChange} placeholder="••••••••" required />
             {passwordError && <p className='text-red-500 text-xs'>{passwordError}</p>}
             <PasswordCriteria criteria={passwordCriteria} />
-            <div className="flex justify-between">
-                <button type="button" className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none focus:ring focus:border-blue-300">Discard</button>
-                <button type="submit" className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300">Apply Changes</button>
+            <div className="flex justify-center">
+                <button 
+                    type="submit" 
+                    className="px-2 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300 mt-[-20px]"
+                >
+                    Apply Changes
+                </button>
             </div>
         </form>
     );
