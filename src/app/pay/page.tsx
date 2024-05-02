@@ -16,7 +16,7 @@ useEffect(() => {
   if (email) {
     modifyRole(email)
   }
-}, [email]);
+}, [email, modifyRole]);
 
   
 

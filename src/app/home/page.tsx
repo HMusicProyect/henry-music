@@ -17,9 +17,9 @@ const Home: React.FC = () => {
   const { albums, loading: albumsLoading, getAlbums } = useAlbumsStore();
 
   useEffect(() => {
-    getMusic();
-    getAlbums();
-  }, []);
+      getMusic();
+      getAlbums();
+  }, [getMusic, getAlbums]);
 
 
   const firstFourSongs = todos.slice(0, 4);

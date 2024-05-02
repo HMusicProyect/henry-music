@@ -15,7 +15,7 @@ import {User} from "@/lib/definitions"
 
 
 interface HeaderProps{
-    children: React.ReactNode;
+    children?: React.ReactNode;
     className?: string;
 }
 const Header: React.FC<HeaderProps> = ({ children, className }) => {
