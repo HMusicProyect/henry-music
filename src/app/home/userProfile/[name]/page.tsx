@@ -161,8 +161,7 @@ const ProfilePage = () => {
                         </div>
                 </div>
 
-                {/* detalles del perfil */}
-                    
+
                 <div>
                     {
                         session?.provider !== 'google' && isEditingPassword && id && token ?(

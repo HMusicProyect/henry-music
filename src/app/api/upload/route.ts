@@ -1,8 +1,5 @@
 import { NextResponse } from "next/server";
 import {v2 as cloudinary} from 'cloudinary';
-import { writeFile } from "fs/promises";
-import path, { resolve } from "path";
-import { rejects } from "assert";
 
 interface CloudinaryResponse {
     secure_url: string;

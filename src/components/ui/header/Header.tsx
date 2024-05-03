@@ -26,7 +26,8 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
 
     const userSession: User = session?.user!;
 
-    const userToken = session?.user.token;
+    const userToken = session?.user?.token;
+
 
     function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
@@ -54,8 +55,6 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
             console.error('Error:', error);
         }
     };
-
-
     return (
         <div className={twMerge(`h-fit bg-gradient-to-b from-yellow-500 p-6`, className)}>
             <div className="w-full mb-4 flex items-center justify-between">
@@ -101,7 +100,7 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
                                         >
                                         <Image
                                             className="rounded-full"
-                                            src={`${userSession?.image}` || `/images/default-profile.png`}
+                                            src={userSession?.image || '/images/img-perfil-padron.jpg'}
                                             alt="img perfil"
                                             width={100}
                                             height={100}
