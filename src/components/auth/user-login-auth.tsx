@@ -58,7 +58,8 @@ useEffect(() => {
       if (user) {
         const userName = user.name.replace(/\s/g, '');
         if (user.esta_verificado === false) {
-          signOut({ callbackUrl: `${window.location.origin}/verification/${userName}` });
+          const urlVerification = `${window.location.origin}/verification/${userName}?id=${user.id}` ;
+          signOut({ callbackUrl: urlVerification });
         } else if (user.esta_verificado === true) {
           router.push("/home");
         }
