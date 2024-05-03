@@ -90,7 +90,7 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
                                     <span className="sr-only">Open user menu</span>
                                     <Image
                                         className="h-11 w-11 rounded-full"
-                                        src={`${userSession?.image}` || `/images/default-profile.png`}
+                                        src={ `${userSession?.image}` || `/images/default-profile.png`}
                                         alt="img perfil"
                                         width={100}
                                         height={100}
