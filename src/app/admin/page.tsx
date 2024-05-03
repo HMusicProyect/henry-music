@@ -1,3 +1,4 @@
+"use client"
 import Header from '@/components/ui/header/Header'
 import React from 'react'
 

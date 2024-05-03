@@ -20,7 +20,7 @@ export default function TableSongsList({
   }, []);
 
   const filteredTodos = todos?.filter((invoice) =>
-    invoice.name.toLowerCase().includes(query.toLowerCase()) ||
+    invoice.name?.toLowerCase().includes(query.toLowerCase()) ||
     invoice.Artist?.name.toLowerCase().includes(query.toLowerCase()) ||
     invoice.Genre?.name.toLowerCase().includes(query.toLowerCase())
   );
