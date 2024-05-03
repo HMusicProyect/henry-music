@@ -11,6 +11,7 @@ import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useState } from 'react';
+import { BookUser, EditIcon, RectangleEllipsis } from 'lucide-react';
 
 
 
@@ -39,7 +40,7 @@ const ProfilePage = () => {
     }
 
 
-    const userSession: User = session?.user.provider === 'google' ? session?.user! : session?.user.user!;
+    const userSession: User = session?.user!;
 
     
     const id = searchParams.get('id');
@@ -107,6 +108,22 @@ const ProfilePage = () => {
         <section className="pt-16 bg-blueGray-50">
         <div className="w-full lg:w-4/12 px-4 mx-auto">
         <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg mt-16">
+            {session?.provider !== 'google' &&  !isEditingPassword && (
+                <button 
+                    className="self-end text-gray-400 w-7 h-8 focus:outline-none"
+                    onClick={toggleEdit}
+                >
+                    {isEditing ? <BookUser/> : <EditIcon />}
+                </button>
+            )}
+            {session?.provider !== 'google' &&  (
+                <button 
+                    className="self-end text-gray-400 w-7 h-8 focus:outline-none"
+                    onClick={togglePasswordEdit}
+                >
+                    {isEditingPassword ? <BookUser/> : <RectangleEllipsis/>}
+                </button>
+            )}
             <div className="px-6">
             <div className="flex flex-wrap justify-center">
                 <div className="w-full px-4 flex justify-center">
@@ -145,29 +162,10 @@ const ProfilePage = () => {
                 </div>
 
                 {/* detalles del perfil */}
-                
-                    <div>
-                        {session?.user?.provider !== 'google' &&  !isEditingPassword && (
-                            <button 
-                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                                onClick={toggleEdit}
-                            >
-                                {isEditing ? 'Ver Perfil' : 'Editar Perfil'}
-                            </button>
-                        )}
-                        {session?.user?.provider !== 'google' &&  (
-                            <button 
-                                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                                onClick={togglePasswordEdit}
-                            >
-                                {isEditingPassword ? 'Cancelar Edición de Contraseña' : 'Editar Contraseña'}
-                            </button>
-                        )}
-                    </div>
                     
                 <div>
                     {
-                        session?.user?.provider !== 'google' && isEditingPassword && id && token ?(
+                        session?.provider !== 'google' && isEditingPassword && id && token ?(
                             <ResetPassword
                                 id={id}
                                 token={token}
@@ -176,7 +174,7 @@ const ProfilePage = () => {
                                 setMessageType={setMessageType}
                             />
                             
-                        ) : session?.user?.provider !== 'google' && isEditing ? (
+                        ) : session?.provider !== 'google' && isEditing ? (
                             <UserForm
                                 user={editProfile}
                                 onSubmit={handleSubmit}
@@ -244,6 +242,54 @@ const ProfilePage = () => {
                     </div>
                 </div>
             </ModalComponent>
+            {/* <ModalComponent
+                isModalOpen={isModalOpen}
+                setIsModalOpen={setIsModalOpen}
+            >
+                <div className="flex items-center justify-center rounded-[20px] ">
+                    <div 
+                        className="
+                        flex 
+                        flex-col 
+                        items-center 
+                        bg-white 
+                        text-center 
+                        rounded-xl p-8 
+                        space-y-4 
+                        w-80
+                        bg-gradient-to-b from-green-800 to-black
+                        "
+                    >
+                        <button 
+                            className="self-end text-gray-400 w-6 h-6 focus:outline-none"
+                            onClick={handleModalClose}
+                        >
+                            ✖
+                        </button>
+                            <div>
+                                {message.length > 0 && (
+                                    <div className="flex justify-center items-center mt-2">
+                                    <ul className={`mb-0 text-lg ${messageType === 'success' ? 'text-green-500' : 'text-red-500'}`}>
+                                        {message.map((msg) => (
+                                        <li key={msg}>
+                                            <h1 className="mb-10">
+                                                {msg}
+                                            </h1>
+                                        </li>
+                                        ))}
+                                    </ul>
+                                    </div>
+                                )}
+                            </div>
+                        <button
+                            onClick={handleModalClose}
+                            className="bg-red-500 text-white rounded-md w-48 py-3 text-sm focus:outline-none shadow-md"
+                        >
+                            Ok
+                        </button>
+                    </div>
+                </div>
+            </ModalComponent> */}
         </div>
         </div>
         <div>

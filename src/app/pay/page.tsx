@@ -1,8 +1,26 @@
+"use client"
 
 import Link from 'next/link';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useSession } from 'next-auth/react';
+import useStore from '@/store/actions/modifyRol';
 
 const Pay = () => {
+
+const {data: session} = useSession();
+const email = session?.user?.email;
+
+const { modifyRole } = useStore();
+
+useEffect(() => {
+  if (email) {
+    modifyRole(email)
+  }
+}, [email, modifyRole]);
+
+  
+
+
   return (
     <div className="flex justify-center items-center h-screen">
     <div className="transform transition duration-300 hover:scale-110 rounded-lg shadow-lg h-72 w-80 hover:shadow-xl bg-white flex flex-col justify-between">

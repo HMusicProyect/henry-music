@@ -39,7 +39,8 @@ const handler = NextAuth({
                 token.provider = account.provider;
                 if (account?.provider === 'google') {
                     try {
-                        await postAuthorize(user, account.provider);
+                        const apiResponse = await postAuthorize(user, account.provider);
+                        user = apiResponse;
                     } catch (error) {
                         console.error(error);
                     }
@@ -47,9 +48,11 @@ const handler = NextAuth({
             }
             return { ...token, ...user };
         },
+
         async session({ session, token }) {
-            session.user = token as any;
-            console.log('session', session);
+            session.provider = token.provider as any;
+            session.user = token.user as any;
+            console.log('session',session);
             return session;
         },
     },

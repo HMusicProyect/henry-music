@@ -8,16 +8,29 @@ import SidebarItem from './SidebarItem';
 import MusicLibrary from './MusicLibrary';
 import useStore from '@/store/songs.store';
 import usePlayer from '@/store/hooks/usePlayer';
+import { useSession } from 'next-auth/react';
+import {User} from "@/lib/definitions"
 
 interface SidebarProps {
     children:React.ReactNode;
 }
 const Sidebar: React.FC<SidebarProps> = ({ children}) => {
-    const { todos, getMusic } = useStore();
+    const { userPlaylists, getUserPlaylists } = useStore();
+
+    const { data: session, status } = useSession();
+
+    // if(status === "loading"){
+    //     return <p>Cargando...</p>;
+    // } 
+
+    const userSession: User = session?.user!;
 
     useEffect(() => {
-        getMusic();
-    }, []);
+        if (userSession?.id) {
+            getUserPlaylists(userSession.id);
+        }
+    }, [userSession]);
+
     const pathname = usePathname();
 
     const player = usePlayer();
@@ -54,7 +67,7 @@ const Sidebar: React.FC<SidebarProps> = ({ children}) => {
                     </div>
                 </Box>
                 <Box className="overflow-y-auto h-full">
-                    <MusicLibrary songs={todos}/>
+                    <MusicLibrary songs={userPlaylists}/>
                 </Box>
             </div>
             <main className="h-full flex-1 overflow-y-auto py-2">

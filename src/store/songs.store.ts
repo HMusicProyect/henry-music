@@ -6,17 +6,20 @@ export interface State {
     todos: Music[];
     loading: boolean;
     error: string | null;
+    userPlaylists: any[]; 
     getMusic: () => Promise<void>;
     addMusic: (musicData: Music) => Promise<void>; 
     deleteMusic: (id: number) => Promise<void>;
     searchMusic: (query: string) => Promise<void>;
     getMusicById: (id: number) => Promise<void>;
     filterMusic: (query: string) => void;
+    getUserPlaylists: (userId: string) => Promise<void>;
     
 };
 
 const useStore = create<State>((set) => ({
     todos: [],
+    userPlaylists: [],
     loading: false,
     error: null,
     getMusic: async () => {
@@ -76,6 +79,20 @@ const useStore = create<State>((set) => ({
             set({ todos: [music], loading: false });
         } catch (error) {
             set({ loading: false, error: 'Error al buscar la canción' });
+        }
+    },
+
+    getUserPlaylists: async (userId) => {
+        try {
+            set({ loading: true, error: null });
+            const playlists = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/getUserPlaylist`, {
+                method: 'POST',
+                body: JSON.stringify({ id: userId }),
+                headers: { 'Content-Type': 'application/json' },
+            }).then((res) => res.json());
+            set({ userPlaylists: playlists, loading: false });
+        } catch (error) {
+            set({ loading: false, error: 'Error al obtener las playlists del usuario' });
         }
     },
 

@@ -5,6 +5,7 @@ import useStore from '@/store/songs.store';
 import { Music } from "@/lib/definitions";
 import Link from 'next/link';
 import { capitalizeWords } from "@/utils/CapitalizeWords";
+import Image from "next/image";
 
 export default  function Genres ({params:{genres}}:{params:{genres:string}}){
  
@@ -14,15 +15,14 @@ export default  function Genres ({params:{genres}}:{params:{genres:string}}){
 
   useEffect(() => {
     getMusic();
-  }, []);
+  }, [getMusic]);
 
   useEffect(() => {
     if (todos.length > 0) {
       const filtered = todos.filter((todo) => todo.Genre?.name == genres);
       setFilteredTodos(filtered);
     }
-    console.log(filteredTodos)
-  }, [todos, genres]);
+  }, [todos, genres, filteredTodos]);
   
     return(
         <div>
@@ -48,7 +48,14 @@ export default  function Genres ({params:{genres}}:{params:{genres:string}}){
                       </div>
                     </Link>
                   </td>
-                  <img src={invoice.image} alt={invoice.name} className="w-12 h-12 object-cover mt-3 transform translate-y-4"/>
+                  <Image
+                    src={invoice.image} 
+                    alt={invoice.name} 
+                    className="w-12 h-12 object-cover mt-3 transform translate-y-4" 
+                    width={48} 
+                    height={48}
+                  />
+                  
                   <td className="px-4 py-3 text-sm dark:text-gray-200 dark:border-slate-600 ">
                     <Link href={`/home/lists/${invoice.id}`}>
                     <div className="flex items-center text-sm">

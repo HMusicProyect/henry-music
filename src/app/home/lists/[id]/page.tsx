@@ -25,7 +25,7 @@ interface Props {
 export default function MusicPlayer({ params }: { params: Props }) {
     const { data: session, status } = useSession();
     
-    const userSession = session?.user.provider === 'google' ? session?.user! : session?.user.user!;
+    const userSession = session?.user!;
 
     const { getSongReviews, reviews, loading } = useReviewsStore();
     const [headerBackgroundColor, setHeaderBackgroundColor] = useState<string>('');
@@ -39,7 +39,7 @@ export default function MusicPlayer({ params }: { params: Props }) {
         if (id) {
             getMusicById(id);
         }
-    }, [id]);
+    }, [id, getMusicById]);
 
     useEffect(() => {
         if (song.length > 0) {
@@ -52,7 +52,7 @@ export default function MusicPlayer({ params }: { params: Props }) {
         if (currentSong && currentSong.GenreID) {
             getSongsByGenre(currentSong.GenreID);
         }
-    }, [currentSong]);
+    }, [currentSong, getSongsByGenre]);
 
     useEffect(() => {
         if (currentSong && currentSong.image) {
@@ -71,7 +71,7 @@ export default function MusicPlayer({ params }: { params: Props }) {
         if (currentSong) {
             getSongReviews(currentSong.id!);
         }
-    }, [currentSong]);
+    }, [currentSong, getSongReviews]);
 
 
     const handlePlayClick = () => {

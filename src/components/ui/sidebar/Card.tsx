@@ -16,9 +16,7 @@ const Card: React.FC<CardProps> = ({ children, className }) => {
         'shadow-lg', 
         className 
     );
-const clic = ()=>{
-    alert("abrir listas")
-}
+
     return (
         <div className={cardClasses}>
             <Link href="/home/lists/">

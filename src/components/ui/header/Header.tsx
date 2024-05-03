@@ -15,7 +15,7 @@ import {User} from "@/lib/definitions"
 
 
 interface HeaderProps{
-    children: React.ReactNode;
+    children?: React.ReactNode;
     className?: string;
 }
 const Header: React.FC<HeaderProps> = ({ children, className }) => {
@@ -24,9 +24,9 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
 
     const { data: session } = useSession();
 
-    const userSession: User = session?.user.provider === 'google' ? session?.user! : session?.user.user!;
+    const userSession: User = session?.user!;
 
-    const userToken = session?.user.provider === 'google' ? session?.user.jti! : session?.user.token;
+    const userToken = session?.user.token;
 
     function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
@@ -48,7 +48,8 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
             const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pay`, {
             email:usuario
             });
-            window.location.href = response.data.url
+            window.location.href = response.data.url;
+            
         } catch (error) {
             console.error('Error:', error);
         }
@@ -83,28 +84,39 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
                 <div className="flex justify-between items-center gap-x-4">
                     {session ? (
                         <>
+                            <Button
+                                className="bg-white px-2 py-1 text-black font-medium"
+                                onClick={handlePremium}
+                            >
+                                {userSession?.rol === 'admin' ? 'Admin' : userSession?.rol === 'premium' ? 'Premium' : 'Experiencia Premium'}
+                            </Button>
+
                             <Menu as="div" className="relative ml-3 bg-gradient-to-b from-transparent to-black rounded-full">
                                 <div>
                                 <Menu.Button className="relative m-1 flex rounded-full bg-transparent text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                                     <span className="absolute -inset-1.5" />
                                     <span className="sr-only">Open user menu</span>
-                                    <Image
-                                        className="h-11 w-11 rounded-full"
-                                        src={ `${userSession?.image}` || `/images/default-profile.png`}
-                                        alt="img perfil"
-                                        width={100}
-                                        height={100}
-                                    />
+                                    <div
+                                        className="h-13 w-12 rounded-full"
+                                        >
+                                        <Image
+                                            className="rounded-full"
+                                            src={`${userSession?.image}` || `/images/default-profile.png`}
+                                            alt="img perfil"
+                                            width={100}
+                                            height={100}
+                                        />
+                                    </div>
                                 </Menu.Button>
                                 </div>
                                 <Transition
-                                as={Fragment}
-                                enter="transition ease-out duration-100"
-                                enterFrom="transform opacity-0 scale-95"
-                                enterTo="transform opacity-100 scale-100"
-                                leave="transition ease-in duration-75"
-                                leaveFrom="transform opacity-100 scale-100"
-                                leaveTo="transform opacity-0 scale-95"
+                                    as={Fragment}
+                                    enter="transition ease-out duration-100"
+                                    enterFrom="transform opacity-0 scale-95"
+                                    enterTo="transform opacity-100 scale-100"
+                                    leave="transition ease-in duration-75"
+                                    leaveFrom="transform opacity-100 scale-100"
+                                    leaveTo="transform opacity-0 scale-95"
                                 >
                                 <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                                     <Menu.Item>

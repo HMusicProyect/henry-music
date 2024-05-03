@@ -2,26 +2,18 @@ import "next-auth";
 
 declare module "next-auth" {
     interface Session {
+        provider: string;
         user: {
-            sub: string;
-            provider: string;
-            user: {
+                sub: string;
                 id: string;
                 image: string;
                 name: string;
                 email: string;
                 password: string;
                 rol: string;
-                esta_verificado: boolean;
-                verification_token: string;
+                token: string;
+                expires: string;
+                esta_verificado : boolean;
             };
-            
-            token: string;
-            id: string;
-            iat: number;
-            exp: number;
-            jti: string;
-        };
-        expires: string;
     }
 }
