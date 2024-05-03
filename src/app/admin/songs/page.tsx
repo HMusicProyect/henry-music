@@ -10,6 +10,7 @@ import { Music } from '@/lib/definitions';
 import { useOptionsStore } from '@/store/hooks/useOptions';
 import useUploadSongsModal from '@/store/hooks/useUploadSongModal';
 import { Plus } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import React, { Suspense } from 'react'
 
 const Songs: React.FC = ({
@@ -21,6 +22,7 @@ const Songs: React.FC = ({
     songs: Music[];
   };
 }) => {
+
   const { selectedOption } = useOptionsStore();
   const uploadModal = useUploadSongsModal();
 

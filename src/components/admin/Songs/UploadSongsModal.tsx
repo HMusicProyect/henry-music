@@ -14,19 +14,20 @@ import useArtistStore from '@/store/artist.store';
 import useStore from '@/store/songs.store';
 import SelectInput from '../ui/SelectInput';
 import { handlePhotoSubmit } from '@/store/actions/postCloudinary';
+import { useSession } from 'next-auth/react';
 
 const UploadSongsModal = () => {
   const uploadModal = useUploadSongsModal();
+
   const [photoFile, setPhotoFile] = useState<File | undefined>(undefined);
   const [audioFile, setAudioFile] = useState<File | undefined>(undefined);
-
-
   const [isLoading, setIsLoading] = useState(false);
   const { albums, getAlbums, loading: albumLoading, error: albumError } = useAlbumsStore();
   const { genres, getGenres, loading: genreLoading, error: genreError } = useGenreStore();
   const { artists, getArtists, loading: artistLoading, error: artistError } = useArtistStore();
   const { addMusic } = useStore(); 
   const router = useRouter();
+  const {data: session} = useSession();
 
   const handleImageChange = (e:any) => {
     const file = e.target.files[0];
@@ -70,6 +71,7 @@ const UploadSongsModal = () => {
         toast.error('Todos los campos son requeridos');
         return;
       }
+   
       
       let { title, pathMusic, image, albumId, genreId, artistId } = values;
 
@@ -78,13 +80,13 @@ const UploadSongsModal = () => {
   
       if (photoFile) {
         photoUploadResponse = await handlePhotoSubmit({ photo: photoFile });
-        console.log("Respuesta de subida de foto:", photoUploadResponse);
+        //console.log("Respuesta de subida de foto:", photoUploadResponse);
         image = photoUploadResponse.url;
       }
   
       if (audioFile) {
         audioUploadResponse = await handlePhotoSubmit({ audio: audioFile });
-        console.log("Respuesta de subida de audio:", audioUploadResponse);
+        //console.log("Respuesta de subida de audio:", audioUploadResponse);
         pathMusic = audioUploadResponse.url;
       }
 
@@ -97,7 +99,8 @@ const UploadSongsModal = () => {
         ArtistID: parseInt(artistId),
       };
 
-      await addMusic(newMusic);
+      const token = session?.user?.token ?? '';
+      await addMusic(newMusic, token);
       
       router.refresh();
       setIsLoading(false);
