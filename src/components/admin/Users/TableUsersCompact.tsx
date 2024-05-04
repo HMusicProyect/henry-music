@@ -4,6 +4,10 @@ import { useStore } from '@/store/user.store';
 import Image from 'next/image';
 import { capitalizeWords } from '@/utils/CapitalizeWords';
 import { User } from '@/lib/definitions';
+import { Ban, Pen } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import useBanUsersModal from '@/store/hooks/useBanUsersModal';
+import useActionsUserModal from '@/store/hooks/useActionsUserModal';
 
 export default function TableUsersList({
   query,
@@ -12,6 +16,9 @@ export default function TableUsersList({
   query: string;
   currentPage: number;
 }) {
+
+  const banUsersModal = useBanUsersModal();
+  const editUsersModal = useActionsUserModal();
   const { users, fetchUsers } = useStore();
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [roleFilter, setRoleFilter] = useState<string>('');
@@ -34,6 +41,7 @@ export default function TableUsersList({
       setFilteredUsers(filtered || []);
     }
   }, [query, users]);
+  
 
   useEffect(() => {
     let filtered = users;
@@ -65,17 +73,24 @@ export default function TableUsersList({
 
     setFilteredUsers(filtered || []);
   }, [roleFilter, verificationFilter, alphabeticalFilter, idFilter, users]);
-  return (
 
+  const onClickBan = (user: User) => {
+    return banUsersModal.onOpen(user);
+  }
+
+  const onClickEdit = () => {
+    return editUsersModal.onOpen();
+  }
+
+  return (
     <section className="container mx-auto font-semibold">
-      <div className='mb-7 mt-8 flex items-center justify-between gap-8'>
+       <div className='mb-7 mt-8 flex items-center justify-between gap-8'>
         <select className="flex h-12 w-1/4 rounded-md bg-neutral-700 border border-transparent px-3 py-3 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral-400 disabled:cursor-not-allowed disabled:opacity-50 focus-outline"
           onChange={(e) => setRoleFilter(e.target.value)} >
           <option value="">Filter by Role</option>
           <option value="gratis">Gratis</option>
           <option value="registrado">Registrado</option>
           <option value="premium">Premium</option>
-          <option value="baneado">Baneado</option>
           <option value="admin">Admin</option>
         </select>
 
@@ -102,7 +117,7 @@ export default function TableUsersList({
       </div>
       <div className="w-full mb-8 rounded-t-xl">
         <div className="w-full">
-          <table className="w-full">
+          <table className="w-full mt-12">
             <thead>
               <tr className="text-sm font-bold text-left text-black-600 border-b border-gray-100/30 ">
                 <th className="px-4 py-3">#</th>
@@ -111,6 +126,8 @@ export default function TableUsersList({
                 <th className="px-4 py-3">Email</th>
                 <th className="px-4 py-3">Rol</th>
                 <th className="px-4 py-3">Verified</th>
+                <th className="px-4 py-3">Baneados</th>
+                <th className="px-4 py-3">Acciones</th>
               </tr>
             </thead>
             <tbody className="">
@@ -143,8 +160,23 @@ export default function TableUsersList({
                   <td className="px-4 py-3 text-sm dark:text-gray-200 dark:border-slate-600">
                     {capitalizeWords(user.rol || '')}
                   </td>
-                  <td className="px-4 py-3 text-sm dark:text-gray-200 dark:border-slate-600">
+                  <td className="px-4 py-3 text-center text-sm dark:text-gray-200 dark:border-slate-600">
                     {user.esta_verificado ? 'Yes' : 'No'}
+                  </td>
+                  <td className="px-4 py-3 text-center text-sm dark:text-gray-200 dark:border-slate-600">
+                    {user.ban ? 'Yes' : 'No'}
+                  </td>
+                  <td className="px-4 py-3 text-sm dark:text-gray-200 dark:border-slate-600">
+                    <button className="p-2 mr-2 rounded-full bg-green-500 text-white hover:bg-green-600">
+                      <Pen onClick={onClickEdit}/>
+                    </button>
+                    <button 
+  className="p-2 rounded-full bg-red-500 text-white hover:bg-red-600"
+  onClick={(e) => onClickBan(user)}
+>
+  <Ban />
+</button>
+
                   </td>
                 </tr>
               ))}

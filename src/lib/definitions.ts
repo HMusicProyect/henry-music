@@ -11,6 +11,7 @@ export type User = {
   rol?: string;
   esta_verificado?: boolean;
   verification_token?: string;
+  ban?:boolean;
 };
 
 

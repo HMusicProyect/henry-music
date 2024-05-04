@@ -29,12 +29,6 @@ const SidebarAdmin: React.FC<SidebarProps> = ({ children }) => {
             href: '/admin'
         },
         {
-            icon: <Users />,
-            label: 'Users',
-            active: pathname === '/admin/users',
-            href: '/admin/users'
-        },
-        {
             icon: <Music />,
             label: 'Songs',
             active: pathname === '/admin/songs',

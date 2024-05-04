@@ -23,7 +23,6 @@ const useStore = create<State>((set) => ({
   getMusic: async () => {
     try {
       set({ loading: true, error: null });
-      // Lógica para obtener los todos desde una API o cualquier otra fuente de datos
       const todos = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/songs`
       ).then((res) => res.json());

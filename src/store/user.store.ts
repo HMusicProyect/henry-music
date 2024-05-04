@@ -10,6 +10,7 @@ type Store = {
   postUser: (user: User) => Promise<Response>; 
   getUserById: (id: string) => User | undefined;
   verifyUser: (id: string, url: string) => Promise<void>;
+  banUser: (userId: string, token: string) => Promise<void>;
 };
 
 export const useStore = create<Store>((set, get) => ({
@@ -60,5 +61,26 @@ export const useStore = create<Store>((set, get) => ({
       }));
     }
     
+  },
+  banUser: async (userId: string, token:string) => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users/${userId}/banUser`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `${token}`,
+        }
+      });
+
+      if (response.ok) {
+        await get().fetchUsers();
+        return;
+      }
+
+      throw new Error('Failed to ban user');
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   },
 }));
