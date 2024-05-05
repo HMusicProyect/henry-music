@@ -9,6 +9,7 @@ interface PlaylistDetails {
     GenreName: string;
     PlaylistID: string;
     SongsID: number;
+    SongsImage: string;
     id: string;
 }
 
@@ -42,7 +43,7 @@ const MediaItem: React.FC<MediaItemProps> = ({ data, onClick }) => {
             <div className="relative rounded-md min-h-[48px] min-w-[48px] overflow-hidden">
                 <Image 
                     layout='fill' 
-                    src={isMusic(data) ? data.image || '/images/default-profile.png' : '/images/default-profile.png'} 
+                    src={isMusic(data) ? data.image || '/images/default-profile.png' : data.SongsImage || '/images/default-profile.png'} 
                     alt="Media Item" 
                     className="object-cover" 
                 />
@@ -52,7 +53,7 @@ const MediaItem: React.FC<MediaItemProps> = ({ data, onClick }) => {
                     {capitalizedMusicName}
                 </p>
                 <p className="text-neutral-400 text-sm truncate">
-                    {isMusic(data) ? data.Artist?.name : ''}
+                    {isMusic(data) ? data.Artist?.name : data.ArtistName}
                 </p>
             </div>
         </div>
