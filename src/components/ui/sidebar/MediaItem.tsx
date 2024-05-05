@@ -8,18 +8,18 @@ import Image from "next/image";
 interface MediaItemProps {
     data: Music;
     onClick?: (id: number) => void;
-    userID?: string;
 }
 
-const MediaItem: React.FC<MediaItemProps> = ({ data, onClick, userID }) => {
+const MediaItem: React.FC<MediaItemProps> = ({ data, onClick }) => {
 
     const capitalizedMusicName = capitalizeWords(data.name);
+
     const handleClick = () => {
         if (onClick) {
             return onClick(data.id!)
         }
-        //TODO reproducir la musica
     }
+
     return (
         <div
             onClick={handleClick}

@@ -32,7 +32,6 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
                 },
             });
             const data = await response.json();
-            console.log('fetchUserPlaylists',data);
 
             set({ userPlaylists: data });
         } catch (error) {
@@ -55,7 +54,6 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
     //este controlador es para consulta el detalles de una playlist especifica
     //que requiera el usuario
     fetchPlaylistDetail: async (id) => {
-        console.log('fetchPlaylistDetail', id);
         if (!id) {
             console.error('Error: ID is undefined');
             return;
@@ -91,10 +89,7 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-
             const data = await response.json();
-            console.log('postPlaylist', data);
-
             set((state) => {
                 if (Array.isArray(state.userPlaylists)) {
                     return { userPlaylists: [...state.userPlaylists, data] };
@@ -129,7 +124,6 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
             }
 
             const data = await response.json();
-            console.log('postSavingPlaylist', data);
 
             set((state) => {
                 const updatedUserPlaylists = state.userPlaylists.map((playlist) => 
@@ -163,7 +157,6 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
             }
 
             const data = await response.json();
-            console.log('postSongToPlaylist', data);
 
             // Aquí puedes actualizar el estado según sea necesario
             // Por ejemplo, puedes agregar la nueva canción a la playlist en el estado

@@ -31,11 +31,9 @@ export default function MusicPlayer() {
 
     const playlistDetail = usePlaylistStore((state) => state.playlistDetail);
 
-    console.log('playlistDetail', playlistDetail);
     const playlistData = playlistDetail?.dataValues;
     const songs = playlistDetail?.songs
-;
-
+    console.log('songs', songs);
 
     useEffect(() => {
         if (id) {
@@ -74,11 +72,11 @@ export default function MusicPlayer() {
                             <div>
                                 <h2 className="text-2xl font-semibold">{playlistData && capitalizeWords(playlistData.name)}</h2>
                                 <p className="text-md text-gray-500">
-                                    <span className='text-white font-semibold text-md'>Artist: </span>
+                                    <span className='text-white font-semibold text-md'>Nombre: </span>
                                     {playlistData?.name}
                                 </p>
                                 <p className="text-md text-gray-500">
-                                    <span className='text-white font-semibold text-md'>Genre: </span>
+                                    <span className='text-white font-semibold text-md'>Autor: </span>
                                     {playlistData?.name}
                                 </p>
                                 {playlistData && <p className='mt-8'>Now playing: {playlistData.name}</p>}
