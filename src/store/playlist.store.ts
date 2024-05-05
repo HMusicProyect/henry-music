@@ -88,10 +88,7 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-
             const data = await response.json();
-            console.log('postPlaylist', data);
-
             set((state) => {
                 if (Array.isArray(state.userPlaylists)) {
                     return { userPlaylists: [...state.userPlaylists, data] };
@@ -126,7 +123,6 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
             }
 
             const data = await response.json();
-            console.log('postSavingPlaylist', data);
 
             set((state) => {
                 const updatedUserPlaylists = state.userPlaylists.map((playlist) => 
@@ -160,7 +156,6 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
             }
 
             const data = await response.json();
-            console.log('postSongToPlaylist', data);
 
             // Aquí puedes actualizar el estado según sea necesario
             // Por ejemplo, puedes agregar la nueva canción a la playlist en el estado
@@ -173,6 +168,41 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
 
         } catch (error) {
             console.error('Error posting song to playlist:', error);
+        }
+    },
+
+    // Este controlador es para actualizar una playlist existente
+    updatePlaylist: async (id: string, name?: string, image?: string) => {
+        if (!id || (!name && !image)) {
+            console.error('Error: ID, Name or Image is undefined');
+            return;
+        }
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/playlist/putPlaylist`, {
+                method: 'PUT',
+                body: JSON.stringify({ id, name, image }),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            set((state) => {
+                const updatedUserPlaylists = state.userPlaylists.map((playlist) => 
+                    playlist.id === id 
+                        ? { ...playlist, name: name || playlist.name, image: image || playlist.image } 
+                        : playlist
+                );
+                return { userPlaylists: updatedUserPlaylists };
+            });
+
+        } catch (error) {
+            console.error('Error updating playlist:', error);
         }
     },
     
