@@ -1,22 +1,36 @@
 "use client"
 
-
 import { Music } from "@/lib/definitions";
 import { capitalizeWords } from "@/utils/CapitalizeWords";
 import Image from "next/image";
 
+interface PlaylistDetails {
+    ArtistName: string;
+    GenreName: string;
+    PlaylistID: string;
+    SongsID: number;
+    id: string;
+}
+
 interface MediaItemProps {
-    data: Music;
+    data: Music | PlaylistDetails;
     onClick?: (id: number) => void;
 }
 
 const MediaItem: React.FC<MediaItemProps> = ({ data, onClick }) => {
+    const isMusic = (data: Music | PlaylistDetails): data is Music => {
+        return (data as Music).name !== undefined;
+    }
 
-    const capitalizedMusicName = capitalizeWords(data.name);
+    const capitalizedMusicName = isMusic(data) ? capitalizeWords(data.name) : data.ArtistName;
 
     const handleClick = () => {
         if (onClick) {
-            return onClick(data.id!)
+            if (isMusic(data) && data.id !== undefined) {
+                return onClick(data.id);
+            } else if (!isMusic(data) && data.SongsID !== undefined) {
+                return onClick(data.SongsID);
+            }
         }
     }
 
@@ -28,7 +42,7 @@ const MediaItem: React.FC<MediaItemProps> = ({ data, onClick }) => {
             <div className="relative rounded-md min-h-[48px] min-w-[48px] overflow-hidden">
                 <Image 
                     layout='fill' 
-                    src={data?.image || '/images/default-profile.png'} 
+                    src={isMusic(data) ? data.image || '/images/default-profile.png' : '/images/default-profile.png'} 
                     alt="Media Item" 
                     className="object-cover" 
                 />
@@ -38,11 +52,11 @@ const MediaItem: React.FC<MediaItemProps> = ({ data, onClick }) => {
                     {capitalizedMusicName}
                 </p>
                 <p className="text-neutral-400 text-sm truncate">
-                    {data.Artist?.name}
+                    {isMusic(data) ? data.Artist?.name : ''}
                 </p>
             </div>
         </div>
     )
 }
 
-export default MediaItem
+export default MediaItem;
