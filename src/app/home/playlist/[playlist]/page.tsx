@@ -31,9 +31,12 @@ export default function MusicPlayer() {
 
     const playlistDetail = usePlaylistStore((state) => state.playlistDetail);
 
+
+    
     const playlistData = playlistDetail?.dataValues;
-    const songs = playlistDetail?.songs
-    console.log('songs', songs);
+    const songs = playlistDetail?.songs;
+    const otherDetails = playlistDetail?.playlistDetails;
+
 
     useEffect(() => {
         if (id) {
@@ -88,16 +91,25 @@ export default function MusicPlayer() {
             <div className='mt-8 mb-7 px-6 flex gap-x-16'>
                 <div className='w-1/2 flex flex-col gap-8'>
                     <h2 className='text-left'>Explore songs of the same genre</h2>
-                    {songs?.map((song: Song) => (
-                        <Link
-                            href={`/home/lists/${song.id}`}
-                            key={song.id}
-                        >
-                            <MediaItem
+                    {songs?.map((song: Song) => {
+                    const otherDetail = otherDetails?.find((detail: any) => detail.SongsID === song.id);
+                        return (
+                            <Link
+                                href={`/home/lists/${song.id}`}
+                                key={song.id}
+                            >
+                                <MediaItem
                                 data={song}
-                            />
-                        </Link>
-                    ))}
+                                /> 
+                                {otherDetail && (
+                                    <div>
+                                        <h3>Artist: {otherDetail.ArtistName}</h3>
+                                        <h3>Genre: {otherDetail.GenreName}</h3>
+                                    </div>
+                                )}
+                            </Link>
+                        );
+                    })}
                 </div>
 
             </div>

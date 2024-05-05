@@ -32,7 +32,6 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
                 },
             });
             const data = await response.json();
-
             set({ userPlaylists: data });
         } catch (error) {
             console.error('Error fetching user playlists:', error);
