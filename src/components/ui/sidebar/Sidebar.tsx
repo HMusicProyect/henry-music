@@ -5,8 +5,7 @@ import { Home, Search, List } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
 import Box from './Box';
 import SidebarItem from './SidebarItem';
-import MusicLibrary from './MusicLibrary';
-import useStore from '@/store/songs.store';
+import MusicLibrary from './playlist/MusicLibrary';
 import usePlayer from '@/store/hooks/usePlayer';
 import usePlaylistStore from '@/store/playlist.store'; 
 import { useSession } from 'next-auth/react';
@@ -16,28 +15,20 @@ interface SidebarProps {
     children:React.ReactNode;
 }
 const Sidebar: React.FC<SidebarProps> = ({ children}) => {
-
     const { fetchUserPlaylists, userPlaylists: userPlaylistsFromPlaylistStore } = usePlaylistStore();  
-    
-    const { data: session, status } = useSession();
-
+    const { data: session } = useSession();
     const userSession: User = session?.user!;
-
-    useEffect(() => {
-        if (userSession?.id) {
-            fetchUserPlaylists(userSession.id);
-        }
-    }, [userSession, fetchUserPlaylists]);
-
-    useEffect(() => {
-        if (userPlaylistsFromPlaylistStore.length === 0 && userSession?.id) {
-            fetchUserPlaylists(userSession.id);
-        }
-    }, [ fetchUserPlaylists, userSession]);
-
     const pathname = usePathname();
-
     const player = usePlayer();
+
+
+    useEffect(() => {
+        if (userSession?.id && (userPlaylistsFromPlaylistStore.length === 0 || !userPlaylistsFromPlaylistStore)) {
+            fetchUserPlaylists(userSession.id);
+        }
+    }, [userSession, fetchUserPlaylists, userPlaylistsFromPlaylistStore]);
+
+
 
     const routes = useMemo(() => [
         {
