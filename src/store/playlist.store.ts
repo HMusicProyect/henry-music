@@ -32,8 +32,6 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
                 },
             });
             const data = await response.json();
-            console.log('fetchUserPlaylists',data);
-
             set({ userPlaylists: data });
         } catch (error) {
             console.error('Error fetching user playlists:', error);
@@ -55,7 +53,6 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
     //este controlador es para consulta el detalles de una playlist especifica
     //que requiera el usuario
     fetchPlaylistDetail: async (id) => {
-        console.log('fetchPlaylistDetail', id);
         if (!id) {
             console.error('Error: ID is undefined');
             return;
