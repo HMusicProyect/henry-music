@@ -51,6 +51,11 @@ const handler = NextAuth({
 
         async session({ session, token }) {
             session.provider = token.provider as any;
+            if (session.provider === 'google'){
+                session.user = token.user as any;
+                console.log('session',session);
+                return session;
+            }
             session.user = token as any;
             console.log('session',session);
             return session;

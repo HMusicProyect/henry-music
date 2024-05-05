@@ -1,20 +1,24 @@
 "use client"
-
 import { Plus, Library } from 'lucide-react';
-import MediaItem from './MediaItem';
-import usePlayer from '@/store/hooks/usePlayer';
-import useOnPlay from '@/store/hooks/useOnPlay';
-import { Music } from '@/lib/definitions';
+import usePlaylistStore from '@/store/playlist.store';
+import { User } from '@/lib/definitions';
 import { useState } from 'react';
 import { Menu, MenuItem } from '@mui/material';
+import PlaylistItem from './PlaylistItem';
 
-interface MusicLibraryProps {
-    songs: Music[];
+interface Playlist{
+    id: string;
+    name: string;
 }
 
-const MusicLibrary: React.FC<MusicLibraryProps> = ({ songs }) => {
+interface MusicLibraryProps {
+    playlist: Playlist[] | null; 
+    user: User; 
+}
 
-    const onPlay = useOnPlay(songs);
+const MusicLibrary: React.FC<MusicLibraryProps> = ({ playlist = [], user }) => {
+
+    const postPlaylist = usePlaylistStore(state => state.postPlaylist);
 
     const [anchorEl, setAnchorEl] = useState<null | SVGSVGElement>(null);
 
@@ -26,6 +30,13 @@ const MusicLibrary: React.FC<MusicLibraryProps> = ({ songs }) => {
         setAnchorEl(null);
     };
 
+    const handleCreatePlaylist = () => {
+        const defaultPlaylistName = "Nombre predeterminado de la playlist";
+        if (user?.id) {
+            postPlaylist(defaultPlaylistName, user.id);
+        }
+        handleClose();
+    };
 
     return (
         <div className='flex flex-col'>
@@ -39,27 +50,26 @@ const MusicLibrary: React.FC<MusicLibraryProps> = ({ songs }) => {
                     onClick={handleClick} 
                     className='text-neutral-400 cursor-pointer hover:text-white transition'
                 />
-            <Menu
-                anchorEl={anchorEl}
-                keepMounted
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-                style={{ backgroundColor: 'tuColorDeFondo' }} // Reemplaza 'tuColorDeFondo' con el color que desees
-            >
-                <MenuItem onClick={handleClose} style={{ backgroundColor: 'tuColorDeFondo' }}>Crear Playlist</MenuItem>
-                <MenuItem onClick={handleClose} style={{ backgroundColor: 'tuColorDeFondo' }}>Crear Carpeta</MenuItem>
-            </Menu>
+                <Menu
+                    anchorEl={anchorEl}
+                    keepMounted
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
+                    style={{ backgroundColor: 'tuColorDeFondo' }}
+                >
+                    <MenuItem onClick={handleCreatePlaylist} style={{ backgroundColor: 'tuColorDeFondo' }}>Crear Playlist</MenuItem>
+                    
+                    <MenuItem onClick={handleClose} style={{ backgroundColor: 'tuColorDeFondo' }}>Crear Carpeta</MenuItem>
+                </Menu>
             </div>
 
             <div className="flex flex-col gap-y-2 mt-4 px-3">
-                {Array.isArray(songs) && songs.map((item) => (
-                    <MediaItem
-                        onClick={(id: number) => onPlay(id.toString())}
+                {Array.isArray(playlist) && playlist.map((item) => (
+                    <PlaylistItem
                         key={item.id}
                         data={item}
                     />
                 ))}
-
             </div>
         </div>
     )

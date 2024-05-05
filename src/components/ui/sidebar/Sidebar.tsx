@@ -8,6 +8,7 @@ import SidebarItem from './SidebarItem';
 import MusicLibrary from './MusicLibrary';
 import useStore from '@/store/songs.store';
 import usePlayer from '@/store/hooks/usePlayer';
+import usePlaylistStore from '@/store/playlist.store'; 
 import { useSession } from 'next-auth/react';
 import {User} from "@/lib/definitions"
 
@@ -15,21 +16,24 @@ interface SidebarProps {
     children:React.ReactNode;
 }
 const Sidebar: React.FC<SidebarProps> = ({ children}) => {
-    const { userPlaylists, getUserPlaylists } = useStore();
 
+    const { fetchUserPlaylists, userPlaylists: userPlaylistsFromPlaylistStore } = usePlaylistStore();  
+    
     const { data: session, status } = useSession();
-
-    // if(status === "loading"){
-    //     return <p>Cargando...</p>;
-    // } 
 
     const userSession: User = session?.user!;
 
     useEffect(() => {
         if (userSession?.id) {
-            getUserPlaylists(userSession.id);
+            fetchUserPlaylists(userSession.id);
         }
-    }, [userSession]);
+    }, [userSession, fetchUserPlaylists]);
+
+    useEffect(() => {
+        if (userPlaylistsFromPlaylistStore.length === 0 && userSession?.id) {
+            fetchUserPlaylists(userSession.id);
+        }
+    }, [ fetchUserPlaylists, userSession]);
 
     const pathname = usePathname();
 
@@ -67,7 +71,10 @@ const Sidebar: React.FC<SidebarProps> = ({ children}) => {
                     </div>
                 </Box>
                 <Box className="overflow-y-auto h-full">
-                    <MusicLibrary songs={userPlaylists}/>
+                    <MusicLibrary 
+                        playlist={userPlaylistsFromPlaylistStore || []} 
+                        user={userSession}
+                    />
                 </Box>
             </div>
             <main className="h-full flex-1 overflow-y-auto py-2">
@@ -76,7 +83,5 @@ const Sidebar: React.FC<SidebarProps> = ({ children}) => {
         </div>
     )
 }
-
-
 
 export default Sidebar;

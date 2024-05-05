@@ -8,16 +8,16 @@ import Image from "next/image";
 interface MediaItemProps {
     data: Music;
     onClick?: (id: number) => void;
+    userID?: string;
 }
 
-const MediaItem: React.FC<MediaItemProps> = ({ data, onClick }) => {
+const MediaItem: React.FC<MediaItemProps> = ({ data, onClick, userID }) => {
 
     const capitalizedMusicName = capitalizeWords(data.name);
     const handleClick = () => {
         if (onClick) {
             return onClick(data.id!)
         }
-
         //TODO reproducir la musica
     }
     return (
@@ -27,7 +27,7 @@ const MediaItem: React.FC<MediaItemProps> = ({ data, onClick }) => {
         >
             <div className="relative rounded-md min-h-[48px] min-w-[48px] overflow-hidden">
                 <Image 
-                    fill={true}
+                    layout='fill' 
                     src={data?.image || '/images/default-profile.png'} 
                     alt="Media Item" 
                     className="object-cover" 

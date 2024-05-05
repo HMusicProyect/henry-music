@@ -1,72 +1,108 @@
 "use client"
 
-import TableArtistCompact from '@/components/admin/Artists/TableArtistCompact';
-import TableArtistList from '@/components/admin/Artists/TableArtistList';
-import Header from '@/components/ui/header/Header'
-import { Input } from '@/components/ui/input';
-import OptionsDropdown from '@/components/ui/OptionDropdown';
-import { InvoicesTableSkeleton } from '@/components/ui/skeletons';
-import { useOptionsStore } from '@/store/hooks/useOptions';
-import useUploadArtistsModal from '@/store/hooks/useUploadArtistsModal';
-import { Plus } from 'lucide-react';
-import React, { Suspense } from 'react'
+import { useEffect, useState } from 'react';
+import Header from '@/components/ui/header/Header';
+import usePlaylistStore from '@/store/playlist.store';
+import { capitalizeWords } from "@/utils/CapitalizeWords";
+import { useRouter, useSearchParams } from 'next/navigation';
+import Image from 'next/image';
+import Link from 'next/link';
+import MediaItem from '@/components/ui/sidebar/MediaItem';
+import { ModalComponent } from '@/components/ui/Modal/Modal';
+import AddMusicToPlaylist from '@/components/home/playlist/addMusic';
 
-const Artists: React.FC = ({
-  searchParams,
-}: {
-  searchParams?: {
-    music?: string;
-    page?: string;
-  };
-}) => {
-  const { selectedOption } = useOptionsStore();
-  const uploadModal = useUploadArtistsModal();
-
-  const query = searchParams?.music || '';
-  const currentPage = Number(searchParams?.page) || 1;
-
-  const onClick = () => {
-    return uploadModal.onOpen();
-  }
-
-  return (
-    
-    <div className="bg-neutral-900 rounded-lg h-full w-full overflow-hidden overflow-y-auto">
-      <Header className='from-red-900'>
-        <div className="mb-2">
-          <h1 className="text-white text-3xl font-semibold">Artists Dashboard</h1>
-        </div>
-      </Header>
-      <div  className="flex items-center justify-end px-6 pb-6 mt-5">
-        <button onClick={onClick} className='flex gap-x-2 transition hover:bg-neutral-400/5 px-4 py-2 cursor-pointer rounded-md bg-neutral-900'>
-          Add Artist
-        <Plus fill='white' />
-        </button>
-      </div>
-      <div className="px-6 mb-7 flex items-center justify-between gap-2 md:mt-8">
-        <Input className='w-1/4' placeholder='Search Invoices' />
-        <OptionsDropdown />
-      </div>
-      <div className="mt-2 mb-7 px-6 flex justify-between items-center">
-        <Suspense
-          key={query + currentPage}
-          fallback={<InvoicesTableSkeleton />}
-        >
-          {selectedOption === 'list' ? (
-            <TableArtistList
-              query={query}
-              currentPage={currentPage}
-            />
-          ) : (
-            <TableArtistCompact
-              query={query}
-              currentPage={currentPage}
-            />
-          )}
-        </Suspense>
-      </div>
-      </div>
-  )
+interface Song {
+    id: number;
+    image: string;
+    name: string;
 }
 
-export default Artists;
+
+export default function MusicPlayer() {
+    const searchParams = useSearchParams();
+    const router = useRouter();
+    
+    const id = searchParams.get('id') || '';
+    // const token = searchParams.get('token');
+
+    const fetchPlaylistDetail = usePlaylistStore((state) => state.fetchPlaylistDetail);
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const playlistDetail = usePlaylistStore((state) => state.playlistDetail);
+
+    console.log('playlistDetail', playlistDetail);
+    const playlistData = playlistDetail?.dataValues;
+    const songs = playlistDetail?.songs
+;
+
+
+    useEffect(() => {
+        if (id) {
+            fetchPlaylistDetail(id);
+        }
+    }, [id]);
+
+
+    return (
+        <div className='bg-neutral-900 rounded-lg h-full w-full overflow-hidden overflow-y-auto'>
+            
+                <div className={``}>
+                    <Header>
+                        <h1 className="bg-neutral-900"></h1>
+                    </Header>
+                    <ModalComponent
+                        isModalOpen={isModalOpen}
+                        setIsModalOpen={setIsModalOpen}
+                    >
+                        <AddMusicToPlaylist
+                            id={id}
+                        />
+                    </ModalComponent>
+                    <div className='mt-2 mb-7 px-6'>
+                        <div className="flex gap-x-4 items-center">
+                            <div className="relative rounded-lg overflow-hidden">
+                                <Image
+                                    className="w-full h-full object-cover"
+                                    src={playlistData?.image ? playlistData?.image : '/images/HenrryMusic.svg'}
+                                    alt={playlistData?.name} 
+                                    width={300}
+                                    height={400}
+                                />
+                            </div>
+                            <button onClick={() => setIsModalOpen(true)}>Add Song to Playlist</button>
+                            <div>
+                                <h2 className="text-2xl font-semibold">{playlistData && capitalizeWords(playlistData.name)}</h2>
+                                <p className="text-md text-gray-500">
+                                    <span className='text-white font-semibold text-md'>Artist: </span>
+                                    {playlistData?.name}
+                                </p>
+                                <p className="text-md text-gray-500">
+                                    <span className='text-white font-semibold text-md'>Genre: </span>
+                                    {playlistData?.name}
+                                </p>
+                                {playlistData && <p className='mt-8'>Now playing: {playlistData.name}</p>}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            <div className='mt-8 mb-7 px-6 flex gap-x-16'>
+                <div className='w-1/2 flex flex-col gap-8'>
+                    <h2 className='text-left'>Explore songs of the same genre</h2>
+                    {songs?.map((song: Song) => (
+                        <Link
+                            href={`/home/lists/${song.id}`}
+                            key={song.id}
+                        >
+                            <MediaItem
+                                data={song}
+                            />
+                        </Link>
+                    ))}
+                </div>
+
+            </div>
+        </div>
+    );
+}

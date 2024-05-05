@@ -2,7 +2,7 @@ import { Music } from "@/lib/definitions";
 import { create } from "zustand";
 
 export interface State {
-    song: Music[];
+    song: Music[] | null;
     loading: boolean;
     error: string | null;
     getMusicById: (id: number) => Promise<void>;
