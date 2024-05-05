@@ -20,7 +20,7 @@ interface PlayerContentProps {
 const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
 
     const player = usePlayer();
-    const [volume, setVolume] = useState(1);
+    const [volume, setVolume] = useState(0.5);
     const [isPlaying, setIsPlaying] = useState(false);
     const { data: session, status } = useSession();
     const [ isModalOpen, setIsModalOpen ] = useState(false);
@@ -102,7 +102,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
 
     const toggleMute = () => {
         if (volume === 0) {
-            setVolume(1);
+            setVolume(0.5);
         } else {
             setVolume(0);
         }

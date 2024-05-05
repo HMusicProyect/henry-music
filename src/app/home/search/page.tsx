@@ -17,7 +17,7 @@ interface SearchProps {
 const Search = ({ searchParams }: SearchProps) => {
   const [searchResults, setSearchResults] = useState<SearchResults | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const { loading: genreLoading, genres, getGenres } = useGenreStore();
+  const { genres, getGenres } = useGenreStore();
   
   useEffect(() => {
     getGenres();
@@ -46,9 +46,6 @@ const Search = ({ searchParams }: SearchProps) => {
     }
   }, [searchParams.title]);
 
-  if (genreLoading) {
-    return <div>Loading...</div>;
-}
 
   return (
     <div className="bg-neutral-900 rounded-lg h-full w-full overflow-hidden overflow-y-auto">

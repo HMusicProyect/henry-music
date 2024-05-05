@@ -4,6 +4,7 @@ import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export const handleSignOut = async () => {
     try {
@@ -19,10 +20,13 @@ export default function AuthButton({ page }: { page: string }) {
     const { data: session, status } = useSession();
     const isAuthenticated = status === "authenticated";
     const router = useRouter();
-    if(session){
-        router.push('/home');
-    }
 
+    useEffect(() => {
+        // Si hay una sesión de usuario y está autenticado, redirige a la página de inicio
+        if (session && isAuthenticated) {
+            router.push('/home');
+        }
+    }, [session, isAuthenticated, router]);
 
 
     return (
