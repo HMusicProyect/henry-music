@@ -70,7 +70,7 @@ const MusicLibrary: React.FC<MusicLibraryProps> = ({ playlist = [], user }) => {
             </div>
 
             <div className="flex flex-col gap-y-2 mt-4 px-3">
-                {playlist?.map((item) => (
+                {playlist && playlist?.map((item) => (
                     <PlaylistItem
                         key={item.id}
                         data={item}
