@@ -137,7 +137,9 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
         }
     },
 
-        postSongToPlaylist: async (playlistId: string, songId: string) => {
+    // Este módulo define una función para agregar una canción a una lista de reproducción en una base de datos.
+
+    postSongToPlaylist: async (playlistId: string, songId: string) => {
         if (!playlistId || !songId) {
             console.error('Error: Playlist ID or Song ID is undefined');
             return;
@@ -203,6 +205,80 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
 
         } catch (error) {
             console.error('Error updating playlist:', error);
+        }
+    },
+
+    //este controlador es para eliminar una cancion de una playlist, recibe el id de la cancion y 
+    //el id de la playlist por params.
+
+    deleteSongFromPlaylist: async (songId: string, playlistId: string) => {
+        if (!songId || !playlistId) {
+            console.error('Error: Song ID or Playlist ID is undefined');
+            return;
+        }
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/playlist/deleteSongFromPlaylist/${songId}/${playlistId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+        set((state) => {
+            const updatedPlaylist = state.playlistDetail?.songs
+                ? { 
+                    ...state.playlistDetail, 
+                    songs: state.playlistDetail.songs.filter((song: { id: string }) => song.id !== songId) 
+                }
+                : state.playlistDetail;
+            return { playlistDetail: updatedPlaylist };
+        });
+
+        } catch (error) {
+            console.error('Error deleting song from playlist:', error);
+        }
+    },
+
+    //este controlador es para eliminar una playlist, toma el id de la playlist a eliminar por params y la 
+    //elimina.
+
+    deletePlaylist: async (id: string) => {
+        if (!id) {
+            console.error('Error: ID is undefined');
+            return;
+        }
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/playlist/deletePlaylist/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            set((state) => {
+                const updatedUserPlaylists = state.userPlaylists.filter((playlist: { id: string }) => playlist.id !== id);
+                const updatedAllPlaylists = state.allPlaylists.filter((playlist: { id: string }) => playlist.id !== id);
+                return { 
+                    userPlaylists: updatedUserPlaylists,
+                    allPlaylists: updatedAllPlaylists,
+                    playlistDetail: state.playlistDetail?.id === id ? null : state.playlistDetail
+                };
+            });
+
+        } catch (error) {
+            console.error('Error deleting playlist:', error);
         }
     },
     
