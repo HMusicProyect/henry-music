@@ -26,8 +26,8 @@ const SongItem: React.FC<SongsItemProps> = ({ data, onClick, id }) => {
                         className='object-cover' 
                         src={data?.image} 
                         alt='Image' 
-                        layout='fill'
-                        sizes="100vw"
+                        fill={true} 
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         priority 
                         onClick={() => router.push(`/home/lists/${id}`)} 
                     />

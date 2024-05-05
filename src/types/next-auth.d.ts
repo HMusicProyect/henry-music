@@ -14,6 +14,7 @@ declare module "next-auth" {
                 token: string;
                 expires: string;
                 esta_verificado : boolean;
+                ban:boolean;
             };
     }
 }

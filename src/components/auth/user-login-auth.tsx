@@ -10,6 +10,7 @@ import { SignInResponse, getSession, signIn, signOut } from "next-auth/react";
 
 import { useRouter } from "next/navigation";
 
+
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 
@@ -22,6 +23,9 @@ export function UserLoginForm({ className, ...props }: UserAuthFormProps) {
   const [errors, setErrors] = useState<string[]>([]);
   const [res, setRes] = useState<SignInResponse | {}>({});
 
+
+
+  
   const [data, setData] = useState<ILoginUser>({
     email: "",
     password: "",
@@ -70,6 +74,7 @@ useEffect(() => {
   checkSession();
 }, [res]);
 
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setData((prev) => {
       return { ...prev, [e.target.name]: e.target.value };
@@ -113,7 +118,7 @@ useEffect(() => {
               name="password"
               value={data.password}
               onChange={handleChange}
-              autoComplete="current-password" // Cambia 'autocomplete' a 'autoComplete'
+              autoComplete="current-password"
               required
             />
           </div>

@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import Header from "@/components/ui/header/Header";
 import AlbumCard from "@/components/ui/sidebar/AlbumCard";
 import { data } from '@/components/ui/sidebar/data';
@@ -27,7 +27,6 @@ const Home: React.FC = () => {
     return <div>Loading...</div>;
 }
 
-
   return (
     <div className="bg-neutral-900 rounded-lg h-full w-full overflow-hidden overflow-y-auto">
       <Header>
@@ -38,6 +37,7 @@ const Home: React.FC = () => {
               image="/images/liked.png" 
               name="Liked Songs" 
               href="liked" 
+              
             />
           </div>
         </div>

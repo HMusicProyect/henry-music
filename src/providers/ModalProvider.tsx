@@ -27,6 +27,7 @@ const ModalProvider = () => {
         <UploadAlbumsModal />
         <UserActionsModal />
         <UserBanModal />
+
         </>
     )
 }
