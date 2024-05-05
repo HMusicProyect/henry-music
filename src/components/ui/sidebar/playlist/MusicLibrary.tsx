@@ -16,26 +16,46 @@ interface MusicLibraryProps {
     user: User; 
 }
 
-const MusicLibrary: React.FC<MusicLibraryProps> = ({ playlist = [], user }) => {
-
-    const postPlaylist = usePlaylistStore(state => state.postPlaylist);
-
+const CreatePlaylistMenu: React.FC<{ onCreate: () => void, onClose: () => void }> = ({ onCreate, onClose }) => {
     const [anchorEl, setAnchorEl] = useState<null | SVGSVGElement>(null);
 
-    const handleClick = (event: React.MouseEvent<SVGSVGElement>) => {
+    const handleMenuOpen = (event: React.MouseEvent<SVGSVGElement>) => {
         setAnchorEl(event.currentTarget);
     };
 
-    const handleClose = () => {
+    const handleMenuClose = () => {
         setAnchorEl(null);
+        onClose();
     };
+
+    return (
+        <>
+            <Plus 
+                onClick={handleMenuOpen} 
+                className='text-neutral-400 cursor-pointer hover:text-white transition'
+            />
+            <Menu
+                anchorEl={anchorEl}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={handleMenuClose}
+                style={{ backgroundColor: 'tuColorDeFondo' }}
+            >
+                <MenuItem onClick={onCreate} style={{ backgroundColor: 'tuColorDeFondo' }}>Crear Playlist</MenuItem>
+                <MenuItem onClick={handleMenuClose} style={{ backgroundColor: 'tuColorDeFondo' }}>Crear Carpeta</MenuItem>
+            </Menu>
+        </>
+    );
+}
+
+const MusicLibrary: React.FC<MusicLibraryProps> = ({ playlist = [], user }) => {
+    const postPlaylist = usePlaylistStore(state => state.postPlaylist);
 
     const handleCreatePlaylist = () => {
         const defaultPlaylistName = "Nombre predeterminado de la playlist";
         if (user?.id) {
             postPlaylist(defaultPlaylistName, user.id);
         }
-        handleClose();
     };
 
     return (
@@ -46,25 +66,11 @@ const MusicLibrary: React.FC<MusicLibraryProps> = ({ playlist = [], user }) => {
                     <p className="text-neutral-400 font-medium text-md">Your Library</p>
                 </div>
 
-                <Plus 
-                    onClick={handleClick} 
-                    className='text-neutral-400 cursor-pointer hover:text-white transition'
-                />
-                <Menu
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
-                    style={{ backgroundColor: 'tuColorDeFondo' }}
-                >
-                    <MenuItem onClick={handleCreatePlaylist} style={{ backgroundColor: 'tuColorDeFondo' }}>Crear Playlist</MenuItem>
-                    
-                    <MenuItem onClick={handleClose} style={{ backgroundColor: 'tuColorDeFondo' }}>Crear Carpeta</MenuItem>
-                </Menu>
+                <CreatePlaylistMenu onCreate={handleCreatePlaylist} onClose={() => {}} />
             </div>
 
             <div className="flex flex-col gap-y-2 mt-4 px-3">
-                {Array.isArray(playlist) && playlist.map((item) => (
+                {playlist?.map((item) => (
                     <PlaylistItem
                         key={item.id}
                         data={item}
