@@ -4,6 +4,8 @@ import "./globals.css";
 import ModalProvider from '@/providers/ModalProvider';
 import ToasterProvider from '@/providers/ToasterProvider';
 import SessionAuthProvider from '@/context/auth-provider';
+import { SpeedInsights } from "@vercel/speed-insights/next"
+import { Analytics } from '@vercel/analytics/react';
 
 
 const inter = Figtree({ subsets: ["latin"] });
@@ -27,6 +29,8 @@ export default function RootLayout({
           <main>
             {children}
           </main>
+          <SpeedInsights/>
+          <Analytics />
         </SessionAuthProvider>
       </body>
     </html>

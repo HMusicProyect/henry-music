@@ -41,12 +41,12 @@ export default function MusicPlayer({ params }: { params: Props }) {
         }
     }, [id, getMusicById]);
 
-    useEffect(() => {
-        if (song.length > 0) {
-            const initialSong = song.find(song => song != null);
-            setCurrentSong(initialSong || null);
-        }
-    }, [song]);
+useEffect(() => {
+    if (song && song.length > 0) {
+        const initialSong = song.find(song => song != null);
+        setCurrentSong(initialSong || null);
+    }
+}, [song]);
 
     useEffect(() => {
         if (currentSong && currentSong.GenreID) {
@@ -74,12 +74,12 @@ export default function MusicPlayer({ params }: { params: Props }) {
     }, [currentSong, getSongReviews]);
 
 
-    const handlePlayClick = () => {
-        if (currentSong) {
-            player.setId(currentSong.id!.toString());
-            player.setIds(song.map((song) => song.id!.toString()));
-        }
-    };
+const handlePlayClick = () => {
+    if (currentSong && song) {
+        player.setId(currentSong.id!.toString());
+        player.setIds(song.map((song) => song.id!.toString()));
+    }
+};
     const handleReviewSubmit = () => {
         getSongReviews(currentSong!.id!);
     };
