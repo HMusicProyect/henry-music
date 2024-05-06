@@ -13,16 +13,29 @@ export const handlePhotoSubmit = async (file: FilePair) => {
     }
 
     if(formData !== undefined && formData !== null){
-        const response = await fetch(`/api/upload`, {
-            method: 'POST',
-            body: formData,
-        })
-        const filePair = await response.json();
-        return filePair;
-    }
-    
-    return {
-        message: 'error uploading file to Cloudinary',
-        status: 500,
+        try {
+            const response = await fetch(`/api/upload`, {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error('Error al subir el archivo a Cloudinary');
+            }
+
+            const data = await response.text();
+            if (!data) {
+                throw new Error('Respuesta vacía del servidor');
+            }
+
+            const filePair = JSON.parse(data);
+            return filePair;
+        } catch (error) {
+            console.error(error);
+            return {
+                message: 'error uploading file to Cloudinary',
+                status: 500,
+            };
+        }
     }
 };

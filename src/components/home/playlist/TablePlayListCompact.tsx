@@ -57,7 +57,7 @@ console.log('currentPage', currentPage);
 
                       <div className="flex items-center text-sm">
                         <div className="relative mr-3 rounded-full md:block">
-                      {invoice?.id}
+                          {invoice.ArtistName}
                         </div>
                       </div>
  
@@ -75,7 +75,7 @@ console.log('currentPage', currentPage);
    
                     <div className="flex items-center text-sm">
                         <div className="relative mr-3 rounded-full md:block">
-                        {invoice.ArtistName}
+                        {invoice.GenreName}
                         </div>
                       </div>
        
@@ -84,7 +84,7 @@ console.log('currentPage', currentPage);
      
                     <div className="flex items-center text-sm">
                         <div className="relative mr-3 rounded-full md:block">
-                        {invoice.GenreName}
+                        {invoice.id}
                         </div>
                       </div>
 
