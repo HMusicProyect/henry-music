@@ -16,6 +16,7 @@ interface SidebarProps {
 }
 const Sidebar: React.FC<SidebarProps> = ({ children}) => {
     const { fetchUserPlaylists, userPlaylists: userPlaylistsFromPlaylistStore } = usePlaylistStore();  
+    
     const { data: session } = useSession();
     const userSession: User = session?.user!;
     const pathname = usePathname();
@@ -27,8 +28,6 @@ const Sidebar: React.FC<SidebarProps> = ({ children}) => {
             fetchUserPlaylists(userSession.id);
         }
     }, [userSession, fetchUserPlaylists, userPlaylistsFromPlaylistStore]);
-
-
 
     const routes = useMemo(() => [
         {

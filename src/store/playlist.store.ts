@@ -13,6 +13,7 @@ type PlaylistState = {
     postSongToPlaylist: (playlistId: string, songId: string) => void;
     deleteSongFromPlaylist: (id: string) => void;
     updatePlaylist: (id: string, name?: string, image?: string) => void;
+    deletePlaylist: (id: string) => void;
 };
 
 const usePlaylistStore = create<PlaylistState>((set) => ({
@@ -252,6 +253,7 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
     //elimina.
 
     deletePlaylist: async (id: string) => {
+        console.log('deletePlaylist', id)
         if (!id) {
             console.error('Error: ID is undefined');
             return;
@@ -265,10 +267,15 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
             });
 
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                if (response.headers.get('content-type')?.includes('application/json')) {
+                    const data = await response.json();
+                    console.error(`HTTP error! status: ${response.status}, message: ${data.error}`);
+                } else {
+                    console.log(response)
+                    console.error(`HTTP error! status: ${response.status}`);
+                }
+                return;
             }
-
-            const data = await response.json();
 
             set((state) => {
                 const updatedUserPlaylists = state.userPlaylists.filter((playlist: { id: string }) => playlist.id !== id);
@@ -281,6 +288,7 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
             });
 
         } catch (error) {
+            console.log(error)
             console.error('Error deleting playlist:', error);
         }
     },
