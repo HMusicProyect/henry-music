@@ -10,6 +10,7 @@ interface PlaylistDetails {
     PlaylistID: string;
     SongsID: number;
     SongsImage: string;
+    SongsName: string;
     id: string;
 }
 
@@ -23,7 +24,7 @@ const MediaItem: React.FC<MediaItemProps> = ({ data, onClick }) => {
         return (data as Music).name !== undefined;
     }
 
-    const capitalizedMusicName = isMusic(data) ? capitalizeWords(data.name) : data.ArtistName;
+    const capitalizedMusicName = isMusic(data) ? capitalizeWords(data.name) : data.SongsName;
 
     const handleClick = () => {
         if (onClick) {

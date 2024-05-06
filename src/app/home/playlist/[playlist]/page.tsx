@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import Header from '@/components/ui/header/Header';
 import usePlaylistStore from '@/store/playlist.store';
 import { capitalizeWords } from "@/utils/CapitalizeWords";
@@ -11,6 +11,13 @@ import MediaItem from '@/components/ui/sidebar/MediaItem';
 import { ModalComponent } from '@/components/ui/Modal/Modal';
 import AddMusicToPlaylist from '@/components/home/playlist/addMusic';
 import EditPlaylistDetails from '@/components/home/playlist/editPlaylist';
+import OptionsDropdown from '@/components/ui/OptionDropdown';
+import { InvoicesTableSkeleton } from '@/components/ui/skeletons';
+import { Input } from '@/components/ui/input';
+import { useOptionsStore } from '@/store/hooks/useOptions';
+import { Music } from '@/lib/definitions';
+import TablePlayList from '@/components/ui/sidebar/playlist/TablePlayList';
+import TablePlayListCompact from '@/components/home/playlist/TablePlayListCompact';
 
 interface PlaylistData {
     id: string;
@@ -19,15 +26,27 @@ interface PlaylistData {
 }
 
 
-export default function MusicPlayer() {
-    const searchParams = useSearchParams();
-    const router = useRouter();
-    
-    const id = searchParams.get('id') || '';
+const MusicPlayer: React.FC = ({
+  searchParams,
+}: {
+  searchParams?: {
+    id?: string;
+    music?: string;
+    page?: string;
+    songs: Music[];
+  };
+}) => {
+    const { selectedOption } = useOptionsStore();
+
+  const query = searchParams?.music || '';
+  const id = searchParams?.id || '';
+
+  console.log('id', id);
+  
+  const currentPage = Number(searchParams?.page) || 1;
     // const token = searchParams.get('token');
 
     const fetchPlaylistDetail = usePlaylistStore((state) => state.fetchPlaylistDetail);
-    const deleteSongFromPlaylist = usePlaylistStore((state) => state.deleteSongFromPlaylist);
     const updatePlaylist = usePlaylistStore((state) => state.updatePlaylist);
     const playlistDetail = usePlaylistStore((state) => state.playlistDetail);
     
@@ -43,31 +62,12 @@ export default function MusicPlayer() {
     
     const otherDetails = playlistDetail?.playlistDetails;
 
-    console.log( 'playlistDetails',otherDetails);
-
-    const handleNameEdit = (newName: string) => {
-        if (playlistData) {
-            Promise.resolve(updatePlaylist(playlistData.id, newName, playlistData.image))
-                .then(() => {
-                    setPlaylistData((prevState: PlaylistData | undefined) => prevState ? { ...prevState, name: newName } : undefined);
-                });
-        }
-    };
-
-    // const handleImageEdit = (newImage: File) => {
-    //     if (playlistData) {
-    //         Promise.resolve(updatePlaylist(playlistData.id, playlistData.name, newImage))
-    //             .then(() => {
-    //                 setPlaylistData((prevState: PlaylistData | undefined) => prevState ? { ...prevState, image: newImage } : undefined);
-    //             });
-    //     }
-    // };
-
     useEffect(() => {
         if (id) {
             fetchPlaylistDetail(id);
         }
     }, [id]);
+
 
 
     return (
@@ -95,38 +95,29 @@ export default function MusicPlayer() {
                             updatePlaylist={updatePlaylist}
                         />
                 </ModalComponent>
-                        <button 
-                            onClick={() => setIsModalEditOpen(true)}
-                            >
-                                edit Playlist
-                            </button>
                 <div className='mt-2 mb-7 px-6'>
                     
                     <div className="flex gap-x-4 items-center">
-                        
-                    <div 
-                        className="relative rounded-lg overflow-hidden" 
-                        onClick={() => setIsModalEditOpen(true)}
-                    
-                    >
-                    <Image
-                        className="w-full h-full object-cover"
-                        src={playlistData?.image instanceof File ? URL.createObjectURL(playlistData?.image) : playlistData?.image || '/images/HenrryMusic.svg'}
-                        alt={playlistData?.name!} 
-                        width={300}
-                        height={400}
-                    />
-                    </div>
+                        <div 
+                            className="relative rounded-lg overflow-hidden cursor-pointer hover:opacity-80" 
+                            onClick={() => setIsModalEditOpen(true)}
+                        >
+                            <Image
+                                className="w-full h-full object-cover"
+                                src={playlistData?.image instanceof File ? URL.createObjectURL(playlistData?.image) : playlistData?.image || '/images/HenrryMusic.svg'}
+                                alt={playlistData?.name!} 
+                                width={300}
+                                height={400}
+                            />
+                        </div>
+                            
                         <div>
-                            <button
+                            <h2
                                 onClick={() => setIsModalEditOpen(true)}
-                                className="text-10x10 font-semibold"
+                                className="text-4xl cursor-pointer hover:opacity-80 font-semibold"
                             >
-                                <h2
-                                >
-                                    {playlistData && capitalizeWords(playlistData.name)}
-                                </h2>
-                            </button>
+                                {playlistData && capitalizeWords(playlistData.name)}
+                            </h2>
                             <p className="text-md text-gray-500">
                                 <span className='text-white font-semibold text-md'>Nombre: </span>
                                 {playlistData?.name}
@@ -149,35 +140,66 @@ export default function MusicPlayer() {
                 </button>
             </div>
 
-            <div className='mt-8 mb-7 px-6 flex gap-x-16'>
-                <div className='w-1/2 flex flex-col gap-8'>
-                    <h2 className='text-left'>Explore songs of the same genre</h2>
-                    {otherDetails?.map((detail: any) => {
-                        return (
-                            <Link
-                                href={`/home/lists/${detail.SongsID}`}
-                                key={detail.SongsID}
-                            >
-                                <MediaItem
-                                    data={detail}
-                                /> 
-                                <button 
-                                    className="self-end text-gray-400 w-6 h-6 focus:outline-none"
-                                        onClick={(e) => {
-                                        // Evita que el evento de clic se propague al elemento padre (Link)
-                                        e.stopPropagation();
-                                        // Llama a deleteSongFromPlaylist con el id de la canción
-                                        deleteSongFromPlaylist(detail.id);
-                                    }}
-                                >
-                                    ✖
-                                </button>
-                            </Link>
-                        );
-                    })}
-                </div>
-
+            <div className="px-6 mb-7 flex items-center justify-between gap-2 md:mt-8">
+                <Input className='w-1/4' placeholder='Search Invoices' />
+                <OptionsDropdown />
+            </div>
+            <div className="mt-2 mb-7 px-6 flex justify-between items-center">
+                <Suspense
+                key={query + otherDetails}
+                fallback={<InvoicesTableSkeleton />}
+                >
+                {selectedOption === 'list' ? (
+                    <TablePlayList
+                    query={query}
+                    currentPage={otherDetails}
+                    />
+                ) : (
+                    <TablePlayListCompact
+                    query={query}
+                    currentPage={otherDetails}
+                    />
+                )}
+                </Suspense>
             </div>
         </div>
     );
 }
+
+
+
+export default MusicPlayer;
+
+
+
+
+
+            // <div className='mt-8 mb-7 px-6 flex gap-x-16'>
+            //     <div className='w-1/2 flex flex-col gap-8'>
+            //         <h2 className='text-left'>Explore songs of the same genre</h2>
+            //         {otherDetails?.map((detail: any) => {
+            //             return (
+            //                 <Link
+            //                     href={`/home/lists/${detail.SongsID}`}
+            //                     key={detail.SongsID}
+            //                 >
+            //                     <MediaItem
+            //                         data={detail}
+            //                     /> 
+            //                     <button 
+            //                         className="self-end text-gray-400 w-6 h-6 focus:outline-none"
+            //                             onClick={(e) => {
+            //                             // Evita que el evento de clic se propague al elemento padre (Link)
+            //                             e.stopPropagation();
+            //                             // Llama a deleteSongFromPlaylist con el id de la canción
+            //                             deleteSongFromPlaylist(detail.id);
+            //                         }}
+            //                     >
+            //                         ✖
+            //                     </button>
+            //                 </Link>
+            //             );
+            //         })}
+            //     </div>
+
+            // </div>
