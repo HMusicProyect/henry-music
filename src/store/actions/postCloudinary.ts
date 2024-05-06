@@ -1,8 +1,4 @@
-interface FilePair {
-    photo?: File;
-    audio?: File;
-}
-
+import { FilePair } from "@/lib/definitions";
 
     //Foto de perfil
 export const handlePhotoSubmit = async (file: FilePair) => {

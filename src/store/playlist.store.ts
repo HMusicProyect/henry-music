@@ -1,5 +1,6 @@
 import {create} from 'zustand';
-import { Music } from '@/lib/definitions';
+import { FilePair, Music } from '@/lib/definitions';
+import { handlePhotoSubmit } from './actions/postCloudinary';
 
 type PlaylistState = {
     userPlaylists: any[];
@@ -12,7 +13,7 @@ type PlaylistState = {
     postPlaylist: (name: string, userId: string) => void;
     postSongToPlaylist: (playlistId: string, songId: string) => void;
     deleteSongFromPlaylist: (id: string) => void;
-    updatePlaylist: (id: string, name?: string, image?: string) => void;
+    updatePlaylist: (id: string, name?: string, image?: File) => Promise<void>;
     deletePlaylist: (id: string) => void;
 };
 
@@ -178,38 +179,66 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
     },
 
     // Este controlador es para actualizar una playlist existente
-    updatePlaylist: async (id: string, name?: string, image?: string) => {
-        if (!id || (!name && !image)) {
-            console.error('Error: ID, Name or Image is undefined');
-            return;
-        }
-        try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/playlist/putPlaylist`, {
-                method: 'PUT',
-                body: JSON.stringify({ id, name, image }),
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
+    updatePlaylist: (id: string, name?: string, image?: File): Promise<void> => {
+        return new Promise(async (resolve, reject) => {
+            let imageUrl: string = '';
+            console.log('updatePlaylist', id, name, image);
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+            if (image) {
+                // Crear un objeto FilePair con la imagen
+                const filePair: FilePair = { photo: image };
+                const uploadResponse = await handlePhotoSubmit(filePair);
+                console.log('uploadResponse:', uploadResponse);
+                if (uploadResponse.status === 200) {
+                    imageUrl = uploadResponse.url;
+                } else {
+                    const error = 'Error uploading image to Cloudinary';
+                    console.error(error);
+                    reject(error);
+                    return;
+                }
             }
 
-            const data = await response.json();
+            if (!id || (!name && !imageUrl)) {
+                const error = 'Error: ID, Name or Image is undefined';
+                console.error(error);
+                reject(error);
+                return;
+            }
 
-            set((state) => {
-                const updatedUserPlaylists = state.userPlaylists.map((playlist) => 
-                    playlist.id === id 
-                        ? { ...playlist, name: name || playlist.name, image: image || playlist.image } 
-                        : playlist
-                );
-                return { userPlaylists: updatedUserPlaylists };
-            });
+            try {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/playlist/putPlaylist`, {
+                    method: 'PUT',
+                    body: JSON.stringify({ id, name, image: imageUrl }),
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
 
-        } catch (error) {
-            console.error('Error updating playlist:', error);
-        }
+                if (!response.ok) {
+                    const error = `HTTP error! status: ${response.status}`;
+                    console.error(error);
+                    reject(error);
+                    return;
+                }
+
+                await response.json();
+
+                set((state) => {
+                    const updatedUserPlaylists = state.userPlaylists.map((playlist) =>
+                        playlist.id === id
+                            ? { ...playlist, name: name || playlist.name, image: imageUrl || playlist.image }
+                            : playlist
+                    );
+                    return { userPlaylists: updatedUserPlaylists };
+                });
+
+                resolve();
+            } catch (error) {
+                console.error('Error updating playlist:', error);
+                reject(error);
+            }
+        });
     },
 
     //este controlador es para eliminar una cancion de una playlist, recibe el id de la cancion y 

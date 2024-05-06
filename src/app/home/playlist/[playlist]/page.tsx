@@ -10,11 +10,12 @@ import Link from 'next/link';
 import MediaItem from '@/components/ui/sidebar/MediaItem';
 import { ModalComponent } from '@/components/ui/Modal/Modal';
 import AddMusicToPlaylist from '@/components/home/playlist/addMusic';
+import EditPlaylistDetails from '@/components/home/playlist/editPlaylist';
 
-interface Song {
-    id: number;
-    image: string;
+interface PlaylistData {
+    id: string;
     name: string;
+    image: File;
 }
 
 
@@ -28,32 +29,39 @@ export default function MusicPlayer() {
     const fetchPlaylistDetail = usePlaylistStore((state) => state.fetchPlaylistDetail);
     const deleteSongFromPlaylist = usePlaylistStore((state) => state.deleteSongFromPlaylist);
     const updatePlaylist = usePlaylistStore((state) => state.updatePlaylist);
-    
-
-    const [isModalOpen, setIsModalOpen] = useState(false);
-
     const playlistDetail = usePlaylistStore((state) => state.playlistDetail);
-
-console.log(playlistDetail);
     
-    const playlistData = playlistDetail?.dataValues;
-    const songs = playlistDetail?.songs;
+    
+    
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalEditOpen, setIsModalEditOpen] = useState(false);
+    const [playlistData, setPlaylistData] = useState<PlaylistData | undefined>(playlistDetail?.dataValues);
+    
+    useEffect(() => {
+        setPlaylistData(playlistDetail?.dataValues);
+    }, [playlistDetail]);
+    
     const otherDetails = playlistDetail?.playlistDetails;
 
     console.log( 'playlistDetails',otherDetails);
 
-    const handleNameEdit = async (newName: string) => {
+    const handleNameEdit = (newName: string) => {
         if (playlistData) {
-            await updatePlaylist(playlistData.id, newName, playlistData.image);
+            Promise.resolve(updatePlaylist(playlistData.id, newName, playlistData.image))
+                .then(() => {
+                    setPlaylistData((prevState: PlaylistData | undefined) => prevState ? { ...prevState, name: newName } : undefined);
+                });
         }
     };
 
-    const handleImageEdit = async (newImage: string) => {
-        if (playlistData) {
-            await updatePlaylist(playlistData.id, playlistData.name, newImage);
-        }
-    };
-
+    // const handleImageEdit = (newImage: File) => {
+    //     if (playlistData) {
+    //         Promise.resolve(updatePlaylist(playlistData.id, playlistData.name, newImage))
+    //             .then(() => {
+    //                 setPlaylistData((prevState: PlaylistData | undefined) => prevState ? { ...prevState, image: newImage } : undefined);
+    //             });
+    //     }
+    // };
 
     useEffect(() => {
         if (id) {
@@ -65,58 +73,81 @@ console.log(playlistDetail);
     return (
         <div className='bg-neutral-900 rounded-lg h-full w-full overflow-hidden overflow-y-auto'>
             
-                <div className={``}>
-                    <Header>
-                        <h1 className="bg-neutral-900"></h1>
-                    </Header>
-                    <ModalComponent
-                        isModalOpen={isModalOpen}
-                        setIsModalOpen={setIsModalOpen}
-                    >
-                        <AddMusicToPlaylist
-                            id={id}
+            <div className={``}>
+                <Header>
+                    <h1 className="bg-neutral-900"></h1>
+                </Header>
+                <ModalComponent
+                    isModalOpen={isModalOpen}
+                    setIsModalOpen={setIsModalOpen}
+                >
+                    <AddMusicToPlaylist
+                        id={id}
+                    />
+                </ModalComponent>
+
+                <ModalComponent
+                    isModalOpen={isModalEditOpen}
+                    setIsModalOpen={setIsModalEditOpen}
+                >
+                        <EditPlaylistDetails
+                            playlistData={playlistData}
+                            updatePlaylist={updatePlaylist}
                         />
-                    </ModalComponent>
-                    <div className='mt-2 mb-7 px-6'>
+                </ModalComponent>
+                        <button 
+                            onClick={() => setIsModalEditOpen(true)}
+                            >
+                                edit Playlist
+                            </button>
+                <div className='mt-2 mb-7 px-6'>
+                    
+                    <div className="flex gap-x-4 items-center">
                         
-                        <div className="flex gap-x-4 items-center">
-                            
-                        <div className="relative rounded-lg overflow-hidden" onClick={() => {
-                            const newImage = prompt('Enter new image URL');
-                            if (newImage) {
-                                handleImageEdit(newImage);
-                            }
-                        }}>
-                            <Image
-                                className="w-full h-full object-cover"
-                                src={playlistData?.image ? playlistData?.image : '/images/HenrryMusic.svg'}
-                                alt={playlistData?.name} 
-                                width={300}
-                                height={400}
-                            />
-                        </div>
-                            <button onClick={() => setIsModalOpen(true)}>Add Song to Playlist</button>
-                            <div>
-                                                <h2 className="text-2xl font-semibold">{playlistData && capitalizeWords(playlistData.name)}</h2>
-                <button onClick={() => {
-                    const newName = prompt('Enter new name');
-                    if (newName) {
-                        handleNameEdit(newName);
-                    }
-                }}>Edit Name</button>
-                                <p className="text-md text-gray-500">
-                                    <span className='text-white font-semibold text-md'>Nombre: </span>
-                                    {playlistData?.name}
-                                </p>
-                                <p className="text-md text-gray-500">
-                                    <span className='text-white font-semibold text-md'>Autor: </span>
-                                    {playlistData?.name}
-                                </p>
-                                {playlistData && <p className='mt-8'>Now playing: {playlistData.name}</p>}
-                            </div>
+                    <div 
+                        className="relative rounded-lg overflow-hidden" 
+                        onClick={() => setIsModalEditOpen(true)}
+                    
+                    >
+                    <Image
+                        className="w-full h-full object-cover"
+                        src={playlistData?.image instanceof File ? URL.createObjectURL(playlistData?.image) : playlistData?.image || '/images/HenrryMusic.svg'}
+                        alt={playlistData?.name!} 
+                        width={300}
+                        height={400}
+                    />
+                    </div>
+                        <div>
+                            <button
+                                onClick={() => setIsModalEditOpen(true)}
+                                className="text-10x10 font-semibold"
+                            >
+                                <h2
+                                >
+                                    {playlistData && capitalizeWords(playlistData.name)}
+                                </h2>
+                            </button>
+                            <p className="text-md text-gray-500">
+                                <span className='text-white font-semibold text-md'>Nombre: </span>
+                                {playlistData?.name}
+                            </p>
+                            <p className="text-md text-gray-500">
+                                <span className='text-white font-semibold text-md'>Autor: </span>
+                                {playlistData?.name}
+                            </p>
+                            {playlistData && <p className='mt-8'>Now playing: {playlistData.name}</p>}
                         </div>
                     </div>
                 </div>
+            </div>
+            <div className="flex justify-center items-center mt-4">
+                <button 
+                    onClick={() => setIsModalOpen(true)}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                >
+                    Add Song to Playlist
+                </button>
+            </div>
 
             <div className='mt-8 mb-7 px-6 flex gap-x-16'>
                 <div className='w-1/2 flex flex-col gap-8'>
