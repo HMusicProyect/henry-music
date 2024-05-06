@@ -1,6 +1,7 @@
 // EditPlaylistDetails.tsx
 import { useEffect, useState } from 'react';
 import { capitalizeWords } from "@/utils/CapitalizeWords";
+import toast from 'react-hot-toast';
 
 interface EditPlaylistDetailsProps {
     playlistData: any;
@@ -11,6 +12,7 @@ interface EditPlaylistDetailsProps {
 const EditPlaylistDetails: React.FC<EditPlaylistDetailsProps> = ({ playlistData, updatePlaylist, globalState }) => {
     const [isEditingName, setIsEditingName] = useState(false);
     const [isEditingImage, setIsEditingImage] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [newName, setNewName] = useState(playlistData.name);
     const [newImage, setNewImage] = useState(playlistData.image);
 
@@ -19,17 +21,26 @@ const EditPlaylistDetails: React.FC<EditPlaylistDetailsProps> = ({ playlistData,
         setNewImage(playlistData.image);
     }, [playlistData, globalState]); 
 
-    const handleSave = () => {
+    const handleSave = async () => {
+        setIsLoading(true);
+
         if (playlistData) {
-            Promise.resolve(updatePlaylist(
-                playlistData.id, 
-                isEditingName ? newName : undefined, 
-                isEditingImage ? newImage : undefined
-            ))
-            .then(() => {
+            let editedField = '';
+            try {
+                await updatePlaylist(
+                    playlistData.id, 
+                    isEditingName ? (editedField = 'Nombre', newName) : undefined, 
+                    isEditingImage ? (editedField = 'Imagen', newImage) : undefined
+                );
                 setIsEditingName(false);
                 setIsEditingImage(false);
-            });
+                toast.success(`${editedField} de la playlist se ha actualizado correctamente.`);
+            } catch (error) {
+                toast.error(`Hubo un error al editar la ${editedField} de la playlist.`);
+                console.error(error);
+            } finally {
+                setIsLoading(false);
+            }
         }
     };
 
