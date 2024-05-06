@@ -27,6 +27,7 @@ export default function MusicPlayer() {
 
     const fetchPlaylistDetail = usePlaylistStore((state) => state.fetchPlaylistDetail);
     const deleteSongFromPlaylist = usePlaylistStore((state) => state.deleteSongFromPlaylist);
+    const updatePlaylist = usePlaylistStore((state) => state.updatePlaylist);
     
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -40,6 +41,18 @@ console.log(playlistDetail);
     const otherDetails = playlistDetail?.playlistDetails;
 
     console.log( 'playlistDetails',otherDetails);
+
+    const handleNameEdit = async (newName: string) => {
+        if (playlistData) {
+            await updatePlaylist(playlistData.id, newName, playlistData.image);
+        }
+    };
+
+    const handleImageEdit = async (newImage: string) => {
+        if (playlistData) {
+            await updatePlaylist(playlistData.id, playlistData.name, newImage);
+        }
+    };
 
 
     useEffect(() => {
@@ -65,19 +78,32 @@ console.log(playlistDetail);
                         />
                     </ModalComponent>
                     <div className='mt-2 mb-7 px-6'>
+                        
                         <div className="flex gap-x-4 items-center">
-                            <div className="relative rounded-lg overflow-hidden">
-                                <Image
-                                    className="w-full h-full object-cover"
-                                    src={playlistData?.image ? playlistData?.image : '/images/HenrryMusic.svg'}
-                                    alt={playlistData?.name} 
-                                    width={300}
-                                    height={400}
-                                />
-                            </div>
+                            
+                        <div className="relative rounded-lg overflow-hidden" onClick={() => {
+                            const newImage = prompt('Enter new image URL');
+                            if (newImage) {
+                                handleImageEdit(newImage);
+                            }
+                        }}>
+                            <Image
+                                className="w-full h-full object-cover"
+                                src={playlistData?.image ? playlistData?.image : '/images/HenrryMusic.svg'}
+                                alt={playlistData?.name} 
+                                width={300}
+                                height={400}
+                            />
+                        </div>
                             <button onClick={() => setIsModalOpen(true)}>Add Song to Playlist</button>
                             <div>
-                                <h2 className="text-2xl font-semibold">{playlistData && capitalizeWords(playlistData.name)}</h2>
+                                                <h2 className="text-2xl font-semibold">{playlistData && capitalizeWords(playlistData.name)}</h2>
+                <button onClick={() => {
+                    const newName = prompt('Enter new name');
+                    if (newName) {
+                        handleNameEdit(newName);
+                    }
+                }}>Edit Name</button>
                                 <p className="text-md text-gray-500">
                                     <span className='text-white font-semibold text-md'>Nombre: </span>
                                     {playlistData?.name}

@@ -12,6 +12,7 @@ type PlaylistState = {
     postPlaylist: (name: string, userId: string) => void;
     postSongToPlaylist: (playlistId: string, songId: string) => void;
     deleteSongFromPlaylist: (id: string) => void;
+    updatePlaylist: (id: string, name?: string, image?: string) => void;
 };
 
 const usePlaylistStore = create<PlaylistState>((set) => ({
