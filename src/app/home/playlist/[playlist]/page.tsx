@@ -26,6 +26,8 @@ export default function MusicPlayer() {
     // const token = searchParams.get('token');
 
     const fetchPlaylistDetail = usePlaylistStore((state) => state.fetchPlaylistDetail);
+    const deleteSongFromPlaylist = usePlaylistStore((state) => state.deleteSongFromPlaylist);
+    
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -102,6 +104,17 @@ console.log(playlistDetail);
                                 <MediaItem
                                     data={detail}
                                 /> 
+                                <button 
+                                    className="self-end text-gray-400 w-6 h-6 focus:outline-none"
+                                        onClick={(e) => {
+                                        // Evita que el evento de clic se propague al elemento padre (Link)
+                                        e.stopPropagation();
+                                        // Llama a deleteSongFromPlaylist con el id de la canción
+                                        deleteSongFromPlaylist(detail.id);
+                                    }}
+                                >
+                                    ✖
+                                </button>
                             </Link>
                         );
                     })}

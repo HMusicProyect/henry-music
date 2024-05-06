@@ -11,6 +11,7 @@ type PlaylistState = {
     fetchPlaylistDetail: (id: string) => void;
     postPlaylist: (name: string, userId: string) => void;
     postSongToPlaylist: (playlistId: string, songId: string) => void;
+    deleteSongFromPlaylist: (id: string) => void;
 };
 
 const usePlaylistStore = create<PlaylistState>((set) => ({
@@ -18,6 +19,7 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
     userPlaylists: [],
     allPlaylists: [],
     playlistDetail: null,
+    
     //este controlador es para traer las playlist del usuario que consulta
     fetchUserPlaylists: async (id) => {
         if (!id) {
@@ -211,13 +213,13 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
     //este controlador es para eliminar una cancion de una playlist, recibe el id de la cancion y 
     //el id de la playlist por params.
 
-    deleteSongFromPlaylist: async (songId: string, playlistId: string) => {
-        if (!songId || !playlistId) {
-            console.error('Error: Song ID or Playlist ID is undefined');
+    deleteSongFromPlaylist: async (id: string) => {
+        if (!id) {
+            console.error('Error: ID is undefined');
             return;
         }
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/playlist/deleteSongFromPlaylist/${songId}/${playlistId}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/playlist/deleteSongFromPlaylist?id=${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -230,15 +232,15 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
 
             const data = await response.json();
 
-        set((state) => {
-            const updatedPlaylist = state.playlistDetail?.songs
-                ? { 
-                    ...state.playlistDetail, 
-                    songs: state.playlistDetail.songs.filter((song: { id: string }) => song.id !== songId) 
-                }
-                : state.playlistDetail;
-            return { playlistDetail: updatedPlaylist };
-        });
+            set((state) => {
+                const updatedPlaylist = state.playlistDetail?.songs
+                    ? { 
+                        ...state.playlistDetail, 
+                        songs: state.playlistDetail.songs.filter((song: { id: string }) => song.id !== id) 
+                    }
+                    : state.playlistDetail;
+                return { playlistDetail: updatedPlaylist };
+            });
 
         } catch (error) {
             console.error('Error deleting song from playlist:', error);
