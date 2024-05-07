@@ -39,6 +39,7 @@ export default function MusicPlayer({ params }: { params: Props }) {
         if (id) {
             getMusicById(id);
         }
+
         return () => {
             cleanSongState();
         };

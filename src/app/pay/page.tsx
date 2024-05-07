@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import React, { useEffect } from 'react';
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import useStore from '@/store/actions/modifyRol';
 
 const Pay = () => {
@@ -18,7 +18,14 @@ useEffect(() => {
   }
 }, [email, modifyRole]);
 
-  
+  const handleSignOut = async () => {
+try {
+  const callbackUrl = "/login"
+  await signOut({callbackUrl})
+} catch (error) {
+  console.error("error duarante cierre de sesion",error)
+}
+  }
 
 
   return (
@@ -30,12 +37,13 @@ useEffect(() => {
       <div className="px-5 pt-2 flex flex-col text-black">
         <h2 className="font-semibold text-xl">Ya Eres Premium</h2>
   
-        <Link href="/home">
+        <Link href="/login">
         <button
+          onClick={handleSignOut}
           className="bg-blue-500 cursor-pointer text-white px-4 py-2 mt-2 rounded-md transition duration-150 hover:bg-blue-700 mb-3"
           type="button"
         >
-          Inicio
+          Login
         </button>
         </Link>
       </div>
