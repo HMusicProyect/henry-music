@@ -4,6 +4,27 @@ import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { getUser, postAuthorize } from "@/lib/auth/user.auth";
 
+interface User {
+    id: string;
+    image: string;
+    name: string;
+    email: string;
+    password: string;
+    rol: string;
+    ban: boolean;
+    esta_verificado: boolean;
+    verification_token: string;
+}
+
+interface JWT {
+    sub: string;
+    user: User;
+    token: string;
+    exp: number;
+    [key: string]: any;
+}
+
+
 
 
 const handler = NextAuth({
@@ -49,15 +70,33 @@ const handler = NextAuth({
             return { ...token, ...user };
         },
 
-        async session({ session, token }) {
+        async session({ session, token: rawToken }) {
+            const token = rawToken as JWT;
+
             session.provider = token.provider as any;
+
             if (session.provider === 'google'){
                 session.user = token.user as any;
                 console.log('session',session);
                 return session;
             }
-            session.user = token as any;
-            console.log('session',session);
+
+            const user = token.user as User;
+
+            session.user = {
+                sub: token.sub,
+                id: user.id,
+                image: user.image,
+                name: user.name,
+                email: user.email,
+                password: user.password,
+                rol: user.rol,
+                token: token.token,
+                expires: new Date(token.exp * 1000).toISOString(), // Convertir la fecha de expiración de UNIX a ISO
+                esta_verificado: user.esta_verificado,
+                ban: user.ban
+            };
+            console.log('----session User',session);
             return session;
         },
     },

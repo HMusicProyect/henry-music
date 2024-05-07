@@ -17,6 +17,7 @@ export async function POST(request: Request, response: Response){
     const image = data.get('photo');
     const sound = data.get('audio');
 
+
     if((!image && sound == undefined) || (!sound && image == null)){
         return NextResponse.json({
             message: 'error uploaded',
@@ -44,7 +45,8 @@ export async function POST(request: Request, response: Response){
                 status: 500,
             });
         }
-
+        
+        console.log('response', response.secure_url);
         return NextResponse.json({
             message: 'image uploaded',
             url: response.secure_url,
