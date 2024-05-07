@@ -5,7 +5,7 @@ export interface Review {
     content: string;
     punctuation: number;
     userId: string;
-    user: {
+    User: {
         name: string;
         image: string;
     };

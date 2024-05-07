@@ -24,7 +24,7 @@ interface Props {
 
 export default function MusicPlayer({ params }: { params: Props }) {
     const { data: session, status } = useSession();
-    
+
     const userSession = session?.user!;
 
     const { getSongReviews, reviews, loading } = useReviewsStore();
@@ -46,12 +46,12 @@ export default function MusicPlayer({ params }: { params: Props }) {
 
     }, [id, getMusicById]);
 
-useEffect(() => {
-    if (song && song.length > 0) {
-        const initialSong = song.find(song => song != null);
-        setCurrentSong(initialSong || null);
-    }
-}, [song]);
+    useEffect(() => {
+        if (song && song.length > 0) {
+            const initialSong = song.find(song => song != null);
+            setCurrentSong(initialSong || null);
+        }
+    }, [song]);
 
     useEffect(() => {
         if (currentSong && currentSong.GenreID) {
@@ -79,12 +79,12 @@ useEffect(() => {
     }, [currentSong, getSongReviews]);
 
 
-const handlePlayClick = () => {
-    if (currentSong && song) {
-        player.setId(currentSong.id!.toString());
-        player.setIds(song.map((song) => song.id!.toString()));
-    }
-};
+    const handlePlayClick = () => {
+        if (currentSong && song) {
+            player.setId(currentSong.id!.toString());
+            player.setIds(song.map((song) => song.id!.toString()));
+        }
+    };
     const handleReviewSubmit = () => {
         getSongReviews(currentSong!.id!);
     };
@@ -92,7 +92,13 @@ const handlePlayClick = () => {
     if (status === 'loading') {
         return <div>Cargando...</div>;
     }
-
+    const totalPunctuation = reviews.reduce((total, review) => total + review.punctuation, 0);
+    const averagePunctuation = reviews.length > 0 ? totalPunctuation / reviews.length : null;
+    
+    // Formateamos la puntuación total para mostrarla como una fracción de 5
+    const formattedTotalPunctuation = averagePunctuation !== null ? `${(averagePunctuation).toFixed(1)}/5` : "Aún no existe puntuación";
+    
+    
     return (
         <div className='bg-neutral-900 rounded-lg h-full w-full overflow-hidden overflow-y-auto'>
             {currentSong && (
@@ -128,6 +134,7 @@ const handlePlayClick = () => {
                                     <Play className="text-black" fill="black" size={25} />
                                 </button>
                                 {currentSong && <p className='mt-8'>Now playing: {currentSong.name}</p>}
+                                <p>Puntuación total por canción: {formattedTotalPunctuation}</p>
                             </div>
                         </div>
                     </div>
@@ -139,14 +146,30 @@ const handlePlayClick = () => {
                     <h2 className='text-center'>All Reviews</h2>
                     {reviews.length > 0 ? (
                         reviews.map((review) => (
-                            <div key={review.id}>
-                                <p>{review.content}</p>
-                                <p>Punctuation: {review.punctuation}</p>
+                            <div key={review.id} className="flex flex-col gap-y-2 p-4 rounded-lg shadow-md border border-gray-400">
+                                <div className='flex justify-between items-center'>
+                                    <div className="flex flex-col gap-4">
+                                        <p className="text-sm">{review.content}</p>
+                                        <p className="text-sm">Puntuación: {review.punctuation}</p>
+                                    </div>
+                                    <div className="flex items-center gap-x-2">
+                                        <div className="relative rounded-full h-10 w-10 overflow-hidden">
+                                            <Image
+                                                layout='fill'
+                                                src={review.User.image}
+                                                alt="User Image"
+                                                className="object-cover"
+                                            />
+                                        </div>
+                                        <p className="text-sm font-medium">{review.User.name}</p>
+                                    </div>
+                                </div>
                             </div>
                         ))
                     ) : (
-                        <p>No reviews available for this song</p>
+                        <p className="text-md text-gray-300">No reviews available for this song</p>
                     )}
+
 
                 </div>
             </div>
