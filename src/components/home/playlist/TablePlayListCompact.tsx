@@ -1,8 +1,6 @@
-"use client";
-import { useEffect } from 'react';
-import useStore from '@/store/songs.store';
 import { capitalizeWords } from '@/utils/CapitalizeWords';
 import usePlaylistStore from '@/store/playlist.store';
+import Link from 'next/link';
 
 interface PlaylistDetails {
     ArtistName: string;
@@ -22,7 +20,7 @@ export default function TablePlayListCompact({
   currentPage: PlaylistDetails[];
 }) {
   const deleteSongFromPlaylist = usePlaylistStore((state) => state.deleteSongFromPlaylist);
-console.log('currentPage', currentPage);
+  console.log('currentPage', currentPage);
 
 
   const filteredTodos = currentPage?.filter((invoice) =>
@@ -53,14 +51,17 @@ console.log('currentPage', currentPage);
                   key={invoice.id}
                   className="text-white transition-transform duration-300 ease-in-out transform  hover:bg-neutral-400/10 "
                 >
+                
                   <td className="px-4 py-3 text-md font-semibold dark:border-slate-500 ">
-
-                      <div className="flex items-center text-sm">
-                        <div className="relative mr-3 rounded-full md:block">
-                          {invoice.ArtistName}
-                        </div>
+                  <Link
+                    href={`/home/lists/${invoice.SongsID}`}
+                  >
+                    <div className="flex items-center text-sm">
+                      <div className="relative mr-3 rounded-full md:block">
+                        {invoice.ArtistName}
                       </div>
- 
+                    </div>
+                  </Link>
                   </td>
                   <td className="px-4 py-3 text-sm dark:text-gray-200 dark:border-slate-600 ">
 
@@ -84,11 +85,12 @@ console.log('currentPage', currentPage);
      
                     <div className="flex items-center text-sm">
                         <div className="relative mr-3 rounded-full md:block">
-                        {invoice.id}
+                        {invoice.SongsID}
                         </div>
                       </div>
 
                   </td>
+                  
                   <td className="px-4 py-3 text-sm dark:text-gray-200 dark:border-slate-600 ">
                     <div
                         className="flex items-center text-sm"

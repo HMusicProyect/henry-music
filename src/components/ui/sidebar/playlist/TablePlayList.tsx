@@ -1,11 +1,7 @@
 "use client";
-import { useEffect } from 'react';
-import useStore from '@/store/songs.store';
-import Link from 'next/link';
-import Image from 'next/image';
-import { Clock } from 'lucide-react';
 import MediaItem from '@/components/ui/sidebar/MediaItem';
 import usePlaylistStore from '@/store/playlist.store';
+import Link from 'next/link';
 
 interface PlaylistDetails {
     ArtistName: string;
@@ -27,7 +23,6 @@ export default function TablePlayList({
 
   const deleteSongFromPlaylist = usePlaylistStore((state) => state.deleteSongFromPlaylist);
 
-  console.log('currentPage', currentPage);
   const filteredTodos = currentPage?.filter((invoice) =>
     typeof query === 'string' && (
       invoice.SongsName?.toLowerCase().includes(query.toLowerCase()) ||
@@ -35,8 +30,8 @@ export default function TablePlayList({
       invoice.GenreName.toLowerCase().includes(query.toLowerCase())
     )
   );
+  console.log('filteredTodos', filteredTodos)
 
-  console.log('filteredTodos', filteredTodos);
 
   return (
     <section className="container mx-auto font-semibold">
@@ -62,9 +57,14 @@ export default function TablePlayList({
                   <td className="px-6 py-3 dark:border-slate-500 ">
                       <div className="flex items-center text-sm">
                         <div className="relative mr-3 rounded-full md:block">
-                          <MediaItem
-                            data={invoice}
-                          />
+                          <Link
+                              href={`/home/lists/${invoice.SongsID}`}
+                              key={invoice.id}
+                          >
+                              <MediaItem
+                                data={invoice}
+                              />
+                          </Link>
                         </div>
                       </div>
                   </td>
@@ -76,17 +76,15 @@ export default function TablePlayList({
                     {invoice.GenreName}
                   </td>
                   <td className="px-4 py-3 text-md font-semibold dark:border-slate-500 ">
-                    {invoice?.id}
+                    {invoice?.SongsID}
                   </td>
                   <td className="px-4 py-3 text-md font-semibold dark:border-slate-500 ">
                     <button 
                         className="self-end text-gray-400 w-6 h-6 focus:outline-none"
-                          onClick={(e) => {
-                          // Evita que el evento de clic se propague al elemento padre (Link)
-                          e.stopPropagation();
-                          // Llama a deleteSongFromPlaylist con el id de la canción
-                          deleteSongFromPlaylist(invoice?.id);
-                      }}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            deleteSongFromPlaylist(invoice?.id);
+                        }}
                     >
                         ✖
                     </button>

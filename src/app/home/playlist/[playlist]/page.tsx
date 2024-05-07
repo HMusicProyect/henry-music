@@ -37,6 +37,7 @@ const MusicPlayer: React.FC = ({
     const query = searchParams?.music || '';
     const id = searchParams?.id || '';
     const fetchPlaylistDetail = usePlaylistStore((state) => state.fetchPlaylistDetail);
+    
     const playlistDetail = usePlaylistStore((state) => state.playlistDetail);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isModalEditOpen, setIsModalEditOpen] = useState(false);
@@ -52,7 +53,7 @@ const MusicPlayer: React.FC = ({
         if (id) {
             fetchPlaylistDetail(id);
         }
-    }, [id]);
+    }, [id, fetchPlaylistDetail]);
 
     return (
         <div className='bg-neutral-900 rounded-lg h-full w-full overflow-hidden overflow-y-auto'>
