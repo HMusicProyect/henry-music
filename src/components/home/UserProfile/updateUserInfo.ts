@@ -36,7 +36,7 @@ export const updateUserInfo = async (user: UserWithPhoto, userSession: any) => {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${userSession.token}`
+            'Authorization': `${userSession.token}`
         },
         body: JSON.stringify(updateData),
     });
