@@ -43,7 +43,7 @@ try {
           className="bg-blue-500 cursor-pointer text-white px-4 py-2 mt-2 rounded-md transition duration-150 hover:bg-blue-700 mb-3"
           type="button"
         >
-          Inicio
+          Login
         </button>
         </Link>
       </div>
