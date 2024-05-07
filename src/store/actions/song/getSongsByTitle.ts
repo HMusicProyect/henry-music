@@ -1,7 +1,7 @@
 import { Music } from "@/lib/definitions";
-import { Album } from "../albums.store";
-import { Artist } from "../artist.store";
-import { Genre } from "../genres.store";
+import { Album } from "../../albums.store";
+import { Artist } from "../../artist.store";
+import { Genre } from "../../genres.store";
 
 
 export interface SearchResults {

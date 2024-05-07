@@ -7,7 +7,8 @@ import { updateUserInfo } from '@/components/home/UserProfile/updateUserInfo';
 import { ModalComponent } from '@/components/ui/Modal/Modal';
 import { User } from '@/lib/auth/user.auth';
 import { UserWithPhoto } from '@/lib/definitions';
-import { useSession } from 'next-auth/react';
+import { useSession, getSession, signIn } from 'next-auth/react';
+import toast from 'react-hot-toast';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useState } from 'react';
@@ -16,19 +17,18 @@ import { BookUser, EditIcon, RectangleEllipsis } from 'lucide-react';
 
 
 const ProfilePage = () => {
-    const { data: session, status } = useSession();
+    const { data: session, status, update } = useSession();
     const searchParams = useSearchParams();
     const router = useRouter();
     
     
     const [editProfile, setEditProfile] = useState<UserWithPhoto>({ name: '', photo: undefined });
-    const [passwordFieldsEnabled, setPasswordFieldsEnabled] = useState(false);
     
     const [isEditingPassword, setIsEditingPassword] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const [isEditing, setIsEditing] = useState(false);
     const [imageURL, setImageURL] = useState<string | null>(null);
-
     const [message, setMessage]= useState<string[]>([]);
     const [messageType, setMessageType] = useState<'success' | 'error' | ''>('');
     const [ isModalOpen, setIsModalOpen ] = useState(false);
@@ -42,7 +42,6 @@ const ProfilePage = () => {
 
     const userSession: User = session?.user!;
 
-    
     const id = searchParams.get('id');
 
     const token = searchParams.get('token');
@@ -65,25 +64,48 @@ const ProfilePage = () => {
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
+        setIsLoading(true);
 
-        try {
-            const response = await updateUserInfo(editProfile, userSession);
-
-        if (response.status !== 'success') {
-            throw new Error(`HTTP error! status: ${response.status}`);
+        if(!token){
+            toast.error('Token not found');
+            setIsLoading(false);
+            return;
         }
 
-        const data = response.data;
+        if(!id){
+            toast.error('User id not found');
+            setIsLoading(false);
+            return;
+        }
 
-        setMessage(['Información de usuario actualizada con éxito']);
-        setMessageType('success');
-        setIsModalOpen(true);
+        try {
+            const response = await updateUserInfo(editProfile, userSession, token);
+
+            if (response.status !== 'success') {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            console.log('User information updated:', response);
+            
+            // Actualiza la sesión con la nueva información del usuario
+            if (session) {
+                // Invalidar la caché de la sesión
+                window.localStorage.clear();
+                // Forzar la actualización de la sesión en el cliente
+                const updatedSession = await getSession(response);
+                console.log('Updated session:', updatedSession);
+                update(updatedSession);
+                toast.success('Información de usuario actualizada con éxito');
+            } else {
+                throw new Error('Session not found');
+            }
 
         } catch (error) {
-            setMessage(['Error al actualizar la información del usuario']);
-            setMessageType('error');
-            setIsModalOpen(true);
+            toast.error('Error al actualizar la información del usuario');
+            setIsLoading(true);
             console.error('Failed to update user information:', error);
+        } finally{
+            setIsLoading(false);
         }
     };
 
@@ -102,20 +124,17 @@ const ProfilePage = () => {
         setImageURL(null);
     };
 
-    //password
 
     return (
         <section className="pt-16 bg-blueGray-50">
         <div className="w-full lg:w-4/12 px-4 mx-auto">
         <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg mt-16">
-            {session?.provider !== 'google' &&  !isEditingPassword && (
-                <button 
-                    className="self-end text-gray-400 w-7 h-8 focus:outline-none"
-                    onClick={toggleEdit}
-                >
-                    {isEditing ? <BookUser/> : <EditIcon />}
-                </button>
-            )}
+            <button 
+                className="self-end text-gray-400 w-7 h-8 focus:outline-none"
+                onClick={toggleEdit}
+            >
+                {isEditing ? <BookUser/> : <EditIcon />}
+            </button>
             {session?.provider !== 'google' &&  (
                 <button 
                     className="self-end text-gray-400 w-7 h-8 focus:outline-none"
@@ -173,7 +192,7 @@ const ProfilePage = () => {
                                 setMessageType={setMessageType}
                             />
                             
-                        ) : session?.provider !== 'google' && isEditing ? (
+                        ) : isEditing ? (
                             <UserForm
                                 user={editProfile}
                                 onSubmit={handleSubmit}
@@ -241,54 +260,6 @@ const ProfilePage = () => {
                     </div>
                 </div>
             </ModalComponent>
-            {/* <ModalComponent
-                isModalOpen={isModalOpen}
-                setIsModalOpen={setIsModalOpen}
-            >
-                <div className="flex items-center justify-center rounded-[20px] ">
-                    <div 
-                        className="
-                        flex 
-                        flex-col 
-                        items-center 
-                        bg-white 
-                        text-center 
-                        rounded-xl p-8 
-                        space-y-4 
-                        w-80
-                        bg-gradient-to-b from-green-800 to-black
-                        "
-                    >
-                        <button 
-                            className="self-end text-gray-400 w-6 h-6 focus:outline-none"
-                            onClick={handleModalClose}
-                        >
-                            ✖
-                        </button>
-                            <div>
-                                {message.length > 0 && (
-                                    <div className="flex justify-center items-center mt-2">
-                                    <ul className={`mb-0 text-lg ${messageType === 'success' ? 'text-green-500' : 'text-red-500'}`}>
-                                        {message.map((msg) => (
-                                        <li key={msg}>
-                                            <h1 className="mb-10">
-                                                {msg}
-                                            </h1>
-                                        </li>
-                                        ))}
-                                    </ul>
-                                    </div>
-                                )}
-                            </div>
-                        <button
-                            onClick={handleModalClose}
-                            className="bg-red-500 text-white rounded-md w-48 py-3 text-sm focus:outline-none shadow-md"
-                        >
-                            Ok
-                        </button>
-                    </div>
-                </div>
-            </ModalComponent> */}
         </div>
         </div>
         <div>

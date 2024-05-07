@@ -75,7 +75,6 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
     },
 
     //este controlador es para crear una playlist nueva
-// ...
     postPlaylist: async (name: string, userId: string) => {
         if (!name || !userId) {
             console.error('Error: Name or User ID is undefined');
@@ -325,3 +324,7 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
 }));
 
 export default usePlaylistStore;
+
+
+
+

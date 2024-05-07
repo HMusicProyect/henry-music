@@ -72,17 +72,8 @@ const handler = NextAuth({
 
         async session({ session, token: rawToken }) {
             const token = rawToken as JWT;
-
             session.provider = token.provider as any;
-
-            if (session.provider === 'google'){
-                session.user = token.user as any;
-                console.log('session',session);
-                return session;
-            }
-
             const user = token.user as User;
-
             session.user = {
                 sub: token.sub,
                 id: user.id,

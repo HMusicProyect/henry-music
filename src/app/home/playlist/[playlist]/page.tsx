@@ -4,10 +4,7 @@ import { Suspense, useEffect, useState } from 'react';
 import Header from '@/components/ui/header/Header';
 import usePlaylistStore from '@/store/playlist.store';
 import { capitalizeWords } from "@/utils/CapitalizeWords";
-import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
-import Link from 'next/link';
-import MediaItem from '@/components/ui/sidebar/MediaItem';
 import { ModalComponent } from '@/components/ui/Modal/Modal';
 import AddMusicToPlaylist from '@/components/home/playlist/addMusic';
 import EditPlaylistDetails from '@/components/home/playlist/editPlaylist';
@@ -27,31 +24,20 @@ interface PlaylistData {
 
 
 const MusicPlayer: React.FC = ({
-  searchParams,
-}: {
-  searchParams?: {
-    id?: string;
-    music?: string;
-    page?: string;
-    songs: Music[];
-  };
-}) => {
+    searchParams,
+    }: {
+    searchParams?: {
+        id?: string;
+        music?: string;
+        page?: string;
+        songs: Music[];
+    };
+    }) => {
     const { selectedOption } = useOptionsStore();
-
-  const query = searchParams?.music || '';
-  const id = searchParams?.id || '';
-
-  console.log('id', id);
-  
-  const currentPage = Number(searchParams?.page) || 1;
-    // const token = searchParams.get('token');
-
+    const query = searchParams?.music || '';
+    const id = searchParams?.id || '';
     const fetchPlaylistDetail = usePlaylistStore((state) => state.fetchPlaylistDetail);
-    const updatePlaylist = usePlaylistStore((state) => state.updatePlaylist);
     const playlistDetail = usePlaylistStore((state) => state.playlistDetail);
-    
-    
-    
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isModalEditOpen, setIsModalEditOpen] = useState(false);
     const [playlistData, setPlaylistData] = useState<PlaylistData | undefined>(playlistDetail?.dataValues);
@@ -67,8 +53,6 @@ const MusicPlayer: React.FC = ({
             fetchPlaylistDetail(id);
         }
     }, [id]);
-
-
 
     return (
         <div className='bg-neutral-900 rounded-lg h-full w-full overflow-hidden overflow-y-auto'>
@@ -90,10 +74,7 @@ const MusicPlayer: React.FC = ({
                     isModalOpen={isModalEditOpen}
                     setIsModalOpen={setIsModalEditOpen}
                 >
-                        <EditPlaylistDetails
-                            playlistData={playlistData}
-                            updatePlaylist={updatePlaylist}
-                        />
+                        <EditPlaylistDetails/>
                 </ModalComponent>
                 <div className='mt-2 mb-7 px-6'>
                     
@@ -169,37 +150,3 @@ const MusicPlayer: React.FC = ({
 
 
 export default MusicPlayer;
-
-
-
-
-
-            // <div className='mt-8 mb-7 px-6 flex gap-x-16'>
-            //     <div className='w-1/2 flex flex-col gap-8'>
-            //         <h2 className='text-left'>Explore songs of the same genre</h2>
-            //         {otherDetails?.map((detail: any) => {
-            //             return (
-            //                 <Link
-            //                     href={`/home/lists/${detail.SongsID}`}
-            //                     key={detail.SongsID}
-            //                 >
-            //                     <MediaItem
-            //                         data={detail}
-            //                     /> 
-            //                     <button 
-            //                         className="self-end text-gray-400 w-6 h-6 focus:outline-none"
-            //                             onClick={(e) => {
-            //                             // Evita que el evento de clic se propague al elemento padre (Link)
-            //                             e.stopPropagation();
-            //                             // Llama a deleteSongFromPlaylist con el id de la canción
-            //                             deleteSongFromPlaylist(detail.id);
-            //                         }}
-            //                     >
-            //                         ✖
-            //                     </button>
-            //                 </Link>
-            //             );
-            //         })}
-            //     </div>
-
-            // </div>

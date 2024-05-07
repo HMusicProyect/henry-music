@@ -3,26 +3,39 @@ import { useEffect, useState } from 'react';
 import { capitalizeWords } from "@/utils/CapitalizeWords";
 import toast from 'react-hot-toast';
 import Image from 'next/image';
-
+import usePlaylistStore from '@/store/playlist.store';
+interface PlaylistData {
+    id: string;
+    name: string;
+    image: File;
+}
 interface EditPlaylistDetailsProps {
-    playlistData: any;
-    updatePlaylist: (id: string, name: string, image: File) => Promise<void>;
     globalState?: any; 
 }
 
-const EditPlaylistDetails: React.FC<EditPlaylistDetailsProps> = ({ playlistData, updatePlaylist, globalState }) => {
+const EditPlaylistDetails: React.FC<EditPlaylistDetailsProps> = ({ globalState }) => {
+    
+    const updatePlaylist = usePlaylistStore((state) => state.updatePlaylist);
+    const playlistDetail = usePlaylistStore((state) => state.playlistDetail);
+    
+    const [playlistData, setPlaylistData] = useState<PlaylistData | undefined>(playlistDetail?.dataValues);
+
+
     const [isEditingName, setIsEditingName] = useState(false);
     const [isEditingImage, setIsEditingImage] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [newName, setNewName] = useState(playlistData.name);
-    const [newImage, setNewImage] = useState(playlistData.image);
-    const [previewImage, setPreviewImage] = useState(playlistData.image);
+    const [newName, setNewName] = useState(playlistData?.name);
+    const [newImage, setNewImage] = useState(playlistData?.image);
+    const [previewImageUrl, setPreviewImageUrl] = useState<string | undefined>(undefined);
+    
 
     useEffect(() => {
-        setNewName(playlistData.name);
-        setNewImage(playlistData.image);
-        setPreviewImage(playlistData.image);
-    }, [playlistData, globalState]); 
+        setNewName(playlistData?.name);
+        setNewImage(playlistData?.image);
+        if (playlistData?.image instanceof File) {
+            setPreviewImageUrl(URL.createObjectURL(playlistData.image));
+        }
+    }, [playlistData, globalState]);
 
     const handleSave = async () => {
         setIsLoading(true);
@@ -51,7 +64,7 @@ const EditPlaylistDetails: React.FC<EditPlaylistDetailsProps> = ({ playlistData,
         if (e.target.files && e.target.files.length > 0) {
             setNewImage(e.target.files[0]);
             setIsEditingImage(true);
-            setPreviewImage(URL.createObjectURL(e.target.files[0])); 
+            setPreviewImageUrl(URL.createObjectURL(e.target.files[0]));
         }
     };
 
@@ -68,7 +81,7 @@ const EditPlaylistDetails: React.FC<EditPlaylistDetailsProps> = ({ playlistData,
                         <input
                             className="w-full px-3 dark:text-gray-200 dark:bg-gray-900 py-2 rounded-md border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-500"
                             type="text"
-                            defaultValue={playlistData.name}
+                            defaultValue={playlistData?.name}
                             onChange={(e) => setNewName(e.target.value)}
                         />
                     ) : (
@@ -90,8 +103,8 @@ const EditPlaylistDetails: React.FC<EditPlaylistDetailsProps> = ({ playlistData,
                             onChange={handleImageChange}
                         />
                         <Image
-                            src={previewImage ? previewImage : '/images/HenrryMusic.svg'}
-                            alt={playlistData?.name}
+                            src={previewImageUrl ? previewImageUrl : '/images/HenrryMusic.svg'}
+                            alt={playlistData?.name || 'Default alt text'}
                             width={100} 
                             height={100} 
                             onClick={() => setIsEditingImage(true)}

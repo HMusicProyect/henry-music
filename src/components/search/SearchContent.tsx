@@ -9,7 +9,7 @@ import GenreItem from './GenreItem';
 import ArtistItem from './ArtistItem';
 import AlbumCard from '../ui/sidebar/AlbumCard';
 import FilterBar from './FilterBar';
-import { SearchResults } from '@/store/actions/getSongsByTitle';
+import { SearchResults } from '@/store/actions/song/getSongsByTitle';
 
 
 interface SearchContentProps {

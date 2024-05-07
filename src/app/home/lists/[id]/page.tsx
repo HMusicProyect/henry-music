@@ -13,9 +13,9 @@ import { Music } from '@/lib/definitions';
 import FormReview from '@/components/lists/id/formReview';
 import MediaItem from '@/components/ui/sidebar/MediaItem';
 import Link from 'next/link';
-import useSongByGenre from '@/store/actions/getSongsByGenre';
+import useSongByGenre from '@/store/actions/song/getSongsByGenre';
 import useReviewsStore from '@/store/reviews.store';
-import useGetSongById from '@/store/actions/getSongById';
+import useGetSongById from '@/store/actions/song/getSongById';
 
 
 interface Props {

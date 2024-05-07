@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Header from '@/components/ui/header/Header';
 import SearchInput from '@/components/search/SearchInput';
 import SearchContent from '@/components/search/SearchContent';
-import getSongByTitle, { SearchResults } from '@/store/actions/getSongsByTitle';
+import getSongByTitle, { SearchResults } from '@/store/actions/song/getSongsByTitle';
 import Link from 'next/link';
 import useGenreStore from '@/store/genres.store';
 import { colorDarkPallette } from '@/utils/ColorDarkPallette';

@@ -27,21 +27,20 @@ const  verifyUser = async (user: UserWithPhoto) => {
 }
 
 
-export const updateUserInfo = async (user: UserWithPhoto, userSession: any) => {
-    console.log('user', userSession.token);
+export const updateUserInfo = async (user: UserWithPhoto, userSession: any, token: string) => {
 
     const updateData = await verifyUser(user);
-    
+
+    console.log('Token to be used in request', userSession.token);
     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users/editNameAndPic/${userSession.id}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `${userSession.token}`
+            'Authorization': `${token}`
         },
         body: JSON.stringify(updateData),
     });
 
-    console.log('response', response);
     if (!response.ok) {
         throw new Error('Failed to update user information');
     }
