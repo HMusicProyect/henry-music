@@ -29,7 +29,7 @@ export default function MusicPlayer({ params }: { params: Props }) {
 
     const { getSongReviews, reviews, loading } = useReviewsStore();
     const [headerBackgroundColor, setHeaderBackgroundColor] = useState<string>('');
-    const { song, getMusicById } = useGetSongById();
+    const { song, getMusicById, cleanSongState } = useGetSongById();
     const { musicGenre, getSongsByGenre } = useSongByGenre()
     const player = usePlayer();
     const [currentSong, setCurrentSong] = useState<Music | null | undefined>(null);
@@ -39,6 +39,10 @@ export default function MusicPlayer({ params }: { params: Props }) {
         if (id) {
             getMusicById(id);
         }
+        return () => {
+            cleanSongState();
+        };
+
     }, [id, getMusicById]);
 
 useEffect(() => {
