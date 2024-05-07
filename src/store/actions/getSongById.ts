@@ -6,6 +6,7 @@ export interface State {
     loading: boolean;
     error: string | null;
     getMusicById: (id: number) => Promise<void>;
+    cleanSongState: () => void;
 
 };
 
@@ -23,6 +24,10 @@ const useGetSongById = create<State>((set) => ({
             set({ loading: false, error: 'Error al buscar la canción' });
         }
     },
+
+    cleanSongState: () => {
+        set({ song: [], loading: true, error: null });
+    }
 }));
 
 export default useGetSongById;
