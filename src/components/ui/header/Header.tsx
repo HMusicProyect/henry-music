@@ -71,15 +71,19 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
                     </button>
                 </div>
                 <div className="flex md:hidden gap-x-2 items-center">
-                    <button className="rounded-full p-2 bg-white flex items-center justify-center hover:opacity-75 transition">
-                        <Home className="text-black" size={20} />
-                    </button>
-                </div>
+      <Link href="/home">
+        <button className="rounded-full p-2 bg-white flex items-center justify-center hover:opacity-75 transition">
+          <Home className="text-black" size={20} />
+        </button>
+      </Link>
+    </div>
                 <div className="flex md:hidden gap-x-2 items-center">
-                    <button className="rounded-full p-2 bg-white flex items-center justify-center hover:opacity-75 transition">
-                        <Search className="text-black" size={20} />
-                    </button>
-                </div>
+      <Link href="/home/search">
+        <button className="rounded-full p-2 bg-white flex items-center justify-center hover:opacity-75 transition">
+          <Search className="text-black" size={20} />
+        </button>
+      </Link>
+    </div>
                 <div className="flex justify-between items-center gap-x-4">
                     {session ? (
                         <>
