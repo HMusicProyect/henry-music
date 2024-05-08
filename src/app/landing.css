@@ -1,0 +1,91 @@
+/* Estilos para el gradiente de fondo */
+.gradient-style {
+    background: linear-gradient(to bottom, #FFD700, #4a3e01, #000);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  /* Estilos para el contenedor principal */
+  .container-style {
+    display: flex;
+    gap: 0px;
+    max-width: 1200px; /* Ajustar el ancho máximo del contenedor */
+    height: 500px;
+  }
+  
+  /* Estilos para el primer cuadro */
+  .box-style {
+    flex: 1;
+    background-color: #000;
+    border-radius: 20px 0px 0px 20px;
+    padding: 40px;
+    font-size: 24px;
+    margin-top: -20px;
+  }
+  
+  /* Estilos para el segundo cuadro */
+  .box-style2 {
+    flex: 1;
+    background-color: #181818;
+    border-radius: 0px 20px 20px 0px;
+    padding: 40px;
+    font-size: 19px;
+    width: 600px;
+    margin-top: -20px;
+  }
+  
+  /* Animación para el disco */
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  /* Estilos para la imagen 2 */
+  .imagen2 {
+    margin-left:13rem;
+    
+  }
+  
+  /* Estilos para el botón */
+  .boton {
+    z-index: 10;
+    transform: translateX(-154px);
+    margin-top: -140px;
+    border: none;
+  }
+  
+  /* Estilos para el disco */
+  .disco {
+    font-size: 40px;
+    animation: rotate 5s linear infinite;
+  }
+  
+  @media screen and (max-width: 1250px) {
+    .imagen2 {
+        margin-left: 150px; 
+      }
+  
+  }
+  @media screen and (max-width: 1050px) {
+    .box-style {
+      display: none;
+    }
+    .imagen2 {
+        margin-left: 200px;
+        scale: 0.8;
+        margin-top: -40px;
+      }
+      .boton {
+        z-index: 10;
+        transform: translateX(154px);
+        margin-top: 0px;
+        border: none;
+      }
+  }
