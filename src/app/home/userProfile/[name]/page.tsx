@@ -7,11 +7,11 @@ import { updateUserInfo } from '@/components/home/UserProfile/updateUserInfo';
 import { ModalComponent } from '@/components/ui/Modal/Modal';
 import { User } from '@/lib/auth/user.auth';
 import { UserWithPhoto } from '@/lib/definitions';
-import { useSession, getSession, signIn } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BookUser, EditIcon, RectangleEllipsis } from 'lucide-react';
 
 
@@ -32,6 +32,7 @@ const ProfilePage = () => {
     const [message, setMessage]= useState<string[]>([]);
     const [messageType, setMessageType] = useState<'success' | 'error' | ''>('');
     const [ isModalOpen, setIsModalOpen ] = useState(false);
+    const [user, setUser] = useState<User | null>(null);
 
     if(status === "loading"){
         return <p>Cargando...</p>;
@@ -45,6 +46,7 @@ const ProfilePage = () => {
     const id = searchParams.get('id');
 
     const token = searchParams.get('token');
+
 
     const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setEditProfile(prevState => ({ ...prevState, name: event.target.value }));
@@ -86,20 +88,24 @@ const ProfilePage = () => {
             }
 
             console.log('User information updated:', response);
-            
-            // Actualiza la sesión con la nueva información del usuario
+            // Transforma la respuesta para que tenga la misma estructura que la sesión
             if (session) {
-                // Invalidar la caché de la sesión
-                window.localStorage.clear();
-                // Forzar la actualización de la sesión en el cliente
-                const updatedSession = await getSession(response);
+                // Transforma la respuesta para que tenga la misma estructura que la sesión
+                const updatedSession = {
+                    ...session,
+                    user: {
+                        ...session.user,
+                        image: response.data.image,
+                        name: response.data.name,
+                    },
+                };
                 console.log('Updated session:', updatedSession);
+                // Actualiza la sesión con la nueva información del usuario
                 update(updatedSession);
                 toast.success('Información de usuario actualizada con éxito');
             } else {
                 throw new Error('Session not found');
             }
-
         } catch (error) {
             toast.error('Error al actualizar la información del usuario');
             setIsLoading(true);

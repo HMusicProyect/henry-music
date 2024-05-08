@@ -7,6 +7,7 @@ export interface Playlist {
     id: string;
     name: string;
     image: string;
+    likes: any[];
 }
 
 export interface PlaylistDetailData {
