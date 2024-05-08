@@ -7,7 +7,7 @@ interface AddMusicToPlaylistProps {
     id: string;
 }
 
-const AddMusicToPlaylist = ({ id }: AddMusicToPlaylistProps) => {
+export default function AddMusicToPlaylist ({ id }: AddMusicToPlaylistProps) {
     const [selectedSongs, setSelectedSongs] = useState<string[]>([]);
     const postSongToPlaylist = usePlaylistStore((state) => state.postSongToPlaylist);
     const [isLoading, setIsLoading] = useState(false);
@@ -64,5 +64,3 @@ const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         </div>
     );
 };
-
-export default AddMusicToPlaylist;
