@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { Menu, MenuItem } from '@mui/material';
 
 import PlaylistItem from './PlaylistItem';
+import Link from 'next/link';
 
 interface Playlist{
     id: string;
@@ -62,10 +63,14 @@ const MusicLibrary: React.FC<MusicLibraryProps> = ({ playlist = [], user }) => {
     return (
         <div className='flex flex-col'>
             <div className="flex items-center justify-between px-5 pt-4">
-                <div className="inline-flex items-center gap-x-2">
-                    <Library />
-                    <p className="text-neutral-400 font-medium text-md">Your Library</p>
-                </div>
+                <Link
+                    href="/home/playlist"
+                >
+                    <div className="inline-flex items-center gap-x-2">
+                        <Library />
+                        <p className="text-neutral-400 font-medium text-md">Your Library</p>
+                    </div>
+                </Link>
 
                 <CreatePlaylistMenu onCreate={handleCreatePlaylist} onClose={() => {}} />
             </div>

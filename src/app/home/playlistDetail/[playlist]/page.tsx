@@ -6,15 +6,15 @@ import usePlaylistStore from '@/store/playlist.store';
 import { capitalizeWords } from "@/utils/CapitalizeWords";
 import Image from 'next/image';
 import { ModalComponent } from '@/components/ui/Modal/Modal';
-import AddMusicToPlaylist from '@/components/home/playlist/addMusic';
-import EditPlaylistDetails from '@/components/home/playlist/editPlaylist';
+import AddMusicToPlaylist from '@/components/home/Playlist/addMusic';
+import EditPlaylistDetails from '@/components/home/Playlist/editPlaylist';
 import OptionsDropdown from '@/components/ui/OptionDropdown';
 import { InvoicesTableSkeleton } from '@/components/ui/skeletons';
 import { Input } from '@/components/ui/input';
 import { useOptionsStore } from '@/store/hooks/useOptions';
 import { Music } from '@/lib/definitions';
 import TablePlayList from '@/components/ui/sidebar/playlist/TablePlayList';
-import TablePlayListCompact from '@/components/home/playlist/TablePlayListCompact';
+import TablePlayListCompact from '@/components/home/Playlist/TablePlayListCompact';
 
 interface PlaylistData {
     id: string;

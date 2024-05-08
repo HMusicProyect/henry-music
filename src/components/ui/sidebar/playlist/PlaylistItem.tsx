@@ -29,7 +29,7 @@ const PlaylistItem: React.FC<MediaItemProps> = ({ data }) => {
 
     return (
         <div className="flex items-center justify-between gap-x-3 hover:bg-neutral-400/5 bg-neutral-800/5 cursor-pointer transition w-full p-2 rounded-md">
-            <Link href={`/home/playlist/${nameUrl}?id=${data.id}`}>
+            <Link href={`/home/playlistDetail/${nameUrl}?id=${data.id}`}>
                 <div className="flex items-center gap-x-3">
                     <div className="relative rounded-md min-h-[48px] min-w-[48px] overflow-hidden">
                         <Image 

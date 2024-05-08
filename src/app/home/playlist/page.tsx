@@ -1,6 +1,4 @@
-"use client";
-
-
+import { useEffect } from 'react';
 import { InvoicesTableSkeleton } from '@/components/ui/skeletons';
 import { Suspense } from 'react';
 import Header from '@/components/ui/header/Header';
@@ -8,12 +6,12 @@ import useOnPlay from '@/store/hooks/useOnPlay';
 import Player from '@/components/ui/player';
 import { Input } from '@/components/ui/input';
 import OptionsDropdown from '@/components/ui/OptionDropdown';
-import TableList from '@/components/lists/TableList';
-import TableCompact from '@/components/lists/TableCompact';
-import { useOptionsStore } from '@/store/hooks/useOptions';
+import TableList from '@/components/home/ListPlaylist/PlaylistsTableList';
+import TableCompact from '@/components/home/ListPlaylist/PlaylistsTableCompact';
+import usePlaylistStore  from '@/store/playlist.store';
 import { Music } from '@/lib/definitions';
 
-export default function Page({
+export default function Playlist({
   searchParams,
 }: {
   searchParams?: {
@@ -22,8 +20,13 @@ export default function Page({
     songs: Music[];
   };
 }) {
-  const { selectedOption } = useOptionsStore();
+  const { allPlaylists, fetchAllPlaylists } = usePlaylistStore();
 
+  useEffect(() => {
+    fetchAllPlaylists();
+  }, [fetchAllPlaylists]);
+
+  console.log(allPlaylists);
   const query = searchParams?.music || '';
   const currentPage = Number(searchParams?.page) || 1;
 
@@ -43,15 +46,17 @@ export default function Page({
           key={query + currentPage}
           fallback={<InvoicesTableSkeleton />}
         >
-          {selectedOption === 'list' ? (
+          { allPlaylists.length > 0 ? (
             <TableList
               query={query}
               currentPage={currentPage}
+              playlists={allPlaylists}
             />
           ) : (
             <TableCompact
               query={query}
               currentPage={currentPage}
+              playlists={allPlaylists}
             />
           )}
         </Suspense>
