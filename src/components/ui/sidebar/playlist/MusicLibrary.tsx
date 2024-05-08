@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { Menu, MenuItem } from '@mui/material';
 
 import PlaylistItem from './PlaylistItem';
+import { useRouter } from 'next/navigation';
 
 interface Playlist{
     id: string;
@@ -18,6 +19,7 @@ interface MusicLibraryProps {
 }
 
 const CreatePlaylistMenu: React.FC<{ onCreate: () => void, onClose: () => void }> = ({ onCreate, onClose }) => {
+   
     const [anchorEl, setAnchorEl] = useState<null | SVGSVGElement>(null);
 
     const handleMenuOpen = (event: React.MouseEvent<SVGSVGElement>) => {
@@ -50,12 +52,14 @@ const CreatePlaylistMenu: React.FC<{ onCreate: () => void, onClose: () => void }
 }
 
 const MusicLibrary: React.FC<MusicLibraryProps> = ({ playlist = [], user }) => {
+    const router = useRouter();
     const postPlaylist = usePlaylistStore(state => state.postPlaylist);
 
     const handleCreatePlaylist = () => {
         const defaultPlaylistName = "Nombre predeterminado de la playlist";
         if (user?.id) {
             postPlaylist(defaultPlaylistName, user.id);
+            router.refresh();
         }
     };
 

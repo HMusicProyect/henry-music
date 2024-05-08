@@ -25,16 +25,16 @@ const UploadSongsModal = () => {
   const { albums, getAlbums, loading: albumLoading, error: albumError } = useAlbumsStore();
   const { genres, getGenres, loading: genreLoading, error: genreError } = useGenreStore();
   const { artists, getArtists, loading: artistLoading, error: artistError } = useArtistStore();
-  const { addMusic } = useStore(); 
+  const { addMusic } = useStore();
   const router = useRouter();
-  const {data: session} = useSession();
+  const { data: session } = useSession();
 
-  const handleImageChange = (e:any) => {
+  const handleImageChange = (e: any) => {
     const file = e.target.files[0];
     setPhotoFile(file);
   };
 
-  const handleAudioChange = (e:any) => {
+  const handleAudioChange = (e: any) => {
     const file = e.target.files[0];
     setAudioFile(file);
   };
@@ -50,7 +50,7 @@ const UploadSongsModal = () => {
       title: '',
       pathMusic: '',
       image: '',
-      albumId: '', 
+      albumId: '',
       genreId: '',
       artistId: '',
     }
@@ -71,19 +71,19 @@ const UploadSongsModal = () => {
         toast.error('Todos los campos son requeridos');
         return;
       }
-   
-      
+
+
       let { title, pathMusic, image, albumId, genreId, artistId } = values;
 
       let photoUploadResponse;
       let audioUploadResponse;
-  
+
       if (photoFile) {
         photoUploadResponse = await handlePhotoSubmit({ photo: photoFile });
         //console.log("Respuesta de subida de foto:", photoUploadResponse);
         image = photoUploadResponse.url;
       }
-  
+
       if (audioFile) {
         audioUploadResponse = await handlePhotoSubmit({ audio: audioFile });
         //console.log("Respuesta de subida de audio:", audioUploadResponse);
@@ -101,7 +101,7 @@ const UploadSongsModal = () => {
 
       const token = session?.user?.token ?? '';
       await addMusic(newMusic, token);
-      
+
       router.refresh();
       setIsLoading(false);
       toast.success('Canción creada correctamente');
@@ -115,7 +115,7 @@ const UploadSongsModal = () => {
   }
 
 
-  
+
   return (
     <Modal
       title="Upload Modal Title"
@@ -126,31 +126,40 @@ const UploadSongsModal = () => {
       <form onSubmit={handleSubmit(onSubmit)}
         className='flex flex-col gap-y-4'
       >
-        <Input 
+        <Input
           id='title'
           disabled={isLoading}
-          {...register('title', {required: true})}
+          {...register('title', { required: true })}
           placeholder='Song Title'
         />
-        <Input 
-          id='Song Url'
-          type='file'
-          disabled={isLoading}
-          accept='.mp3'
-          {...register('pathMusic', {required: true})}
-          placeholder='Song Url'
-          onChange={handleAudioChange}
-          
-        />
-        <Input 
-          id='image'
-          type='file'
-          placeholder='Image Url'
-          accept='image/*'
-          disabled={isLoading}
-          {...register('image', {required: true})}
-          onChange={handleImageChange}
-        />
+        <div className='flex items-center'>
+
+          <label htmlFor="Song Url" className='w-1/2'>Select song:</label>
+          <Input
+            id='Song Url'
+            className='py-2'
+            type='file'
+            disabled={isLoading}
+            accept='.mp3'
+            {...register('pathMusic', { required: true })}
+            placeholder='Song Url'
+            onChange={handleAudioChange}
+
+          />
+        </div>
+        <div className='flex items-center'>
+          <label htmlFor="image" className='w-1/2'>Select image:</label>
+          <Input
+            className='py-2'
+            id='image'
+            type='file'
+            placeholder='Image Url'
+            accept='image/*'
+            disabled={isLoading}
+            {...register('image', { required: true })}
+            onChange={handleImageChange}
+          />
+        </div>
         <SelectInput
           id="albumId"
           label="Álbum"

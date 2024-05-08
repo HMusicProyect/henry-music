@@ -7,12 +7,12 @@ import { Input } from '@/components/ui/input';
 import Button from '@/components/ui/header/Button';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
-import useBanUsersModal from '@/store/hooks/useBanUsersModal';
 import { useSession } from 'next-auth/react';
 import { useStore } from '@/store/user.store';
+import useUnbanUsersModal from '@/store/hooks/useUnbanUsersModal';
 
-const UserBanModal = () => {
-    const uploadModal = useBanUsersModal();
+const UserUnbanModal = () => {
+    const uploadModal = useUnbanUsersModal();
     const [isLoading, setIsLoading] = useState(false);
     const { data: session } = useSession();
     const { banUser } = useStore();
@@ -49,7 +49,7 @@ const UserBanModal = () => {
             await banUser(userId || '', token);
             router.refresh();
             setIsLoading(false);
-            toast.success('Usuario baneado correctamente');
+            toast.success('Se ha desbaneado al usuario correctamente.');
             reset();
             uploadModal.onClose();
         } catch (error) {
@@ -61,8 +61,8 @@ const UserBanModal = () => {
 
     return (
         <Modal
-            title="Banear Usuario"
-            description="De estar seguro de banear al usuario por favor escribir. Banear"
+            title="Desbanear Usuario"
+            description="En caso desee desbanear a un usuario escriba: Desbanear"
             isOpen={uploadModal.isOpen}
             onChange={onChange}
         >
@@ -73,12 +73,12 @@ const UserBanModal = () => {
                     {...register('name', { required: true })}
                     placeholder='Escribir Respuesta'
                 />
-                <Button disabled={isLoading} type="submit" className='bg-red-800 text-white'>
-                    Banear Usuario
+                <Button disabled={isLoading} type="submit" className='bg-blue-800 text-white'>
+                    Desbanear Usuario
                 </Button>
             </form>
         </Modal>
     );
 }
 
-export default UserBanModal;
+export default UserUnbanModal;

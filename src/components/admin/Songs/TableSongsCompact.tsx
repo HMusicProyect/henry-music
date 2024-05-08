@@ -6,9 +6,11 @@ import { capitalizeWords } from '@/utils/CapitalizeWords';
 export default function TableSongsCompact({
   query,
   currentPage,
+  sortDirection
 }: {
   query: string;
   currentPage: number;
+  sortDirection:string;
 }) {
   const { todos, getMusic } = useStore();
 
@@ -22,6 +24,17 @@ export default function TableSongsCompact({
     invoice.Genre?.name.toLowerCase().includes(query.toLowerCase())
   );
 
+  const sortedTodos = [...filteredTodos].sort((a, b) => {
+    if (a && b) {
+      if (sortDirection === 'asc') {
+        return (a.id || 0) - (b.id || 0);
+      } else {
+        return (b.id || 0) - (a.id || 0);
+      }
+    } else {
+      return 0;
+    }
+  });
   return (
     <section className="container mx-auto font-semibold">
       <div className="w-full mb-8 rounded-t-xl">
@@ -36,7 +49,7 @@ export default function TableSongsCompact({
               </tr>
             </thead>
             <tbody className="">
-              {filteredTodos?.map((invoice: any) => (
+              {sortedTodos?.map((invoice: any) => (
                 <tr
                   key={invoice.id}
                   className="text-white transition-transform duration-300 ease-in-out transform  hover:bg-neutral-400/10 "

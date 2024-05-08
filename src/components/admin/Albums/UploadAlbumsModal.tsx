@@ -9,12 +9,19 @@ import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import useUploadAlbumsModal from '@/store/hooks/useUploadAlbumsModal';
 import useAlbumsStore from '@/store/albums.store';
+import { handlePhotoSubmit } from '@/store/actions/postCloudinary';
 
 const UploadAlbumsModal = () => {
   const uploadModal = useUploadAlbumsModal();
   const [isLoading, setIsLoading] = useState(false);
   const { postAlbum } = useAlbumsStore(); 
   const router = useRouter();
+
+  const [photoFile, setPhotoFile] = useState<File | undefined>(undefined);
+  const handleImageChange = (e: any) => {
+    const file = e.target.files[0];
+    setPhotoFile(file);
+  };
 
   const { register, handleSubmit, reset } = useForm<FieldValues>({
     defaultValues: {
@@ -39,7 +46,14 @@ const UploadAlbumsModal = () => {
         return;
       }
 
-      const { name, image } = values;
+      let { name, image } = values;
+      let photoUploadResponse;
+
+      if (photoFile) {
+        photoUploadResponse = await handlePhotoSubmit({ photo: photoFile });
+        image = photoUploadResponse.url;
+      }
+
       await postAlbum(name, image);
       
       router.refresh();
@@ -68,13 +82,19 @@ const UploadAlbumsModal = () => {
           {...register('name', {required: true})}
           placeholder='Name of Album'
         />
-        <Input 
-          id='image'
-          placeholder='Album Image'
-          disabled={isLoading}
-          {...register('image', {required: true})}
-        />
-        
+        <div className='flex items-center'>
+          <label htmlFor="image" className='w-1/2'>Select image:</label>
+          <Input
+            className='py-2'
+            id='image'
+            type='file'
+            placeholder='Image Url'
+            accept='image/*'
+            disabled={isLoading}
+            {...register('image', { required: true })}
+            onChange={handleImageChange}
+          />
+        </div>
         <Button disabled={isLoading} type="submit">
           Create Album
         </Button>

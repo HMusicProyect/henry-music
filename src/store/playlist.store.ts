@@ -3,6 +3,8 @@ import { FilePair, Music } from '@/lib/definitions';
 import { handlePhotoSubmit } from './actions/postCloudinary';
 
 type PlaylistState = {
+    loading: boolean;
+    error: string | null;
     userPlaylists: any[];
     allPlaylists: any[];
     currentSong: Music | null;
@@ -10,7 +12,7 @@ type PlaylistState = {
     fetchUserPlaylists: (id: string) => void;
     fetchAllPlaylists: () => void;
     fetchPlaylistDetail: (id: string) => void;
-    postPlaylist: (name: string, userId: string) => void;
+    postPlaylist: (name: string, userId: string) => Promise<void>;
     postSongToPlaylist: (playlistId: string, songId: string) => void;
     deleteSongFromPlaylist: (id: string) => void;
     updatePlaylist: (id: string, name?: string, image?: File) => Promise<void>;
@@ -18,6 +20,8 @@ type PlaylistState = {
 };
 
 const usePlaylistStore = create<PlaylistState>((set) => ({
+    loading: false,
+    error: null,
     currentSong: null,
     userPlaylists: [],
     allPlaylists: [],
@@ -74,7 +78,6 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
         }
     },
 
-    //este controlador es para crear una playlist nueva
     postPlaylist: async (name: string, userId: string) => {
         if (!name || !userId) {
             console.error('Error: Name or User ID is undefined');
@@ -141,42 +144,34 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
         }
     },
 
-    // Este módulo define una función para agregar una canción a una lista de reproducción en una base de datos.
-
     postSongToPlaylist: async (playlistId: string, songId: string) => {
-        if (!playlistId || !songId) {
-            console.error('Error: Playlist ID or Song ID is undefined');
-            return;
-        }
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/postPlaylist`, {
+            set({ loading: true, error: null });
+    
+            const newMusic = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/postPlaylist`, {
                 method: 'POST',
                 body: JSON.stringify({ playlistId, songId }),
                 headers: {
                     'Content-Type': 'application/json',
                 },
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const data = await response.json();
-
-            // Aquí puedes actualizar el estado según sea necesario
-            // Por ejemplo, puedes agregar la nueva canción a la playlist en el estado
-            set((state) => {
-                const updatedPlaylist = state.playlistDetail?.songs
-                    ? { ...state.playlistDetail, songs: [...state.playlistDetail.songs, data] }
-                    : state.playlistDetail;
-                return { playlistDetail: updatedPlaylist };
-            });
-
+            }).then((res) => res.json());
+    
+            set((state) => ({
+                userPlaylists: state.userPlaylists.map((playlist) =>
+                    playlist.id === playlistId
+                        ? { ...playlist, songs: [...playlist.songs, newMusic] }
+                        : playlist
+                ),
+                loading: false,
+            }));
         } catch (error) {
+            set({ loading: false, error: "Error posting song to playlist" });
             console.error('Error posting song to playlist:', error);
         }
     },
-
+    
+    
+    
     // Este controlador es para actualizar una playlist existente
     updatePlaylist: (id: string, name?: string, image?: File): Promise<void> => {
         return new Promise(async (resolve, reject) => {

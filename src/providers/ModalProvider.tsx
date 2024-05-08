@@ -7,6 +7,8 @@ import UploadArtistsModal from '../components/admin/Artists/UploadArtistsModal';
 import UploadAlbumsModal from "@/components/admin/Albums/UploadAlbumsModal";
 import UserActionsModal from "@/components/admin/Users/UserActionsModal";
 import UserBanModal from "@/components/admin/Users/UserBanModal";
+import UserUnbanModal from "@/components/admin/Users/UserUnbanModal";
+
 
 const ModalProvider = () => {
     const [isMounted, setIsMounted] = useState(false);
@@ -27,6 +29,7 @@ const ModalProvider = () => {
         <UploadAlbumsModal />
         <UserActionsModal />
         <UserBanModal />
+        <UserUnbanModal />
 
         </>
     )

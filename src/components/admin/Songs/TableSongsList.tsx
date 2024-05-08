@@ -1,23 +1,26 @@
-"use client";
-import { useEffect } from 'react';
+"use client"
+import { useEffect, useState } from 'react';
 import useStore from '@/store/songs.store';
-import Link from 'next/link';
-import Image from 'next/image';
 import MediaItem from '../../ui/sidebar/MediaItem';
-import { Clock } from 'lucide-react';
 
 export default function TableSongsList({
   query,
   currentPage,
+  sortDirection
 }: {
   query: string;
   currentPage: number;
+  sortDirection:string;
 }) {
   const { todos, getMusic } = useStore();
+
 
   useEffect(() => {
     getMusic();
   }, []);
+
+
+
 
   const filteredTodos = todos?.filter((invoice) =>
     invoice.name?.toLowerCase().includes(query.toLowerCase()) ||
@@ -25,9 +28,23 @@ export default function TableSongsList({
     invoice.Genre?.name.toLowerCase().includes(query.toLowerCase())
   );
 
+
+  const sortedTodos = [...filteredTodos].sort((a, b) => {
+    if (a && b) {
+      if (sortDirection === 'asc') {
+        return (a.id || 0) - (b.id || 0);
+      } else {
+        return (b.id || 0) - (a.id || 0);
+      }
+    } else {
+      return 0;
+    }
+  });
+
   return (
     <section className="container mx-auto font-semibold">
       <div className="w-full mb-8 rounded-t-xl">
+       
         <div className="w-full">
           <table className="w-full">
             <thead>
@@ -36,11 +53,10 @@ export default function TableSongsList({
                 <th className="px-4 py-3 pl-8">Title</th>
                 <th className="px-4 py-3">Artist</th>
                 <th className="px-4 py-3">Género</th>
-      
               </tr>
             </thead>
             <tbody className="">
-              {filteredTodos?.map((invoice : any) => (
+              {sortedTodos?.map((invoice: any) => (
                 <tr
                   key={invoice.id}
                   className="text-white transition-transform duration-300 ease-in-out transform  hover:bg-neutral-400/10 "
@@ -49,17 +65,16 @@ export default function TableSongsList({
                     {invoice?.id}
                   </td>
                   <td className="px-6 py-3 dark:border-slate-500 ">
-                      <div className="flex items-center text-sm">
-                        <div className="relative mr-3 rounded-full md:block">
-                          <MediaItem
-                            onClick={() => { }}
-                            key={invoice.id}
-                            data={invoice}
-                          />
-                        </div>
+                    <div className="flex items-center text-sm">
+                      <div className="relative mr-3 rounded-full md:block">
+                        <MediaItem
+                          onClick={() => { }}
+                          key={invoice.id}
+                          data={invoice}
+                        />
                       </div>
+                    </div>
                   </td>
-              
                   <td className="px-4 py-3 text-sm dark:text-gray-200 dark:border-slate-600 ">
                     {invoice.Artist?.name}
                   </td>

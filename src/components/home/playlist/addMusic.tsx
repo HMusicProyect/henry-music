@@ -2,12 +2,13 @@ import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import usePlaylistStore from '@/store/playlist.store';
 import useStore from '@/store/songs.store';
 import toast from 'react-hot-toast';
-
+import { useRouter } from 'next/navigation';
 interface AddMusicToPlaylistProps {
     id: string;
 }
 
 const AddMusicToPlaylist = ({ id }: AddMusicToPlaylistProps) => {
+    const router = useRouter();
     const [selectedSongs, setSelectedSongs] = useState<string[]>([]);
     const postSongToPlaylist = usePlaylistStore((state) => state.postSongToPlaylist);
     const [isLoading, setIsLoading] = useState(false);
@@ -24,28 +25,28 @@ const AddMusicToPlaylist = ({ id }: AddMusicToPlaylistProps) => {
         setSelectedSongs(Array.from(event.target.selectedOptions, option => option.value));
     };
 
-const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    setIsLoading(true);
-
-    event.preventDefault();
-    if (selectedSongs.length === 0) {
-        alert('Por favor, selecciona al menos una canción.');
-        setIsLoading(false);
-        return;
-    }
-    try {
-        for (const songId of selectedSongs) {
-            await postSongToPlaylist(id, songId);
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+        setIsLoading(true);
+    
+        event.preventDefault();
+        if (selectedSongs.length === 0) {
+            alert('Por favor, selecciona al menos una canción.');
+            setIsLoading(false);
+            return;
         }
-        toast.success('Las canciones se han agregado con éxito a la playlist.');
-    } catch (error) {
-        toast.error('Hubo un error al agregar las canciones a la playlist.');
-        console.error(error);
-    } finally {
-        setIsLoading(false);
-    }
-};
-
+        try {
+            for (const songId of selectedSongs) {
+                await postSongToPlaylist(id, songId);
+            }
+            router.refresh(); 
+            toast.success('Las canciones se han agregado con éxito a la playlist.');
+        } catch (error) {
+            toast.error('Hubo un error al agregar las canciones a la playlist.');
+            console.error(error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
     return (
         <div className="flex justify-center items-center" >
             <form onSubmit={handleSubmit} className="bg-gray-800 p-4 rounded shadow-lg border border-gray-200">

@@ -4,10 +4,11 @@ import { useStore } from '@/store/user.store';
 import Image from 'next/image';
 import { capitalizeWords } from '@/utils/CapitalizeWords';
 import { User } from '@/lib/definitions';
-import { Ban, Pen } from 'lucide-react';
+import { Ban, Pen, ShieldBan } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import useBanUsersModal from '@/store/hooks/useBanUsersModal';
 import useActionsUserModal from '@/store/hooks/useActionsUserModal';
+import useUnbanUsersModal from '@/store/hooks/useUnbanUsersModal';
 
 export default function TableUsersList({
   query,
@@ -18,12 +19,14 @@ export default function TableUsersList({
 }) {
 
   const banUsersModal = useBanUsersModal();
+  const unbanUsersModal = useUnbanUsersModal();
   const editUsersModal = useActionsUserModal();
   const { users, fetchUsers } = useStore();
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [roleFilter, setRoleFilter] = useState<string>('');
+  const [banFilter, setBanFilter] = useState<string>('');
   const [verificationFilter, setVerificationFilter] = useState<string>('');
-  const [alphabeticalFilter, setAlphabeticalFilter] = useState<string>('');
+  const [alphabeticalFilter, setAlphabeticalFilter] = useState<string>('A-Z');
   const [idFilter, setIdFilter] = useState<string>('');
 
   useEffect(() => {
@@ -41,7 +44,7 @@ export default function TableUsersList({
       setFilteredUsers(filtered || []);
     }
   }, [query, users]);
-  
+
 
   useEffect(() => {
     let filtered = users;
@@ -58,24 +61,27 @@ export default function TableUsersList({
       });
     }
 
+    if (banFilter) {
+      filtered = filtered?.filter(user => {
+        const isBanned = user.ban;
+        return banFilter === 'Yes' ? isBanned : !isBanned;
+      });
+    }
+
     if (alphabeticalFilter === 'A-Z') {
-      filtered = filtered?.sort((a, b) => (a?.name || '').localeCompare(b?.name || ''));
+      filtered = filtered?.sort((a, b) => (b?.name?.toLowerCase() || '').localeCompare(a?.name?.toLowerCase() || ''));
     } else if (alphabeticalFilter === 'Z-A') {
-      filtered = filtered?.sort((a, b) => (b?.name || '').localeCompare(a?.name || ''));
+      filtered = filtered?.sort((a, b) => (a?.name?.toLowerCase() || '').localeCompare(b?.name?.toLowerCase() || ''));
     }
-
-    if (idFilter === 'Oldest User') {
-      filtered = filtered?.sort((a, b) => (a?.id || '').localeCompare(b?.id || ''));
-    } else if (idFilter === 'Newest User') {
-      filtered = filtered?.sort((a, b) => (b?.id || '').localeCompare(a?.id || ''));
-    }
-
 
     setFilteredUsers(filtered || []);
-  }, [roleFilter, verificationFilter, alphabeticalFilter, idFilter, users]);
+  }, [roleFilter, verificationFilter, banFilter, alphabeticalFilter, users]);
 
   const onClickBan = (user: User) => {
     return banUsersModal.onOpen(user);
+  }
+  const onClickUnban = (user: User) => {
+    return unbanUsersModal.onOpen(user);
   }
 
   const onClickEdit = () => {
@@ -84,7 +90,7 @@ export default function TableUsersList({
 
   return (
     <section className="container mx-auto font-semibold">
-       <div className='mb-7 mt-8 flex items-center justify-between gap-8'>
+      <div className='mb-7 mt-8 flex items-center justify-between gap-8'>
         <select className="flex h-12 w-1/4 rounded-md bg-neutral-700 border border-transparent px-3 py-3 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral-400 disabled:cursor-not-allowed disabled:opacity-50 focus-outline"
           onChange={(e) => setRoleFilter(e.target.value)} >
           <option value="">Filter by Role</option>
@@ -108,10 +114,10 @@ export default function TableUsersList({
           <option value="Z-A">Z-A</option>
         </select>
         <select className="flex h-12 w-1/4 rounded-md bg-neutral-700 border border-transparent px-3 py-3 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral-400 disabled:cursor-not-allowed disabled:opacity-50 focus-outline"
-          onChange={(e) => setIdFilter(e.target.value)}>
-          <option value="">Filter creation time</option>
-          <option value="Oldest First">Oldest User</option>
-          <option value="Newest First">Newest User</option>
+          onChange={(e) => setBanFilter(e.target.value)}>
+          <option value="">Filter by Ban Status</option>
+          <option value="Yes">Banned</option>
+          <option value="No">Not Banned</option>
 
         </select>
       </div>
@@ -168,14 +174,23 @@ export default function TableUsersList({
                   </td>
                   <td className="px-4 py-3 text-sm dark:text-gray-200 dark:border-slate-600">
                     <button className="p-2 mr-2 rounded-full bg-green-500 text-white hover:bg-green-600">
-                      <Pen onClick={onClickEdit}/>
+                      <Pen onClick={onClickEdit} />
                     </button>
-                    <button 
-  className="p-2 rounded-full bg-red-500 text-white hover:bg-red-600"
-  onClick={(e) => onClickBan(user)}
->
-  <Ban />
-</button>
+                    {user.ban ? (
+                      <button
+                        className="p-2 rounded-full bg-blue-500 text-white hover:bg-blue-600"
+                        onClick={(e) => onClickUnban(user)}
+                      >
+                        <ShieldBan />
+                      </button>
+                    ) : (
+                      <button
+                        className="p-2 rounded-full bg-red-500 text-white hover:bg-red-600"
+                        onClick={(e) => onClickBan(user)}
+                      >
+                        <Ban />
+                      </button>
+                    )}
 
                   </td>
                 </tr>
