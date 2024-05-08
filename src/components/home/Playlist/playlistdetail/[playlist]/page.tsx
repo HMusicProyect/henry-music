@@ -12,7 +12,7 @@ import { Input } from '@/components/ui/input';
 import { useOptionsStore } from '@/store/hooks/useOptions';
 import { Music } from '@/lib/definitions';
 import TablePlayList from '@/components/ui/sidebar/playlist/TablePlayList';
-import AddMusicToPlaylist from '@/components/home/Playlist/addMusic';
+// import AddMusicToPlaylist from '@/components/home/Playlist/addMusic';
 import EditPlaylistDetails from '@/components/home/Playlist/editPlaylist';
 import TablePlayListCompact from '@/components/home/Playlist/TablePlayListCompact';
 
@@ -62,14 +62,14 @@ const MusicPlayer: React.FC = ({
                 <Header>
                     <h1 className="bg-neutral-900"></h1>
                 </Header>
-                <ModalComponent
+                {/* <ModalComponent
                     isModalOpen={isModalOpen}
                     setIsModalOpen={setIsModalOpen}
                 >
                     <AddMusicToPlaylist
                         id={id}
                     />
-                </ModalComponent>
+                </ModalComponent> */}
 
                 <ModalComponent
                     isModalOpen={isModalEditOpen}
