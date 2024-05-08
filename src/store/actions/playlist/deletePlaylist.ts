@@ -35,7 +35,7 @@ import { PlaylistState } from "./playlist.store";
                 return { 
                     userPlaylists: updatedUserPlaylists,
                     allPlaylists: updatedAllPlaylists,
-                    playlistDetail: state.playlistDetail?.id === id ? null : state.playlistDetail
+                    playlistDetail: state.playlistDetail?.dataValues.id === id ? null : state.playlistDetail
                 };
             });
 

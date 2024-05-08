@@ -2,13 +2,11 @@ import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import usePlaylistStore from '@/store/playlist.store';
 import useStore from '@/store/songs.store';
 import toast from 'react-hot-toast';
-import { useRouter } from 'next/navigation';
 interface AddMusicToPlaylistProps {
     id: string;
 }
 
-const AddMusicToPlaylist = ({ id }: AddMusicToPlaylistProps) => {
-    const router = useRouter();
+export default function AddMusicToPlaylist ({ id }: AddMusicToPlaylistProps) {
     const [selectedSongs, setSelectedSongs] = useState<string[]>([]);
     const postSongToPlaylist = usePlaylistStore((state) => state.postSongToPlaylist);
     const [isLoading, setIsLoading] = useState(false);
@@ -38,7 +36,6 @@ const AddMusicToPlaylist = ({ id }: AddMusicToPlaylistProps) => {
             for (const songId of selectedSongs) {
                 await postSongToPlaylist(id, songId);
             }
-            router.refresh(); 
             toast.success('Las canciones se han agregado con éxito a la playlist.');
         } catch (error) {
             toast.error('Hubo un error al agregar las canciones a la playlist.');
@@ -65,5 +62,3 @@ const AddMusicToPlaylist = ({ id }: AddMusicToPlaylistProps) => {
         </div>
     );
 };
-
-export default AddMusicToPlaylist;

@@ -17,12 +17,8 @@ interface MediaItemProps {
 }
 
 const PlaylistItem: React.FC<MediaItemProps> = ({ data }) => {
+    console.log('data',data);
     
-    const deletePlaylist = usePlaylistStore((state) => state.deletePlaylist);
-    if (!data) {
-        return null;
-    }
-
     const nameUrl = data.name.replace(/\s/g, '-');
     const capitalizedPlaylistName = capitalizeWords(data.name);
     const imageUrl = data.image || '/images/HenrryMusic.svg';
@@ -46,17 +42,6 @@ const PlaylistItem: React.FC<MediaItemProps> = ({ data }) => {
                     </div>
                 </div>
             </Link>
-            <button 
-                className="text-gray-400 w-6 h-6 focus:outline-none"
-                onClick={(e) => {
-                    // Evita que el evento de clic se propague al elemento padre (Link)
-                    e.stopPropagation();
-                    // Llama a deleteSongFromPlaylist con el id de la canción
-                    deletePlaylist(data?.id);
-                }}
-            >
-                ✖
-            </button>
         </div>
     );
 }

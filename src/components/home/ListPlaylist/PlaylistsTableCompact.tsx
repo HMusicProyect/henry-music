@@ -12,12 +12,13 @@ export default function TableCompact({
   query: string;
   currentPage: number;
 }) {
-  const { allPlaylists, fetchAllPlaylists } = usePlaylistStore();
+   const { allPlaylists, fetchAllPlaylists } = usePlaylistStore();
 
   useEffect(() => {
     fetchAllPlaylists();
   }, [fetchAllPlaylists]);
 
+  
   const filteredTodos = allPlaylists?.filter((invoice) =>
     invoice.name.toLowerCase().includes(query.toLowerCase()) ||
     invoice.Artist?.name.toLowerCase().includes(query.toLowerCase()) ||
