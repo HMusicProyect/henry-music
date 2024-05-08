@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import useStore from '@/store/songs.store';
 import Link from 'next/link';
 import { capitalizeWords } from '@/utils/CapitalizeWords';
+import usePlaylistStore from '@/store/playlist.store';
 
 export default function TableCompact({
   query,
@@ -11,13 +12,14 @@ export default function TableCompact({
   query: string;
   currentPage: number;
 }) {
-  const { todos, getMusic } = useStore();
+   const { allPlaylists, fetchAllPlaylists } = usePlaylistStore();
 
   useEffect(() => {
-    getMusic();
-  }, []);
+    fetchAllPlaylists();
+  }, [fetchAllPlaylists]);
 
-  const filteredTodos = todos?.filter((invoice) =>
+  
+  const filteredTodos = allPlaylists?.filter((invoice) =>
     invoice.name.toLowerCase().includes(query.toLowerCase()) ||
     invoice.Artist?.name.toLowerCase().includes(query.toLowerCase()) ||
     invoice.Genre?.name.toLowerCase().includes(query.toLowerCase())
