@@ -1,6 +1,6 @@
 // fetchAllPlaylists.ts
 
-import { Playlist } from "./test";
+import { Playlist } from "./playlist.store";
 
 //este controlador es para traer la playlist de todos los usuarios en la
 //base de datos

@@ -1,6 +1,6 @@
     // postSavingPlaylist.ts
 
-import { PlaylistState } from "./test";
+import { PlaylistState } from "./playlist.store";
 
     // Este módulo define una función para agregar una canción a una lista de reproducción en una base de datos.
 

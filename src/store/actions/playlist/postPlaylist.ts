@@ -1,7 +1,7 @@
 // postPlaylist.ts
 //este controlador es para crear una playlist nueva
 
-import { Playlist } from "./test";
+import { Playlist } from "./playlist.store";
 
 export const postPlaylist = async (name: string, userId: string): Promise<Playlist> => {
     if (!name || !userId) {

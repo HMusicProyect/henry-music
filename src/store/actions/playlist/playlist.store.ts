@@ -3,38 +3,59 @@ import { create } from 'zustand';
 import { fetchUserPlaylists, fetchAllPlaylists, fetchPlaylistDetail, postPlaylist, postSongToPlaylist, deleteSongFromPlaylist, updatePlaylist, deletePlaylist } from '@/store/actions/playlist/indext';
 import { handlePhotoSubmit } from '../postCloudinary';
 
-export type Music = {
-    id: string;
-    name: string;
-    artist: string;
-    album: string;
-    image?: string;
-    url: string;
-};
-
-export type Playlist = {
+export interface Playlist {
     id: string;
     name: string;
     image: string;
-    likes: any[];
-    songs: Music[];
-    userId: string; 
-};
+}
+
+export interface PlaylistDetailData {
+    UsersID: string;
+    id: string;
+    image: string | File;
+    name: string;
+}
+
+export interface PlaylistDetailSong {
+    ArtistName: string;
+    GenreName: string;
+    PlaylistID: string;
+    SongsID: number;
+    SongsImage: string;
+    SongsName: string;
+    id: string;
+}
+
+export interface Song {
+    AlbumsID: number;
+    ArtistID: number;
+    GenreID: number;
+    id: number;
+    image: string;
+    name: string;
+    pathMusic: string;
+}
+
+export interface PlaylistDetail {
+    dataValues: PlaylistDetailData;
+    playlistDetails: PlaylistDetailSong[];
+    songs: Song[];
+}
 
 export type PlaylistState = {
     userPlaylists: Playlist[];
     allPlaylists: Playlist[];
-    currentSong: Music | null;
-    playlistDetail: Playlist | null;
+    currentSong: Song | null;
+    playlistDetail: PlaylistDetail | null;
     error: string | null;
     fetchUserPlaylists: (id: string) => void;
     fetchAllPlaylists: () => void;
     fetchPlaylistDetail: (id: string) => void;
-    postPlaylist: (playlist: Playlist) => void;
-    postSongToPlaylist: (song: Music, playlistId: string) => void;
-    deleteSongFromPlaylist: (songId: string, playlistId: string) => void;
-    updatePlaylist: (playlist: Playlist) => void;
-    deletePlaylist: (playlistId: string) => void;
+    postPlaylist: (name: string, userId: string) => void;
+    postSongToPlaylist: (playlistId: string, songId: string) => void;
+    deleteSongFromPlaylist: (id: string ) => void;
+    updatePlaylist: (id: string, name?: string, image?: File) => Promise<void>;
+    deletePlaylist: (id: string) => void;
 };
 
 const usePlaylistStore = create<PlaylistState>((set) => ({
@@ -43,14 +64,17 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
     currentSong: null,
     playlistDetail: null,
     error: null,
+    //este controlador es para traer las playlist del usuario que consulta
     fetchUserPlaylists: async (id: string) => {
         try {
             const playlists = await fetchUserPlaylists(id);
+            console.log(playlists)
             set({ userPlaylists: playlists });
         } catch (error) {
             set({ error: 'Error fetching user playlists:' + error });
         }
     },
+
     fetchAllPlaylists: async () => {
         try {
             const playlists = await fetchAllPlaylists();
@@ -68,18 +92,19 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
         }
     },
 
-    postPlaylist: async (playlist: Playlist) => {
+    //este controlador es para crear una playlist nueva
+    postPlaylist: async (name: string, userId: string) => {
         try {
-            const newPlaylist = await postPlaylist(playlist.name, playlist.userId); // Pasa el userId aquí
+            const newPlaylist = await postPlaylist(name, userId);
             set((state) => ({ userPlaylists: [...state.userPlaylists, newPlaylist] }));
         } catch (error) {
             set({ error: 'Error posting new playlist:' + error });
         }
     },
 
-    postSongToPlaylist: async (song: Music, playlistId: string) => {
+    postSongToPlaylist: async (playlistId: string, songId: string) => {
         try {
-            const updatedPlaylist = await postSongToPlaylist(playlistId, song);
+            const updatedPlaylist = await postSongToPlaylist( playlistId, songId);
             set((state) => ({
                 userPlaylists: state.userPlaylists.map((playlist) =>
                     playlist.id === playlistId ? updatedPlaylist : playlist
@@ -89,16 +114,13 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
             set({ error: 'Error posting song to playlist:' + error });
         }
     },
-    deleteSongFromPlaylist: async (songId: string, playlistId: string) => {
+    deleteSongFromPlaylist: async (songId: string,) => {
         try {
-            await deleteSongFromPlaylist(songId, playlistId, set);
+            const updatedPlaylist = await deleteSongFromPlaylist(songId);
             set((state: PlaylistState) => {
-                const updatedPlaylists = state.userPlaylists.map((playlist) =>
-                    playlist.id === playlistId ? { ...playlist, songs: playlist.songs.filter((song) => song.id !== songId) } : playlist
-                );
                 return { 
                     ...state, 
-                    userPlaylists: updatedPlaylists 
+                    playlistDetail: updatedPlaylist 
                 };
             });
         } catch (error) {
@@ -108,19 +130,22 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
             }));
         }
     },
-    updatePlaylist: async (playlist: Playlist) => {
+    
+    updatePlaylist: async (id: string, name?: string, image?: File) => {
         try {
-            await updatePlaylist(playlist.id,  set, handlePhotoSubmit, playlist.name, playlist.image);
+            const updatedPlaylist = await updatePlaylist(id, set, handlePhotoSubmit, name, image);
             set((state) => ({
                 userPlaylists: state.userPlaylists.map((p) =>
-                    p.id === playlist.id ? { ...p, name: playlist.name, image: playlist.image } : p
+                    p.id === id ? { ...p, name: updatedPlaylist.name, image: updatedPlaylist.image } : p
                 ),
             }));
         } catch (error) {
             set({ error: 'Error updating playlist:' + error });
         }
     },
-
+    
+    //este controlador es para eliminar una playlist, toma el id de la playlist a eliminar por params y la 
+    //elimina.
     deletePlaylist: async (playlistId: string) => {
         try {
             await deletePlaylist(playlistId, set);

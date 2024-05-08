@@ -2,40 +2,37 @@
     //este controlador es para eliminar una cancion de una playlist, recibe el id de la cancion y 
     //el id de la playlist por params.
 
-import { Playlist, PlaylistState } from "./test";
+    import { PlaylistDetail } from "./playlist.store";
 
-export const deleteSongFromPlaylist = async (songId: string, playlistId: string, set: (state: (state: PlaylistState) => Partial<PlaylistState>) => void): Promise<Playlist | undefined>  => {
-    if (!songId || !playlistId) {
-        console.error('Error: ID is undefined');
-        return;
-    }
-    let updatedPlaylist;
-    try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/playlist/deleteSongFromPlaylist?id=${songId}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+    export const deleteSongFromPlaylist = async (songId: string ): Promise<PlaylistDetail | undefined>  => {
+        if (!songId) {
+            console.error('Error: ID is undefined');
+            return;
         }
+        let updatedPlaylist;
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/playlist/deleteSongFromPlaylist?id=${songId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
 
-        const data = await response.json();
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
 
-        set((state: PlaylistState) => {
-            updatedPlaylist = state.playlistDetail?.songs
+            const data = await response.json();
+
+            updatedPlaylist = data.playlistDetail?.songs
                 ? { 
-                    ...state.playlistDetail, 
-                    songs: state.playlistDetail.songs.filter((song: { id: string }) => song.id !== songId) 
+                    ...data.playlistDetail, 
+                    songs: data.playlistDetail.songs.filter((song: { id: string }) => song.id !== songId) 
                 }
-                : state.playlistDetail;
-            return { playlistDetail: updatedPlaylist };
-        });
+                : data.playlistDetail;
 
-    } catch (error) {
-        console.error('Error deleting song from playlist:', error);
-    }
-    return updatedPlaylist;
-};
+        } catch (error) {
+            console.error('Error deleting song from playlist:', error);
+        }
+        return updatedPlaylist;
+    };

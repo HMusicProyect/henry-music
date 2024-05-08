@@ -1,11 +1,11 @@
 // fetchPlaylistDetail.ts
 
-import { Playlist } from "./test";
-
 //este controlador es para consulta el detalles de una playlist especifica
 //que requiera el usuario
 
-export const fetchPlaylistDetail = async (id: string): Promise<Playlist> => {
+import { PlaylistDetail, PlaylistDetailData, PlaylistDetailSong, Song } from "./playlist.store";
+
+export const fetchPlaylistDetail = async (id: string): Promise<PlaylistDetail> => {
     if (!id) {
         console.error('Error: ID is undefined');
         throw new Error('ID is undefined');
@@ -16,7 +16,12 @@ export const fetchPlaylistDetail = async (id: string): Promise<Playlist> => {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        return data; // Devuelve los detalles de la lista de reproducción
+        const playlistDetail: PlaylistDetail = {
+            dataValues: data.dataValues as PlaylistDetailData,
+            playlistDetails: data.playlistDetails as PlaylistDetailSong[],
+            songs: data.songs as Song[],
+        };
+        return playlistDetail;
     } catch (error) {
         console.error('Error fetching playlist detail:', error);
         throw new Error('Error fetching playlist detail');

@@ -1,6 +1,6 @@
     // deletePlaylist.ts
 
-import { PlaylistState } from "./test";
+import { PlaylistState } from "./playlist.store";
 
     //este controlador es para eliminar una playlist, toma el id de la playlist a eliminar por params y la 
     //elimina.

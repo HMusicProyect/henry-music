@@ -1,69 +1,60 @@
     // updatePlaylist.ts
     // Este controlador es para actualizar una playlist existente
 
-import { PlaylistState } from "./test";
+import { PlaylistState } from "./playlist.store";
 
     type FilePair = {
     photo: File;
 };
     
-    export const updatePlaylist = (id: string,   set: Function, handlePhotoSubmit: Function,name?: string, image?: string | File): Promise<void> => {
-        return new Promise(async (resolve, reject) => {
-            let imageUrl: string = '';
-            console.log('updatePlaylist', id, name, image);
+export const updatePlaylist = (id: string, set: Function, handlePhotoSubmit: Function, name?: string, image?: string | File): Promise<any> => {
+    return new Promise(async (resolve, reject) => {
+        let imageUrl: string = '';
 
-            if (image && typeof image !== 'string') {
-                const filePair: FilePair = { photo: image };
-                const uploadResponse = await handlePhotoSubmit(filePair);
-                console.log('uploadResponse:', uploadResponse);
-                if (uploadResponse.status === 200) {
-                    imageUrl = uploadResponse.url;
-                } else {
-                    const error = 'Error uploading image to Cloudinary';
-                    console.error(error);
-                    reject(error);
-                    return;
-                }
+        if (image && typeof image !== 'string') {
+            const filePair: FilePair = { photo: image };
+            const uploadResponse = await handlePhotoSubmit(filePair);
+            if (uploadResponse.status === 200) {
+                imageUrl = uploadResponse.url;
+            } else {
+                reject('Error uploading image to Cloudinary');
+                return;
             }
+        }
 
-            if (!id || (!name && !imageUrl)) {
-                const error = 'Error: ID, Name or Image is undefined';
-                console.error(error);
-                reject(error);
+        if (!id || (!name && !imageUrl)) {
+            reject('Error: ID, Name or Image is undefined');
+            return;
+        }
+
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/playlist/putPlaylist`, {
+                method: 'PUT',
+                body: JSON.stringify({ id, name, image: imageUrl }),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                reject(`HTTP error! status: ${response.status}`);
                 return;
             }
 
-            try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/playlist/putPlaylist`, {
-                    method: 'PUT',
-                    body: JSON.stringify({ id, name, image: imageUrl }),
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
+            const updatedPlaylist = await response.json();
 
-                if (!response.ok) {
-                    const error = `HTTP error! status: ${response.status}`;
-                    console.error(error);
-                    reject(error);
-                    return;
-                }
+            set((state: PlaylistState) => {
+                const updatedUserPlaylists = state.userPlaylists.map((playlist) =>
+                    playlist.id === id
+                        ? { ...playlist, name: updatedPlaylist.name || playlist.name, image: updatedPlaylist.image || playlist.image }
+                        : playlist
+                );
+                return { userPlaylists: updatedUserPlaylists };
+            });
 
-                await response.json();
-
-                set((state: PlaylistState) => {
-                    const updatedUserPlaylists = state.userPlaylists.map((playlist) =>
-                        playlist.id === id
-                            ? { ...playlist, name: name || playlist.name, image: imageUrl || playlist.image }
-                            : playlist
-                    );
-                    return { userPlaylists: updatedUserPlaylists };
-                });
-
-                resolve();
-            } catch (error) {
-                console.error('Error updating playlist:', error);
-                reject(error);
-            }
-        });
-    };
+            resolve(updatedPlaylist);
+        } catch (error) {
+            reject('Error updating playlist:' + error);
+        }
+    });
+};
