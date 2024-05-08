@@ -15,7 +15,7 @@ const UserUnbanModal = () => {
     const uploadModal = useUnbanUsersModal();
     const [isLoading, setIsLoading] = useState(false);
     const { data: session } = useSession();
-    const { banUser } = useStore();
+    const { unbanUser } = useStore();
 
     const router = useRouter();
     const userId = uploadModal.user?.id;
@@ -46,7 +46,7 @@ const UserUnbanModal = () => {
                 token: token
             });
 
-            await banUser(userId || '', token);
+            await unbanUser(userId || '', token);
             router.refresh();
             setIsLoading(false);
             toast.success('Se ha desbaneado al usuario correctamente.');
