@@ -30,7 +30,6 @@ export default function TablePlayList({
       invoice.GenreName.toLowerCase().includes(query.toLowerCase())
     )
   );
-  console.log('filteredTodos', filteredTodos)
 
 
   return (
@@ -62,8 +61,10 @@ export default function TablePlayList({
                               key={invoice.id}
                           >
                               <MediaItem
-                                data={invoice}
-                              />
+                            onClick={() => { }}
+                            key={invoice.id}
+                            data={invoice}
+                          />
                           </Link>
                         </div>
                       </div>
