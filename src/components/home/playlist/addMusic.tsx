@@ -61,9 +61,9 @@ export default function AddMusicToPlaylist ({ id, userId, setIsModalOpen }: AddM
                 // Espera a que se complete cada llamada antes de pasar a la siguiente
                 postSongToPlaylist(id, songId);
             }
-            toast.success('Las canciones se han agregado con éxito a la playlist.');
             window.location.reload();
             setIsModalOpen(false);
+            toast.success('Las canciones se han agregado con éxito a la playlist.');
         } catch (error) {
             toast.error('Hubo un error al agregar las canciones a la playlist.');
             console.error(error);
