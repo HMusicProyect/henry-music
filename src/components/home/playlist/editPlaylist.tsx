@@ -11,9 +11,10 @@ interface playlistDetail {
 }
 interface EditPlaylistDetailsProps {
     globalState?: any; 
+    setIsModalOpen: (arg0: boolean) => void;
 }
 
-const EditPlaylistDetails: React.FC<EditPlaylistDetailsProps> = ({ globalState }) => {
+const EditPlaylistDetails: React.FC<EditPlaylistDetailsProps> = ({ globalState, setIsModalOpen }) => {
     
     const updatePlaylist = usePlaylistStore((state) => state.updatePlaylist);
     const playlistDetail = usePlaylistStore((state) => state.playlistDetail?.dataValues);
@@ -43,11 +44,13 @@ const EditPlaylistDetails: React.FC<EditPlaylistDetailsProps> = ({ globalState }
                 await updatePlaylist(
                     playlistDetail.id, 
                     isEditingName ? (editedField = 'Nombre', newName) : undefined, 
-                    isEditingImage ? (editedField = 'Imagen', newImage) : undefined
+                    isEditingImage && newImage instanceof File ? (editedField = 'Imagen', newImage) : undefined
                 );
                 setIsEditingName(false);
                 setIsEditingImage(false);
                 toast.success(`${editedField} de la playlist se ha actualizado correctamente.`);
+                setIsModalOpen(false);
+                window.location.reload();
             } catch (error) {
                 toast.error(`Hubo un error al editar la ${editedField} de la playlist.`);
                 console.error(error);

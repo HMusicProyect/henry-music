@@ -2,11 +2,14 @@ import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import usePlaylistStore from '@/store/actions/playlist/playlist.store';
 import useStore from '@/store/songs.store';
 import toast from 'react-hot-toast';
+import { fetchUserPlaylists } from '@/store/actions/playlist/fetchUserPlaylists';
 interface AddMusicToPlaylistProps {
     id: string;
+    userId: string | undefined;
+    setIsModalOpen: (arg0: boolean) => void;
 }
 
-export default function AddMusicToPlaylist ({ id }: AddMusicToPlaylistProps) {
+export default function AddMusicToPlaylist ({ id, userId, setIsModalOpen }: AddMusicToPlaylistProps) {
     const [selectedSongs, setSelectedSongs] = useState<string[]>([]);
 
     const postSongToPlaylist = usePlaylistStore((state) => state.postSongToPlaylist);
@@ -30,7 +33,7 @@ export default function AddMusicToPlaylist ({ id }: AddMusicToPlaylistProps) {
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         setIsLoading(true);
-    
+
         event.preventDefault();
 
         if (selectedSongs.length === 0) {
@@ -39,11 +42,17 @@ export default function AddMusicToPlaylist ({ id }: AddMusicToPlaylistProps) {
             return;
         }
         try {
+            // Asegúrate de que tienes las listas de reproducción más recientes del usuario
+            if(!userId) return;
+            await fetchUserPlaylists(userId);
+
             for (const songId of selectedSongs) {
+                // Espera a que se complete cada llamada antes de pasar a la siguiente
                 postSongToPlaylist(id, songId);
             }
-            
             toast.success('Las canciones se han agregado con éxito a la playlist.');
+            window.location.reload();
+            setIsModalOpen(false);
         } catch (error) {
             toast.error('Hubo un error al agregar las canciones a la playlist.');
             console.error(error);
@@ -51,6 +60,7 @@ export default function AddMusicToPlaylist ({ id }: AddMusicToPlaylistProps) {
             setIsLoading(false);
         }
     };
+
     return (
         <div className="flex justify-center items-center" >
             <form onSubmit={handleSubmit} className="bg-gray-800 p-4 rounded shadow-lg border border-gray-200">
