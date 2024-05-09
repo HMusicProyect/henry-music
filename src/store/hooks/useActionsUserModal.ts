@@ -1,15 +1,19 @@
 import { create } from "zustand";
 
-interface ActionsUserModalProps{
+interface ActionsUserModalProps {
     isOpen: boolean;
-    onOpen: () => void;
+    userId: string | null;
+    isAdmin: boolean;
+    onOpen: (userId: string, isAdmin: boolean) => void;
     onClose: () => void;
 }
 
 const useActionsUserModal = create<ActionsUserModalProps>((set) => ({
     isOpen: false,
-    onOpen: () => set({isOpen: true}),
-    onClose: () => set({isOpen: false}),
-}))
+    userId: null,
+    isAdmin: false,
+    onOpen: (userId, isAdmin) => set({ isOpen: true, userId, isAdmin }),
+    onClose: () => set({ isOpen: false, userId: null, isAdmin: false }),
+}));
 
 export default useActionsUserModal;

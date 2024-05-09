@@ -8,6 +8,10 @@ import UploadAlbumsModal from "@/components/admin/Albums/UploadAlbumsModal";
 import UserActionsModal from "@/components/admin/Users/UserActionsModal";
 import UserBanModal from "@/components/admin/Users/UserBanModal";
 import UserUnbanModal from "@/components/admin/Users/UserUnbanModal";
+import UserPutAdminModal from "@/components/admin/Users/UserPutAdminModal";
+import UserDeleteAdminModal from "@/components/admin/Users/UserDeleteAdminModal";
+import UpdateArtistsModal from "@/components/admin/Artists/UpdateArtistsModal";
+import UpdateAlbumModal from "@/components/admin/Albums/UpdateAlbumModal";
 
 
 const ModalProvider = () => {
@@ -30,7 +34,11 @@ const ModalProvider = () => {
         <UserActionsModal />
         <UserBanModal />
         <UserUnbanModal />
-
+        <UserPutAdminModal />
+        <UserDeleteAdminModal /> 
+        <UpdateArtistsModal />
+        <UpdateAlbumModal />
+        <UpdateArtistsModal />
         </>
     )
 }

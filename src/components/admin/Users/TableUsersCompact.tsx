@@ -84,9 +84,11 @@ export default function TableUsersList({
     return unbanUsersModal.onOpen(user);
   }
 
-  const onClickEdit = () => {
-    return editUsersModal.onOpen();
+  const onClickEdit = (user: User) => {
+    const isAdmin = user.rol === 'admin';
+    editUsersModal.onOpen(user.id || '', isAdmin);
   }
+
 
   return (
     <section className="container mx-auto font-semibold">
@@ -173,9 +175,13 @@ export default function TableUsersList({
                     {user.ban ? 'Yes' : 'No'}
                   </td>
                   <td className="px-4 py-3 text-sm dark:text-gray-200 dark:border-slate-600">
-                    <button className="p-2 mr-2 rounded-full bg-green-500 text-white hover:bg-green-600">
-                      <Pen onClick={onClickEdit} />
+                    <button
+                      className="p-2 mr-2 rounded-full bg-green-500 text-white hover:bg-green-600"
+                      onClick={() => onClickEdit(user)}
+                    >
+                      <Pen />
                     </button>
+
                     {user.ban ? (
                       <button
                         className="p-2 rounded-full bg-blue-500 text-white hover:bg-blue-600"
