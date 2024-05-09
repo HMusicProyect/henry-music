@@ -1,7 +1,7 @@
 "use client"
 
 import { capitalizeWords } from "@/utils/CapitalizeWords";
-import usePlaylistStore from '@/store/playlist.store';
+import usePlaylistStore from '@/store/actions/playlist/playlist.store';
 import Image from "next/image";
 import Link from "next/link";
 

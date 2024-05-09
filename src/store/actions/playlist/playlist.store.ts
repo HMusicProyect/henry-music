@@ -103,7 +103,14 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
     postPlaylist: async (name: string, userId: string) => {
         try {
             const newPlaylist = await postPlaylist(name, userId);
-            set((state) => ({ userPlaylists: [...state.userPlaylists, newPlaylist] }));
+            set((state) => {
+                if (Array.isArray(state.userPlaylists)) {
+                    return { userPlaylists: [...state.userPlaylists, newPlaylist] };
+                } else {
+                    console.error('Error: userPlaylists is not an array');
+                    return state;
+                }
+            });
         } catch (error) {
             set({ error: 'Error posting new playlist:' + error });
         }
@@ -113,13 +120,20 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
         postSongToPlaylist: async (playlistId: string, songId: string, ) => {
             try {
                 const updatedSong = await postSongToPlaylist(playlistId, songId, set);
-                
-                console.log('updatedSong',updatedSong)
-                
+                console.log(`updatedSong`,updatedSong)
                 set((state) => {
-                    state.userPlaylists.findIndex((playlist) => playlist.id === playlistId);
-                    console.log('state',state)
-                    
+                    const playlistIndex = state.userPlaylists.findIndex((playlist) => playlist.id === playlistId);
+                    if (playlistIndex !== -1) {
+                        // Clonar el estado actual para evitar la mutación directa
+                        const newState = { ...state };
+                        // Actualizar la lista de canciones de la playlist
+                        newState.userPlaylists[playlistIndex].songs = [...newState.userPlaylists[playlistIndex].songs, updatedSong];
+                        // Actualizar playlistDetail si es la playlist actual
+                        if (newState.playlistDetail && newState.playlistDetail.dataValues && newState.playlistDetail.dataValues.id === playlistId) {
+                            newState.playlistDetail.songs = [...newState.playlistDetail.songs, updatedSong];
+                        }
+                        return newState;
+                    }
                     return state;
                 });
 

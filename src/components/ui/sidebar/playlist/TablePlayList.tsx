@@ -4,7 +4,6 @@ import usePlaylistStore, { PlaylistDetailSong } from '@/store/actions/playlist/p
 
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { useEffect,useState, useMemo } from 'react';
 
 
 export default function TablePlayList({
@@ -20,32 +19,10 @@ export default function TablePlayList({
   const searchParams = useSearchParams();
     const playlistID = searchParams.get('id') || '';
 
-  const [deletePressed, setDeletePressed] = useState(false);
-
   const deleteSongFromPlaylist = usePlaylistStore((state) => state.deleteSongFromPlaylist);
 
   const playlistDetail = usePlaylistStore((state) => state.playlistDetail?.playlistDetails);
   
-  const fetchPlaylistDetail = usePlaylistStore((state) => state.fetchPlaylistDetail);
-
-  
-  useEffect(() => {
-  
-      fetchPlaylistDetail(playlistID);
-      console.log('El botón de eliminar fue presionado');
-  }, [playlistDetail?.length]);
-
-  // console.log(`playlistDetail`,playlistDetail.le);
-
-  const filteredTodos = useMemo(() => {
-    return playlistDetail?.filter((invoice) =>
-      typeof query === 'string' && (
-        invoice.SongsName?.toLowerCase().includes(query.toLowerCase()) ||
-        invoice.ArtistName.toLowerCase().includes(query.toLowerCase()) ||
-        invoice.GenreName.toLowerCase().includes(query.toLowerCase())
-      )
-    );
-  }, [playlistDetail, query]);
 
   return (
     <section className="container mx-auto font-semibold">
@@ -63,7 +40,7 @@ export default function TablePlayList({
               </tr>
             </thead>
             <tbody className="">
-              {filteredTodos?.map((invoice : PlaylistDetailSong) => (
+              {playlistDetail?.map((invoice : PlaylistDetailSong) => (
                 <tr
                   key={invoice.id}
                   className="text-white transition-transform duration-300 ease-in-out transform  hover:bg-neutral-400/10 "

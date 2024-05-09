@@ -2,13 +2,11 @@
 
 import { Suspense, useEffect, useState } from 'react';
 import Header from '@/components/ui/header/Header';
-import usePlaylistStore, { PlaylistDetailData, PlaylistDetailSong } from '@/store/actions/playlist/playlist.store';
+import usePlaylistStore from '@/store/actions/playlist/playlist.store';
 import { capitalizeWords } from "@/utils/CapitalizeWords";
 import Image from 'next/image';
 import { ModalComponent } from '@/components/ui/Modal/Modal';
-import OptionsDropdown from '@/components/ui/OptionDropdown';
 import { InvoicesTableSkeleton } from '@/components/ui/skeletons';
-import { Input } from '@/components/ui/input';
 import { useOptionsStore } from '@/store/hooks/useOptions';
 import { Music } from '@/lib/definitions';
 import TablePlayList from '@/components/ui/sidebar/playlist/TablePlayList';
@@ -32,21 +30,16 @@ const MusicPlayer: React.FC = ({
     const { selectedOption } = useOptionsStore();
     const query = searchParams?.music || '';
     const id = searchParams?.id || '';
-
     const { data: session, status } = useSession();
-
-
 
     console.log(session?.user?.id);
     const userId = session?.user?.id;
-
     
     const fetchPlaylistDetail = usePlaylistStore((state) => state.fetchPlaylistDetail);
     
     const playlistData = usePlaylistStore((state) => state.playlistDetail?.dataValues);
 
     const otherDetails = usePlaylistStore((state) => state.playlistDetail?.playlistDetails);
-    const otherDetais = usePlaylistStore((state) => state.playlistDetail);
     const [set, setset ] = useState<number>(0);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -70,9 +63,6 @@ const MusicPlayer: React.FC = ({
     useEffect(() => {
         fetchPlaylistDetail(id);
     }, [set, id]);
-        
-    console.log('otherDetais----', otherDetais?.songs);
-    console.log(`set`,set)
 
     if(status === "loading"){
         return <p>Cargando...</p>;
@@ -100,7 +90,8 @@ const MusicPlayer: React.FC = ({
                     isModalOpen={isModalEditOpen}
                     setIsModalOpen={setIsModalEditOpen}
                 >
-                    <EditPlaylistDetails 
+                    <EditPlaylistDetails
+                        setset={setset}
                         setIsModalOpen={setIsModalEditOpen}
                     />
                 </ModalComponent>

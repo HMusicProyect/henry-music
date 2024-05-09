@@ -21,7 +21,7 @@ export const postPlaylist = async (name: string, userId: string): Promise<Playli
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        return data; // Devuelve la nueva lista de reproducción
+        return data;
     } catch (error) {
         console.error('Error posting new playlist:', error);
         throw new Error('Error posting new playlist');

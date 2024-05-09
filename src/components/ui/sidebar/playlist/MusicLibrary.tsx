@@ -1,6 +1,7 @@
 "use client"
+import Swal from 'sweetalert2';
 import { Plus, Library } from 'lucide-react';
-import usePlaylistStore from '@/store/playlist.store';
+import usePlaylistStore from '@/store/actions/playlist/playlist.store';
 import { User } from '@/lib/definitions';
 import { useState } from 'react';
 import { Menu, MenuItem } from '@mui/material';
@@ -19,7 +20,6 @@ interface MusicLibraryProps {
 }
 
 const CreatePlaylistMenu: React.FC<{ onCreate: () => void, onClose: () => void }> = ({ onCreate, onClose }) => {
-   
     const [anchorEl, setAnchorEl] = useState<null | SVGSVGElement>(null);
 
     const handleMenuOpen = (event: React.MouseEvent<SVGSVGElement>) => {
@@ -45,7 +45,7 @@ const CreatePlaylistMenu: React.FC<{ onCreate: () => void, onClose: () => void }
                 style={{ backgroundColor: 'tuColorDeFondo' }}
             >
                 <MenuItem onClick={onCreate} style={{ backgroundColor: 'tuColorDeFondo' }}>Crear Playlist</MenuItem>
-                <MenuItem onClick={handleMenuClose} style={{ backgroundColor: 'tuColorDeFondo' }}>Crear Carpeta</MenuItem>
+                {/* <MenuItem onClick={handleMenuClose} style={{ backgroundColor: 'tuColorDeFondo' }}>Crear Carpeta</MenuItem> */}
             </Menu>
         </>
     );
@@ -53,11 +53,23 @@ const CreatePlaylistMenu: React.FC<{ onCreate: () => void, onClose: () => void }
 
 const MusicLibrary: React.FC<MusicLibraryProps> = ({ playlist = [], user }) => {
     const postPlaylist = usePlaylistStore(state => state.postPlaylist);
+    const userPlaylists = usePlaylistStore(state => state.userPlaylists);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
 
     const handleCreatePlaylist = () => {
-        const defaultPlaylistName = "Nombre predeterminado de la playlist";
+        const defaultPlaylistName = "New Playlist";
         if (user?.id) {
-            postPlaylist(defaultPlaylistName, user.id);
+            if (userPlaylists.length === 5) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Límite de playlist alcanzado",
+                    text: "Para crear más playlists, conviértete en premium",
+                    footer: '<a href="URL_AQUI">Hazte premium</a>'
+                });
+            } else {
+                postPlaylist(defaultPlaylistName, user.id);
+            }
         }
     };
 

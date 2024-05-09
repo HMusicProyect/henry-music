@@ -4,17 +4,13 @@ import { capitalizeWords } from "@/utils/CapitalizeWords";
 import toast from 'react-hot-toast';
 import Image from 'next/image';
 import usePlaylistStore from '@/store/actions/playlist/playlist.store';
-interface playlistDetail {
-    id: string;
-    name: string;
-    image: File;
-}
 interface EditPlaylistDetailsProps {
+    setset: any;
     globalState?: any; 
     setIsModalOpen: (arg0: boolean) => void;
 }
 
-const EditPlaylistDetails: React.FC<EditPlaylistDetailsProps> = ({ globalState, setIsModalOpen }) => {
+const EditPlaylistDetails: React.FC<EditPlaylistDetailsProps> = ({ globalState, setIsModalOpen, setset }) => {
     
     const updatePlaylist = usePlaylistStore((state) => state.updatePlaylist);
     const playlistDetail = usePlaylistStore((state) => state.playlistDetail?.dataValues);
@@ -50,7 +46,7 @@ const EditPlaylistDetails: React.FC<EditPlaylistDetailsProps> = ({ globalState, 
                 setIsEditingImage(false);
                 toast.success(`${editedField} de la playlist se ha actualizado correctamente.`);
                 setIsModalOpen(false);
-                window.location.reload();
+                setset((prev: number) => prev + 1);
             } catch (error) {
                 toast.error(`Hubo un error al editar la ${editedField} de la playlist.`);
                 console.error(error);

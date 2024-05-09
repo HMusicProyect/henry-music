@@ -31,10 +31,8 @@ export default function AddMusicToPlaylist ({ id, userId, setIsModalOpen, setset
 
     useEffect(() => {
         getMusic();
-
         fetchPlaylistDetail(playlistID);
-        
-    }, [getMusic, fetchPlaylistDetail]);
+    }, [getMusic, fetchPlaylistDetail, playlistID]);
 
     
 
@@ -53,14 +51,11 @@ export default function AddMusicToPlaylist ({ id, userId, setIsModalOpen, setset
             return;
         }
         try {
-            // Asegúrate de que tienes las listas de reproducción más recientes del usuario
             if(!userId) return;
             for (const songId of selectedSongs) {
-                // Espera a que se complete cada llamada antes de pasar a la siguiente
                 postSongToPlaylist(id, songId);
             }
             setset((prev: number) => prev + 1);
-            // window.location.reload();
             setIsModalOpen(false);
             toast.success('Las canciones se han agregado con éxito a la playlist.');
         } catch (error) {

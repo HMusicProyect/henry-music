@@ -7,7 +7,7 @@ import Box from './Box';
 import SidebarItem from './SidebarItem';
 import MusicLibrary from './playlist/MusicLibrary';
 import usePlayer from '@/store/hooks/usePlayer';
-import usePlaylistStore from '@/store/playlist.store'; 
+import usePlaylistStore from '@/store/actions/playlist/playlist.store'; 
 import { useSession } from 'next-auth/react';
 import {User} from "@/lib/definitions"
 
@@ -21,6 +21,7 @@ const Sidebar: React.FC<SidebarProps> = ({ children}) => {
     const userSession: User = session?.user!;
     const pathname = usePathname();
     const player = usePlayer();
+    console.log('userPlaylists', userPlaylistsFromPlaylistStore.length)
 
 
     useEffect(() => {
