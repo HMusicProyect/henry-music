@@ -76,6 +76,8 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
         }
     },
 
+    //este controlador es para traer la playlist de todos los usuarios en la
+    //base de datos
     fetchAllPlaylists: async () => {
         try {
             const playlists = await fetchAllPlaylists();
@@ -84,6 +86,9 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
             set({ error: 'Error fetching all playlists:' + error });
         }
     },
+
+    //este controlador es para consulta el detalles de una playlist especifica
+    //que requiera el usuario
     fetchPlaylistDetail: async (id: string) => {
         try {
             const playlistDetail = await fetchPlaylistDetail(id);
@@ -102,7 +107,8 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
             set({ error: 'Error posting new playlist:' + error });
         }
     },
-
+    
+     //Este controlador es para guardar la playlist que el usuario le ha dado like(me gusta)
     postSongToPlaylist: async (playlistId: string, songId: string) => {
         try {
             const updatedPlaylist = await postSongToPlaylist( playlistId, songId);
@@ -115,6 +121,7 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
             set({ error: 'Error posting song to playlist:' + error });
         }
     },
+    
     deleteSongFromPlaylist: async (songId: string,) => {
         try {
             const updatedPlaylist = await deleteSongFromPlaylist(songId);

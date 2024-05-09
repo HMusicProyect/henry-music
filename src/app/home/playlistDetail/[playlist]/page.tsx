@@ -30,7 +30,9 @@ const MusicPlayer: React.FC = ({
     const { selectedOption } = useOptionsStore();
     const query = searchParams?.music || '';
     const id = searchParams?.id || '';
+
     const fetchPlaylistDetail = usePlaylistStore((state) => state.fetchPlaylistDetail);
+
     const playlistDetail = usePlaylistStore((state) => state.playlistDetail?.dataValues);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -39,11 +41,11 @@ const MusicPlayer: React.FC = ({
     
 
 
-    useEffect(() => {
-        if (id) {
-            fetchPlaylistDetail(id);
-        }
-    }, [id, fetchPlaylistDetail]);
+useEffect(() => {
+    if (id) {
+        fetchPlaylistDetail(id);
+    }
+}, [id, fetchPlaylistDetail]);
     
 
     return (
