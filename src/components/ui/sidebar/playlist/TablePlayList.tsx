@@ -3,7 +3,6 @@ import MediaItem from '@/components/ui/sidebar/MediaItem';
 import usePlaylistStore, { PlaylistDetailSong } from '@/store/actions/playlist/playlist.store';
 
 import Link from 'next/link';
-import { useEffect } from 'react';
 
 
 export default function TablePlayList({
@@ -12,6 +11,7 @@ export default function TablePlayList({
   query: string;
 }) {
   const deleteSongFromPlaylist = usePlaylistStore((state) => state.deleteSongFromPlaylist);
+
   const playlistDetail = usePlaylistStore((state) => state.playlistDetail?.playlistDetails);
   
 
@@ -41,7 +41,7 @@ export default function TablePlayList({
               </tr>
             </thead>
             <tbody className="">
-              {playlistDetail?.map((invoice : PlaylistDetailSong) => (
+              {filteredTodos?.map((invoice : PlaylistDetailSong) => (
                 <tr
                   key={invoice.id}
                   className="text-white transition-transform duration-300 ease-in-out transform  hover:bg-neutral-400/10 "

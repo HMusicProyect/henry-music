@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useState } from 'react';
 import Header from '@/components/ui/header/Header';
-import usePlaylistStore from '@/store/playlist.store';
+import usePlaylistStore, { PlaylistDetailData, PlaylistDetailSong } from '@/store/actions/playlist/playlist.store';
 import { capitalizeWords } from "@/utils/CapitalizeWords";
 import Image from 'next/image';
 import { ModalComponent } from '@/components/ui/Modal/Modal';
@@ -18,18 +18,6 @@ import TablePlayListCompact from '@/components/home/playlist/TablePlayListCompac
 import useOnPlay from '@/store/hooks/useOnPlay';
 import { Play } from 'lucide-react';
 
-interface PlaylistData {
-    id: string;
-    name: string;
-    image: string;
-}
-
-interface SongData {
-    SongsID: string;
-    SongsName: string;
-    SongsImage: string;
-}
-
 const MusicPlayer: React.FC = ({
     searchParams,
 }: {
@@ -43,25 +31,33 @@ const MusicPlayer: React.FC = ({
     const { selectedOption } = useOptionsStore();
     const query = searchParams?.music || '';
     const id = searchParams?.id || '';
+
     const fetchPlaylistDetail = usePlaylistStore((state) => state.fetchPlaylistDetail);
 
     const playlistDetail = usePlaylistStore((state) => state.playlistDetail);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isModalEditOpen, setIsModalEditOpen] = useState(false);
-    const [playlistData, setPlaylistData] = useState<PlaylistData | undefined>(playlistDetail?.dataValues);
+    const [playlistData, setPlaylistData] = useState<PlaylistDetailData | null>(playlistDetail?.dataValues!);
 
     useEffect(() => {
-        setPlaylistData(playlistDetail?.dataValues);
+        if (playlistDetail) {
+            setPlaylistData(playlistDetail.dataValues);
+        }
     }, [playlistDetail]);
 
-    const otherDetails = playlistDetail?.playlistDetails;
-    const onPlay = useOnPlay(otherDetails?.map((song: SongData) => ({ id: song.SongsID, name: song.SongsName, image: song.SongsImage })));
+    const otherDetails = playlistDetail?.playlistDetails!
+
+    const onPlay = useOnPlay(otherDetails?.map((song: PlaylistDetailSong) => ({
+        id: song.SongsID,
+        name: song.SongsName, 
+        image: song.SongsImage 
+    })));
 
     useEffect(() => {
         if (id) {
             fetchPlaylistDetail(id);
         }
-    }, [id, fetchPlaylistDetail]);
+    }, [id, fetchPlaylistDetail, playlistDetail?.dataValues]);
 
     const handlePlayClick = (songId: string) => {
         onPlay(songId);
@@ -96,8 +92,8 @@ const MusicPlayer: React.FC = ({
                         >
                             <Image
                                 className="w-full h-full object-cover"
-                                src={playlistData?.image || '/images/HenrryMusic.svg'} // Modificado para acceder a playlistData.image directamente
-                                alt={playlistData?.name || 'Playlist Image'} // Añadido valor predeterminado para alt
+                                src={typeof playlistData?.image === 'string' ? playlistData.image : '/images/HenrryMusic.svg'}
+                                alt={playlistData?.name || 'Playlist Image'} 
                                 width={300}
                                 height={400}
                             />
@@ -118,14 +114,14 @@ const MusicPlayer: React.FC = ({
                                 <span className='text-white font-semibold text-md'>Autor: </span>
                                 {playlistData?.name}
                             </p>
-                            {otherDetails && // Asegúrate de que otherDetails esté definido antes de renderizar el botón de reproducción
-                                <button
-                                    className='transition rounded-full flex items-center bg-yellow-500 p-4 drop-shadow-md translate translate-y-1/4 group-hover:opacity-100 group-hover:translate-y-0 hover:scale-110'
-                                    onClick={() => handlePlayClick(otherDetails[0]?.SongsID)} // Cambiado a otherDetails[0]?.SongsID para acceder al primer SongsID
-                                >
-                                    <Play className="text-black" fill="black" size={25} />
-                                </button>
-                            }
+                                {otherDetails && otherDetails.length > 0 &&
+                                    <button
+                                        className='transition rounded-full flex items-center bg-yellow-500 p-4 drop-shadow-md translate translate-y-1/4 group-hover:opacity-100 group-hover:translate-y-0 hover:scale-110'
+                                        onClick={() => handlePlayClick(otherDetails[0].SongsID.toString())} 
+                                    >
+                                        <Play className="text-black" fill="black" size={25} />
+                                    </button>
+                                }
                         </div>
                     </div>
                 </div>
@@ -145,7 +141,7 @@ const MusicPlayer: React.FC = ({
             </div>
             <div className="mt-2 mb-7 px-6 flex justify-between items-center">
                 <Suspense
-                    key={query + JSON.stringify(otherDetails)} // Cambiado para asegurar que React reconozca los cambios en otherDetails
+                    key={query + JSON.stringify(otherDetails)}
                     fallback={<InvoicesTableSkeleton />}
                 >
                     {selectedOption === 'list' ? (

@@ -20,7 +20,7 @@ export default function AddMusicToPlaylist ({ id }: AddMusicToPlaylistProps) {
 
     useEffect(() => {
         getMusic();
-    }, [getMusic, songs]);
+    }, [getMusic]);
 
     
 
