@@ -65,21 +65,6 @@ const MusicPlayer: React.FC = ({
                 <Header>
                     <h1 className="bg-neutral-900"></h1>
                 </Header>
-                <ModalComponent
-                    isModalOpen={isModalOpen}
-                    setIsModalOpen={setIsModalOpen}
-                >
-                    <AddMusicToPlaylist
-                        id={id}
-                    />
-                </ModalComponent>
-
-                <ModalComponent
-                    isModalOpen={isModalEditOpen}
-                    setIsModalOpen={setIsModalEditOpen}
-                >
-                        <EditPlaylistDetails/>
-                </ModalComponent>
                 <div className='mt-2 mb-7 px-6'>
                     
                     <div className="flex gap-x-4 items-center">
@@ -130,7 +115,7 @@ const MusicPlayer: React.FC = ({
                 <OptionsDropdown />
             </div>
             <div className="mt-2 mb-7 px-6 flex justify-between items-center">
-                <Suspense
+                {/* <Suspense
                 key={query + otherDetails}
                 fallback={<InvoicesTableSkeleton />}
                 >
@@ -145,7 +130,7 @@ const MusicPlayer: React.FC = ({
                     currentPage={otherDetails}
                     />
                 )}
-                </Suspense>
+                </Suspense> */}
             </div>
         </div>
     );
