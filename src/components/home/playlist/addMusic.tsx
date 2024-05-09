@@ -1,5 +1,5 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
-import usePlaylistStore from '@/store/playlist.store';
+import usePlaylistStore from '@/store/actions/playlist/playlist.store';
 import useStore from '@/store/songs.store';
 import toast from 'react-hot-toast';
 interface AddMusicToPlaylistProps {
@@ -8,14 +8,19 @@ interface AddMusicToPlaylistProps {
 
 export default function AddMusicToPlaylist ({ id }: AddMusicToPlaylistProps) {
     const [selectedSongs, setSelectedSongs] = useState<string[]>([]);
+
     const postSongToPlaylist = usePlaylistStore((state) => state.postSongToPlaylist);
+
     const [isLoading, setIsLoading] = useState(false);
+
     const getMusic = useStore((state) => state.getMusic);
+
     const songs = useStore((state) => state.todos);
+
 
     useEffect(() => {
         getMusic();
-    }, [getMusic]);
+    }, [getMusic, songs]);
 
     
 
@@ -27,6 +32,7 @@ export default function AddMusicToPlaylist ({ id }: AddMusicToPlaylistProps) {
         setIsLoading(true);
     
         event.preventDefault();
+
         if (selectedSongs.length === 0) {
             alert('Por favor, selecciona al menos una canción.');
             setIsLoading(false);
@@ -34,8 +40,9 @@ export default function AddMusicToPlaylist ({ id }: AddMusicToPlaylistProps) {
         }
         try {
             for (const songId of selectedSongs) {
-                await postSongToPlaylist(id, songId);
+                postSongToPlaylist(id, songId);
             }
+            
             toast.success('Las canciones se han agregado con éxito a la playlist.');
         } catch (error) {
             toast.error('Hubo un error al agregar las canciones a la playlist.');
@@ -57,7 +64,12 @@ export default function AddMusicToPlaylist ({ id }: AddMusicToPlaylistProps) {
                         ))}
                     </select>
                 </label>
-                <button type="submit" className="bg-gray-900 text-white px-4 py-2 rounded mt-4 block w-full">Add Songs to Playlist</button>
+                <button 
+                    type="submit" 
+                    className="bg-gray-900 text-white px-4 py-2 rounded mt-4 block w-full"
+                >
+                    Add Songs to Playlist
+                </button>
             </form>
         </div>
     );

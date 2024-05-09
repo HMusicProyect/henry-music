@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useState } from 'react';
 import Header from '@/components/ui/header/Header';
-import usePlaylistStore from '@/store/playlist.store';
+import usePlaylistStore from '@/store/actions/playlist/playlist.store';
 import { capitalizeWords } from "@/utils/CapitalizeWords";
 import Image from 'next/image';
 import { ModalComponent } from '@/components/ui/Modal/Modal';
@@ -15,12 +15,6 @@ import TablePlayList from '@/components/ui/sidebar/playlist/TablePlayList';
 import AddMusicToPlaylist from '@/components/home/playlist/addMusic';
 import EditPlaylistDetails from '@/components/home/playlist/editPlaylist';
 import TablePlayListCompact from '@/components/home/playlist/TablePlayListCompact';
-
-interface PlaylistData {
-    id: string;
-    name: string;
-    image: File;
-}
 
 
 const MusicPlayer: React.FC = ({
@@ -37,23 +31,20 @@ const MusicPlayer: React.FC = ({
     const query = searchParams?.music || '';
     const id = searchParams?.id || '';
     const fetchPlaylistDetail = usePlaylistStore((state) => state.fetchPlaylistDetail);
-    
-    const playlistDetail = usePlaylistStore((state) => state.playlistDetail);
+    const playlistDetail = usePlaylistStore((state) => state.playlistDetail?.dataValues);
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isModalEditOpen, setIsModalEditOpen] = useState(false);
-    const [playlistData, setPlaylistData] = useState<PlaylistData | undefined>(playlistDetail?.dataValues);
     
-    useEffect(() => {
-        setPlaylistData(playlistDetail?.dataValues);
-    }, [playlistDetail]);
     
-    const otherDetails = playlistDetail?.playlistDetails;
+
 
     useEffect(() => {
         if (id) {
             fetchPlaylistDetail(id);
         }
     }, [id, fetchPlaylistDetail]);
+    
 
     return (
         <div className='bg-neutral-900 rounded-lg h-full w-full overflow-hidden overflow-y-auto'>
@@ -86,8 +77,8 @@ const MusicPlayer: React.FC = ({
                         >
                             <Image
                                 className="w-full h-full object-cover"
-                                src={playlistData?.image instanceof File ? URL.createObjectURL(playlistData?.image) : playlistData?.image || '/images/HenrryMusic.svg'}
-                                alt={playlistData?.name!} 
+                                src={playlistDetail?.image instanceof File ? URL.createObjectURL(playlistDetail?.image) : playlistDetail?.image || '/images/HenrryMusic.svg'}
+                                alt={playlistDetail?.name!} 
                                 width={300}
                                 height={400}
                             />
@@ -98,17 +89,17 @@ const MusicPlayer: React.FC = ({
                                 onClick={() => setIsModalEditOpen(true)}
                                 className="text-4xl cursor-pointer hover:opacity-80 font-semibold"
                             >
-                                {playlistData && capitalizeWords(playlistData.name)}
+                                {playlistDetail && capitalizeWords(playlistDetail.name)}
                             </h2>
                             <p className="text-md text-gray-500">
                                 <span className='text-white font-semibold text-md'>Nombre: </span>
-                                {playlistData?.name}
+                                {playlistDetail?.name}
                             </p>
                             <p className="text-md text-gray-500">
                                 <span className='text-white font-semibold text-md'>Autor: </span>
-                                {playlistData?.name}
+                                {playlistDetail?.name}
                             </p>
-                            {playlistData && <p className='mt-8'>Now playing: {playlistData.name}</p>}
+                            {playlistDetail && <p className='mt-8'>Now playing: {playlistDetail.name}</p>}
                         </div>
                     </div>
                 </div>
@@ -128,18 +119,16 @@ const MusicPlayer: React.FC = ({
             </div>
             <div className="mt-2 mb-7 px-6 flex justify-between items-center">
                 <Suspense
-                key={query + otherDetails}
+                key={query }
                 fallback={<InvoicesTableSkeleton />}
                 >
                 {selectedOption === 'list' ? (
                     <TablePlayList
-                    query={query}
-                    currentPage={otherDetails}
+                        query={query}
                     />
                 ) : (
                     <TablePlayListCompact
                     query={query}
-                    currentPage={otherDetails}
                     />
                 )}
                 </Suspense>

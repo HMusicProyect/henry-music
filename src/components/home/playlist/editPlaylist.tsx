@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react';
 import { capitalizeWords } from "@/utils/CapitalizeWords";
 import toast from 'react-hot-toast';
 import Image from 'next/image';
-import usePlaylistStore from '@/store/playlist.store';
-interface PlaylistData {
+import usePlaylistStore from '@/store/actions/playlist/playlist.store';
+interface playlistDetail {
     id: string;
     name: string;
     image: File;
@@ -16,35 +16,32 @@ interface EditPlaylistDetailsProps {
 const EditPlaylistDetails: React.FC<EditPlaylistDetailsProps> = ({ globalState }) => {
     
     const updatePlaylist = usePlaylistStore((state) => state.updatePlaylist);
-    const playlistDetail = usePlaylistStore((state) => state.playlistDetail);
+    const playlistDetail = usePlaylistStore((state) => state.playlistDetail?.dataValues);
     
-    const [playlistData, setPlaylistData] = useState<PlaylistData | undefined>(playlistDetail?.dataValues);
-
-
     const [isEditingName, setIsEditingName] = useState(false);
     const [isEditingImage, setIsEditingImage] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [newName, setNewName] = useState(playlistData?.name);
-    const [newImage, setNewImage] = useState(playlistData?.image);
+    const [newName, setNewName] = useState(playlistDetail?.name);
+    const [newImage, setNewImage] = useState(playlistDetail?.image);
     const [previewImageUrl, setPreviewImageUrl] = useState<string | undefined>(undefined);
     
 
     useEffect(() => {
-        setNewName(playlistData?.name);
-        setNewImage(playlistData?.image);
-        if (playlistData?.image instanceof File) {
-            setPreviewImageUrl(URL.createObjectURL(playlistData.image));
+        setNewName(playlistDetail?.name);
+        setNewImage(playlistDetail?.image);
+        if (playlistDetail?.image instanceof File) {
+            setPreviewImageUrl(URL.createObjectURL(playlistDetail.image));
         }
-    }, [playlistData, globalState]);
+    }, [playlistDetail, globalState]);
 
     const handleSave = async () => {
         setIsLoading(true);
 
-        if (playlistData) {
+        if (playlistDetail) {
             let editedField = '';
             try {
                 await updatePlaylist(
-                    playlistData.id, 
+                    playlistDetail.id, 
                     isEditingName ? (editedField = 'Nombre', newName) : undefined, 
                     isEditingImage ? (editedField = 'Imagen', newImage) : undefined
                 );
@@ -81,12 +78,12 @@ const EditPlaylistDetails: React.FC<EditPlaylistDetailsProps> = ({ globalState }
                         <input
                             className="w-full px-3 dark:text-gray-200 dark:bg-gray-900 py-2 rounded-md border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-500"
                             type="text"
-                            defaultValue={playlistData?.name}
+                            defaultValue={playlistDetail?.name}
                             onChange={(e) => setNewName(e.target.value)}
                         />
                     ) : (
                         <h2 onClick={() => setIsEditingName(true)}>
-                            {playlistData && capitalizeWords(playlistData.name)}
+                            {playlistDetail && capitalizeWords(playlistDetail.name)}
                         </h2>
                     )}
                 </div>
@@ -104,7 +101,7 @@ const EditPlaylistDetails: React.FC<EditPlaylistDetailsProps> = ({ globalState }
                         />
                         <Image
                             src={previewImageUrl ? previewImageUrl : '/images/HenrryMusic.svg'}
-                            alt={playlistData?.name || 'Default alt text'}
+                            alt={playlistDetail?.name || 'Default alt text'}
                             width={100} 
                             height={100} 
                             onClick={() => setIsEditingImage(true)}

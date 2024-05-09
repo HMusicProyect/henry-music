@@ -3,6 +3,7 @@
 import { Music } from "@/lib/definitions";
 import { capitalizeWords } from "@/utils/CapitalizeWords";
 import Image from "next/image";
+import { useEffect } from "react";
 
 interface PlaylistDetails {
     ArtistName: string;

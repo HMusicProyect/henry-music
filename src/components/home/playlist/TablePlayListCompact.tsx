@@ -1,35 +1,24 @@
 import { capitalizeWords } from '@/utils/CapitalizeWords';
-import usePlaylistStore from '@/store/playlist.store';
+import usePlaylistStore from '@/store/actions/playlist/playlist.store';
 import Link from 'next/link';
 
-interface PlaylistDetails {
-    ArtistName: string;
-    GenreName: string;
-    PlaylistID: string;
-    SongsID: number;
-    SongsImage: string;
-    SongsName: string;
-    id: string;
-}
 
 export default function TablePlayListCompact({
   query,
-  currentPage,
 }: {
   query: string;
-  currentPage: PlaylistDetails[];
 }) {
   const deleteSongFromPlaylist = usePlaylistStore((state) => state.deleteSongFromPlaylist);
-  console.log('currentPage', currentPage);
+  const playlistDetail = usePlaylistStore((state) => state.playlistDetail?.playlistDetails);
 
 
-  const filteredTodos = currentPage?.filter((invoice) =>
-    typeof query === 'string' && (
-      invoice.SongsName?.toLowerCase().includes(query.toLowerCase()) ||
-      invoice.ArtistName.toLowerCase().includes(query.toLowerCase()) ||
-      invoice.GenreName.toLowerCase().includes(query.toLowerCase())
-    )
-  );
+  // const filteredTodos = playlistDetail?.filter((invoice) =>
+  //   typeof query === 'string' && (
+  //     invoice.SongsName?.toLowerCase().includes(query.toLowerCase()) ||
+  //     invoice.ArtistName.toLowerCase().includes(query.toLowerCase()) ||
+  //     invoice.GenreName.toLowerCase().includes(query.toLowerCase())
+  //   )
+  // );
 
   return (
     <section className="container mx-auto font-semibold">
@@ -46,7 +35,7 @@ export default function TablePlayListCompact({
               </tr>
             </thead>
             <tbody className="">
-              {filteredTodos?.map((invoice: any) => (
+              {playlistDetail?.map((invoice: any) => (
                 <tr
                   key={invoice.id}
                   className="text-white transition-transform duration-300 ease-in-out transform  hover:bg-neutral-400/10 "

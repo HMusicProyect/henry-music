@@ -1,36 +1,24 @@
 "use client";
 import MediaItem from '@/components/ui/sidebar/MediaItem';
-import usePlaylistStore from '@/store/playlist.store';
-import Link from 'next/link';
+import usePlaylistStore, { PlaylistDetailSong } from '@/store/actions/playlist/playlist.store';
 
-interface PlaylistDetails {
-    ArtistName: string;
-    GenreName: string;
-    PlaylistID: string;
-    SongsID: number;
-    SongsImage: string;
-    SongsName: string;
-    id: string;
-}
+import Link from 'next/link';
+import { useEffect } from 'react';
+
 
 export default function TablePlayList({
   query,
-  currentPage,
 }: {
   query: string;
-  currentPage: PlaylistDetails[];
 }) {
-
   const deleteSongFromPlaylist = usePlaylistStore((state) => state.deleteSongFromPlaylist);
+  const playlistDetail = usePlaylistStore((state) => state.playlistDetail?.playlistDetails);
+  
 
-  const filteredTodos = currentPage?.filter((invoice) =>
-    typeof query === 'string' && (
-      invoice.SongsName?.toLowerCase().includes(query.toLowerCase()) ||
-      invoice.ArtistName.toLowerCase().includes(query.toLowerCase()) ||
-      invoice.GenreName.toLowerCase().includes(query.toLowerCase())
-    )
-  );
-  console.log('filteredTodos', filteredTodos)
+
+  useEffect(() => {
+    console.log(`me actualice`);
+  }, [playlistDetail]);
 
 
   return (
@@ -49,7 +37,7 @@ export default function TablePlayList({
               </tr>
             </thead>
             <tbody className="">
-              {filteredTodos?.map((invoice : PlaylistDetails) => (
+              {playlistDetail?.map((invoice : PlaylistDetailSong) => (
                 <tr
                   key={invoice.id}
                   className="text-white transition-transform duration-300 ease-in-out transform  hover:bg-neutral-400/10 "
