@@ -57,7 +57,7 @@ const MusicPlayer: React.FC = ({
         if (id) {
             fetchPlaylistDetail(id);
         }
-    }, [id, fetchPlaylistDetail, playlistDetail?.dataValues]);
+    }, [id, fetchPlaylistDetail]);
 
     const handlePlayClick = (songId: string) => {
         onPlay(songId);
