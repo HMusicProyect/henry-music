@@ -16,6 +16,7 @@ export const fetchPlaylistDetail = async (id: string): Promise<PlaylistDetail> =
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
+        
         const playlistDetail: PlaylistDetail = {
             dataValues: data.dataValues as PlaylistDetailData,
             playlistDetails: data.playlistDetails as PlaylistDetailSong[],

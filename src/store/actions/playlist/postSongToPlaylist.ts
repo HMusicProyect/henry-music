@@ -1,7 +1,7 @@
     // Este módulo define una función para agregar una canción a una lista de reproducción en una base de datos.
 
 
-    export const postSongToPlaylist = async (playlistId: string, songId: string) => {
+    export const postSongToPlaylist = async (playlistId: string, songId: string, set:any ) => {
         if (!playlistId || !songId) {
             console.error('Error: Playlist ID or Song ID is undefined');
             return;
@@ -20,6 +20,9 @@
             }
 
             const data = await response.json();
+            set((state:any) => {
+                state.playlistDetail.song= [ ...state.playlistDetail.song, data];
+            });
             return data;
 
         } catch (error) {

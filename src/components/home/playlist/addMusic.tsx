@@ -7,10 +7,11 @@ import { fetchUserPlaylists } from '@/store/actions/playlist/fetchUserPlaylists'
 interface AddMusicToPlaylistProps {
     id: string;
     userId: string | undefined;
+    setset: any;
     setIsModalOpen: (arg0: boolean) => void;
 }
 
-export default function AddMusicToPlaylist ({ id, userId, setIsModalOpen }: AddMusicToPlaylistProps) {
+export default function AddMusicToPlaylist ({ id, userId, setIsModalOpen, setset }: AddMusicToPlaylistProps) {
     const [selectedSongs, setSelectedSongs] = useState<string[]>([]);
 
     const postSongToPlaylist = usePlaylistStore((state) => state.postSongToPlaylist);
@@ -33,7 +34,7 @@ export default function AddMusicToPlaylist ({ id, userId, setIsModalOpen }: AddM
 
         fetchPlaylistDetail(playlistID);
         
-    }, [getMusic, songs,fetchPlaylistDetail]);
+    }, [getMusic, fetchPlaylistDetail]);
 
     
 
@@ -54,14 +55,12 @@ export default function AddMusicToPlaylist ({ id, userId, setIsModalOpen }: AddM
         try {
             // Asegúrate de que tienes las listas de reproducción más recientes del usuario
             if(!userId) return;
-            await fetchUserPlaylists(userId);
-
             for (const songId of selectedSongs) {
-                 postSongToPlaylist(id, songId);
                 // Espera a que se complete cada llamada antes de pasar a la siguiente
                 postSongToPlaylist(id, songId);
             }
-            window.location.reload();
+            setset((prev: number) => prev + 1);
+            // window.location.reload();
             setIsModalOpen(false);
             toast.success('Las canciones se han agregado con éxito a la playlist.');
         } catch (error) {

@@ -9,9 +9,11 @@ import { useEffect,useState, useMemo } from 'react';
 
 export default function TablePlayList({
   query,
+  setset,
   id
 }: {
   query: string;
+  setset: any;
   id: string;
 }) {
 
@@ -23,18 +25,17 @@ export default function TablePlayList({
   const deleteSongFromPlaylist = usePlaylistStore((state) => state.deleteSongFromPlaylist);
 
   const playlistDetail = usePlaylistStore((state) => state.playlistDetail?.playlistDetails);
+  
   const fetchPlaylistDetail = usePlaylistStore((state) => state.fetchPlaylistDetail);
+
   
   useEffect(() => {
-    if (deletePressed) {
-      setTimeout(() => {}, 4000);
+  
       fetchPlaylistDetail(playlistID);
       console.log('El botón de eliminar fue presionado');
-  
-      // Recuerda resetear el estado para que el useEffect pueda detectar el próximo cambio
-      setDeletePressed(false);
-    }
-  }, [deletePressed]);
+  }, [playlistDetail?.length]);
+
+  // console.log(`playlistDetail`,playlistDetail.le);
 
   const filteredTodos = useMemo(() => {
     return playlistDetail?.filter((invoice) =>
@@ -99,7 +100,7 @@ export default function TablePlayList({
                         onClick={(e) => {
                             e.stopPropagation();
                             deleteSongFromPlaylist(invoice?.id);
-                            setDeletePressed(true);
+                            setset((prev: number) => prev + 1);
                         }}
                     >
                         ✖

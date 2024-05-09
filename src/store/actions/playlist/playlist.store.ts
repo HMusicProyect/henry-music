@@ -110,24 +110,19 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
     },
     
     // Este módulo define una función para agregar una canción a una lista de reproducción en una base de datos.
-        postSongToPlaylist: async (playlistId: string, songId: string) => {
+        postSongToPlaylist: async (playlistId: string, songId: string, ) => {
             try {
-                const updatedSong = await postSongToPlaylist(playlistId, songId);
+                const updatedSong = await postSongToPlaylist(playlistId, songId, set);
+                
                 console.log('updatedSong',updatedSong)
-
+                
                 set((state) => {
-                    const playlistIndex = state.userPlaylists.findIndex((playlist) => playlist.id === playlistId);
-                    console.log('playlistIndex',playlistIndex)
-                    
-                    if (playlistIndex !== -1) {
-                        const newState = { ...state };
-                        newState.userPlaylists[playlistIndex].songs = [...newState.userPlaylists[playlistIndex].songs, updatedSong];
-                        console.log('newState',newState)
-                        return newState;
-                    }
+                    state.userPlaylists.findIndex((playlist) => playlist.id === playlistId);
                     console.log('state',state)
+                    
                     return state;
                 });
+
             } catch (error) {
                 set((state) => ({ 
                     ...state, 

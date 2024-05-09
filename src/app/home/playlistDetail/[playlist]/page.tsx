@@ -44,13 +44,16 @@ const MusicPlayer: React.FC = ({
     const fetchPlaylistDetail = usePlaylistStore((state) => state.fetchPlaylistDetail);
     
     const playlistData = usePlaylistStore((state) => state.playlistDetail?.dataValues);
+
     const otherDetails = usePlaylistStore((state) => state.playlistDetail?.playlistDetails);
+    const otherDetais = usePlaylistStore((state) => state.playlistDetail);
+    const [set, setset ] = useState<number>(0);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isModalEditOpen, setIsModalEditOpen] = useState(false);
     
 
-
+    
 
     const onPlay = useOnPlay((otherDetails || []).map((song) => ({
         id: song.SongsID,
@@ -58,19 +61,18 @@ const MusicPlayer: React.FC = ({
         image: song.SongsImage 
     })));
 
-    useEffect(() => {
-        fetchPlaylistDetail(id);
-    }, [id, fetchPlaylistDetail]);
-
     const handlePlayClick = (songId: string) => {
         onPlay(songId);
     };
-useEffect(() => {
-    if (id) {
+
+
+
+    useEffect(() => {
         fetchPlaylistDetail(id);
-    }
-}, [id, fetchPlaylistDetail]);
-    
+    }, [set, id]);
+        
+    console.log('otherDetais----', otherDetais?.songs);
+    console.log(`set`,set)
 
     if(status === "loading"){
         return <p>Cargando...</p>;
@@ -87,6 +89,7 @@ useEffect(() => {
                     setIsModalOpen={setIsModalOpen}
                 >
                     <AddMusicToPlaylist
+                        setset={setset}
                         setIsModalOpen={setIsModalOpen}
                         userId={userId}
                         id={id}
@@ -153,8 +156,8 @@ useEffect(() => {
             </div>
 
             <div className="px-6 mb-7 flex items-center justify-between gap-2 md:mt-8">
-                <Input className='w-1/4' placeholder='Search Invoices' />
-                <OptionsDropdown />
+                {/* <Input className='w-1/4' placeholder='Search Invoices' /> */}
+                {/* <OptionsDropdown /> */}
             </div>
             <div className="mt-2 mb-7 px-6 flex justify-between items-center">
                 <Suspense
@@ -163,6 +166,7 @@ useEffect(() => {
                 >
                     {selectedOption === 'list' ? (
                         <TablePlayList
+                            setset={setset}
                             query={query}
                             id={id}
                         />
