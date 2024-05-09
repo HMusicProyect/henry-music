@@ -3,14 +3,16 @@ import MediaItem from '@/components/ui/sidebar/MediaItem';
 import usePlaylistStore, { PlaylistDetailSong } from '@/store/actions/playlist/playlist.store';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useEffect,useState, useMemo } from 'react';
 
 
 export default function TablePlayList({
   query,
+  id
 }: {
   query: string;
+  id: string;
 }) {
 
   const searchParams = useSearchParams();
@@ -34,14 +36,15 @@ export default function TablePlayList({
     }
   }, [deletePressed]);
 
-  const filteredTodos = playlistDetail?.filter((invoice) =>
-    typeof query === 'string' && (
-      invoice.SongsName?.toLowerCase().includes(query.toLowerCase()) ||
-      invoice.ArtistName.toLowerCase().includes(query.toLowerCase()) ||
-      invoice.GenreName.toLowerCase().includes(query.toLowerCase())
-    )
-  );
-
+  const filteredTodos = useMemo(() => {
+    return playlistDetail?.filter((invoice) =>
+      typeof query === 'string' && (
+        invoice.SongsName?.toLowerCase().includes(query.toLowerCase()) ||
+        invoice.ArtistName.toLowerCase().includes(query.toLowerCase()) ||
+        invoice.GenreName.toLowerCase().includes(query.toLowerCase())
+      )
+    );
+  }, [playlistDetail, query]);
 
   return (
     <section className="container mx-auto font-semibold">
@@ -72,10 +75,10 @@ export default function TablePlayList({
                               key={invoice.id}
                           >
                               <MediaItem
-                            onClick={() => { }}
-                            key={invoice.id}
-                            data={invoice}
-                          />
+                                onClick={() => { }}
+                                key={invoice.id}
+                                data={invoice}
+                              />
                           </Link>
                         </div>
                       </div>

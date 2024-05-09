@@ -8,6 +8,7 @@ export interface Playlist {
     name: string;
     image: string;
     likes: any[];
+     songs: Song[]; 
 }
 
 export interface PlaylistDetailData {
@@ -108,29 +109,50 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
         }
     },
     
-     //Este controlador es para guardar la playlist que el usuario le ha dado like(me gusta)
-    postSongToPlaylist: async (playlistId: string, songId: string) => {
-        try {
-            const updatedPlaylist = await postSongToPlaylist( playlistId, songId);
-            set((state) => ({
-                userPlaylists: state.userPlaylists.map((playlist) =>
-                    playlist.id === playlistId ? updatedPlaylist : playlist
-                ),
-            }));
-        } catch (error) {
-            set({ error: 'Error posting song to playlist:' + error });
-        }
-    },
+    // Este módulo define una función para agregar una canción a una lista de reproducción en una base de datos.
+        postSongToPlaylist: async (playlistId: string, songId: string) => {
+            try {
+                const updatedSong = await postSongToPlaylist(playlistId, songId);
+                console.log('updatedSong',updatedSong)
+
+                set((state) => {
+                    const playlistIndex = state.userPlaylists.findIndex((playlist) => playlist.id === playlistId);
+                    console.log('playlistIndex',playlistIndex)
+                    
+                    if (playlistIndex !== -1) {
+                        const newState = { ...state };
+                        newState.userPlaylists[playlistIndex].songs = [...newState.userPlaylists[playlistIndex].songs, updatedSong];
+                        console.log('newState',newState)
+                        return newState;
+                    }
+                    console.log('state',state)
+                    return state;
+                });
+            } catch (error) {
+                set((state) => ({ 
+                    ...state, 
+                    error: 'Error posting song to playlist:' + error 
+                }));
+            }
+        },
     
+    //este controlador es para eliminar una cancion de una playlist, recibe el id de la cancion y 
+    //el id de la playlist por params.
     deleteSongFromPlaylist: async (songId: string,) => {
         try {
             const updatedPlaylist = await deleteSongFromPlaylist(songId);
-            set((state: PlaylistState) => {
-                return { 
-                    ...state, 
-                    playlistDetail: updatedPlaylist 
-                };
-            });
+            if (updatedPlaylist) {
+                set((state: PlaylistState) => {
+                    const playlistIndex = state.userPlaylists.findIndex((playlist) => playlist.id === updatedPlaylist.dataValues.id);
+                    
+                    if (playlistIndex !== -1) {
+                        const newState = { ...state };
+                        newState.userPlaylists[playlistIndex].songs = newState.userPlaylists[playlistIndex].songs.filter(song => song.id !== Number(songId));
+                        return newState;
+                    }
+                    return state;
+                });
+            }
         } catch (error) {
             set((state) => ({ 
                 ...state, 
@@ -139,6 +161,7 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
         }
     },
     
+    // Este controlador es para actualizar una playlist existente
     updatePlaylist: async (id: string, name?: string, image?: File) => {
         try {
             const updatedPlaylist = await updatePlaylist(id, set, handlePhotoSubmit, name, image);

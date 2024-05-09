@@ -17,6 +17,7 @@ import EditPlaylistDetails from '@/components/home/playlist/editPlaylist';
 import TablePlayListCompact from '@/components/home/playlist/TablePlayListCompact';
 import useOnPlay from '@/store/hooks/useOnPlay';
 import { Play } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 
 const MusicPlayer: React.FC = ({
     searchParams,
@@ -32,31 +33,29 @@ const MusicPlayer: React.FC = ({
     const query = searchParams?.music || '';
     const id = searchParams?.id || '';
 
+    const { data: session, status } = useSession();
+    console.log(session?.user?.id);
+    const userId = session?.user?.id;
+    
     const fetchPlaylistDetail = usePlaylistStore((state) => state.fetchPlaylistDetail);
+    
+    const playlistData = usePlaylistStore((state) => state.playlistDetail?.dataValues);
+    const otherDetails = usePlaylistStore((state) => state.playlistDetail?.playlistDetails);
 
-    const playlistDetail = usePlaylistStore((state) => state.playlistDetail);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isModalEditOpen, setIsModalEditOpen] = useState(false);
-    const [playlistData, setPlaylistData] = useState<PlaylistDetailData | null>(playlistDetail?.dataValues!);
+    
 
-    useEffect(() => {
-        if (playlistDetail) {
-            setPlaylistData(playlistDetail.dataValues);
-        }
-    }, [playlistDetail]);
 
-    const otherDetails = playlistDetail?.playlistDetails!
 
-    const onPlay = useOnPlay(otherDetails?.map((song: PlaylistDetailSong) => ({
+    const onPlay = useOnPlay((otherDetails || []).map((song) => ({
         id: song.SongsID,
         name: song.SongsName, 
         image: song.SongsImage 
     })));
 
     useEffect(() => {
-        if (id) {
-            fetchPlaylistDetail(id);
-        }
+        fetchPlaylistDetail(id);
     }, [id, fetchPlaylistDetail]);
 
     const handlePlayClick = (songId: string) => {
@@ -80,6 +79,8 @@ useEffect(() => {
                     setIsModalOpen={setIsModalOpen}
                 >
                     <AddMusicToPlaylist
+                        setIsModalOpen={setIsModalOpen}
+                        userId={userId}
                         id={id}
                     />
                 </ModalComponent>
@@ -88,7 +89,9 @@ useEffect(() => {
                     isModalOpen={isModalEditOpen}
                     setIsModalOpen={setIsModalEditOpen}
                 >
-                    <EditPlaylistDetails />
+                    <EditPlaylistDetails 
+                        setIsModalOpen={setIsModalEditOpen}
+                    />
                 </ModalComponent>
                 <div className='mt-2 mb-7 px-6'>
                     <div className="flex gap-x-4 items-center">
@@ -153,6 +156,7 @@ useEffect(() => {
                     {selectedOption === 'list' ? (
                         <TablePlayList
                             query={query}
+                            id={id}
                         />
                     ) : (
                         <TablePlayListCompact
