@@ -45,7 +45,7 @@ useEffect(() => {
     if (id) {
         fetchPlaylistDetail(id);
     }
-}, [id, playlistDetail,fetchPlaylistDetail]);
+}, [id,fetchPlaylistDetail]);
     
 
     return (
