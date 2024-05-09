@@ -3,6 +3,8 @@ import MediaItem from '@/components/ui/sidebar/MediaItem';
 import usePlaylistStore, { PlaylistDetailSong } from '@/store/actions/playlist/playlist.store';
 
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 
 export default function TablePlayList({
@@ -10,11 +12,27 @@ export default function TablePlayList({
 }: {
   query: string;
 }) {
+
+  const searchParams = useSearchParams();
+    const playlistID = searchParams.get('id') || '';
+
+  const [deletePressed, setDeletePressed] = useState(false);
+
   const deleteSongFromPlaylist = usePlaylistStore((state) => state.deleteSongFromPlaylist);
 
   const playlistDetail = usePlaylistStore((state) => state.playlistDetail?.playlistDetails);
+  const fetchPlaylistDetail = usePlaylistStore((state) => state.fetchPlaylistDetail);
   
-
+  useEffect(() => {
+    if (deletePressed) {
+      setTimeout(() => {}, 4000);
+      fetchPlaylistDetail(playlistID);
+      console.log('El botón de eliminar fue presionado');
+  
+      // Recuerda resetear el estado para que el useEffect pueda detectar el próximo cambio
+      setDeletePressed(false);
+    }
+  }, [deletePressed]);
 
   const filteredTodos = playlistDetail?.filter((invoice) =>
     typeof query === 'string' && (
@@ -78,6 +96,7 @@ export default function TablePlayList({
                         onClick={(e) => {
                             e.stopPropagation();
                             deleteSongFromPlaylist(invoice?.id);
+                            setDeletePressed(true);
                         }}
                     >
                         ✖

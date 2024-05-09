@@ -2,6 +2,7 @@ import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import usePlaylistStore from '@/store/actions/playlist/playlist.store';
 import useStore from '@/store/songs.store';
 import toast from 'react-hot-toast';
+import { useSearchParams } from 'next/navigation';
 interface AddMusicToPlaylistProps {
     id: string;
 }
@@ -11,6 +12,11 @@ export default function AddMusicToPlaylist ({ id }: AddMusicToPlaylistProps) {
 
     const postSongToPlaylist = usePlaylistStore((state) => state.postSongToPlaylist);
 
+    const fetchPlaylistDetail = usePlaylistStore((state) => state.fetchPlaylistDetail);
+
+    const searchParams = useSearchParams();
+    const playlistID = searchParams.get('id') || '';
+
     const [isLoading, setIsLoading] = useState(false);
 
     const getMusic = useStore((state) => state.getMusic);
@@ -18,9 +24,13 @@ export default function AddMusicToPlaylist ({ id }: AddMusicToPlaylistProps) {
     const songs = useStore((state) => state.todos);
 
 
+
     useEffect(() => {
         getMusic();
-    }, [getMusic]);
+
+        fetchPlaylistDetail(playlistID);
+        
+    }, [getMusic, songs,fetchPlaylistDetail]);
 
     
 
@@ -40,7 +50,7 @@ export default function AddMusicToPlaylist ({ id }: AddMusicToPlaylistProps) {
         }
         try {
             for (const songId of selectedSongs) {
-                postSongToPlaylist(id, songId);
+                 postSongToPlaylist(id, songId);
             }
             
             toast.success('Las canciones se han agregado con éxito a la playlist.');
