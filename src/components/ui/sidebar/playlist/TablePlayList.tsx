@@ -83,6 +83,7 @@ export default function TablePlayList({
                         onClick={(e) => {
                             e.stopPropagation();
                             deleteSongFromPlaylist(invoice?.id);
+                            window.location.reload();
                         }}
                     >
                         ✖

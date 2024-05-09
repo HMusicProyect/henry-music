@@ -4,8 +4,6 @@
 import { InvoicesTableSkeleton } from '@/components/ui/skeletons';
 import { Suspense } from 'react';
 import Header from '@/components/ui/header/Header';
-import useOnPlay from '@/store/hooks/useOnPlay';
-import Player from '@/components/ui/player';
 import { Input } from '@/components/ui/input';
 import OptionsDropdown from '@/components/ui/OptionDropdown';
 import TableList from '@/components/home/ListPlaylist/PlaylistsTableList';

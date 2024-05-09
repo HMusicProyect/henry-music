@@ -34,8 +34,12 @@ const MusicPlayer: React.FC = ({
     const id = searchParams?.id || '';
 
     const { data: session, status } = useSession();
+
+
+
     console.log(session?.user?.id);
     const userId = session?.user?.id;
+
     
     const fetchPlaylistDetail = usePlaylistStore((state) => state.fetchPlaylistDetail);
     
@@ -61,6 +65,10 @@ const MusicPlayer: React.FC = ({
     const handlePlayClick = (songId: string) => {
         onPlay(songId);
     };
+
+    if(status === "loading"){
+        return <p>Cargando...</p>;
+    }
 
     return (
         <div className='bg-neutral-900 rounded-lg h-full w-full overflow-hidden overflow-y-auto'>
