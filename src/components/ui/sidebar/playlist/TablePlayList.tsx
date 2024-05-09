@@ -16,10 +16,6 @@ export default function TablePlayList({
   
 
 
-  useEffect(() => {
-    console.log(`me actualice`);
-  }, [playlistDetail]);
-
 
   return (
     <section className="container mx-auto font-semibold">
