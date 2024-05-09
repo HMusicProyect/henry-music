@@ -16,6 +16,14 @@ export default function TablePlayList({
   
 
 
+  const filteredTodos = playlistDetail?.filter((invoice) =>
+    typeof query === 'string' && (
+      invoice.SongsName?.toLowerCase().includes(query.toLowerCase()) ||
+      invoice.ArtistName.toLowerCase().includes(query.toLowerCase()) ||
+      invoice.GenreName.toLowerCase().includes(query.toLowerCase())
+    )
+  );
+
 
   return (
     <section className="container mx-auto font-semibold">
@@ -46,8 +54,10 @@ export default function TablePlayList({
                               key={invoice.id}
                           >
                               <MediaItem
-                                data={invoice}
-                              />
+                            onClick={() => { }}
+                            key={invoice.id}
+                            data={invoice}
+                          />
                           </Link>
                         </div>
                       </div>

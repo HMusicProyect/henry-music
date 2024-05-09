@@ -16,6 +16,7 @@ import Link from 'next/link';
 import useSongByGenre from '@/store/actions/song/getSongsByGenre';
 import useReviewsStore from '@/store/reviews.store';
 import useGetSongById from '@/store/actions/song/getSongById';
+import useOnPlay from '@/store/hooks/useOnPlay';
 
 
 interface Props {
@@ -34,6 +35,7 @@ export default function MusicPlayer({ params }: { params: Props }) {
     const player = usePlayer();
     const [currentSong, setCurrentSong] = useState<Music | null | undefined>(null);
     const id = params.id;
+    const onPlay = useOnPlay(song || []); 
 
     useEffect(() => {
         if (id) {
@@ -83,8 +85,11 @@ export default function MusicPlayer({ params }: { params: Props }) {
         if (currentSong && song) {
             player.setId(currentSong.id!.toString());
             player.setIds(song.map((song) => song.id!.toString()));
+            onPlay(currentSong.id!.toString());
         }
     };
+    
+    
     const handleReviewSubmit = () => {
         getSongReviews(currentSong!.id!);
     };
