@@ -12,6 +12,9 @@ type Store = {
   verifyUser: (id: string, url: string) => Promise<void>;
   banUser: (userId: string, token: string) => Promise<void>;
   unbanUser: (userId: string, token: string) => Promise<void>;
+  updateUser: (id: string, name?: string, image?: string, token?: string) => Promise<void>;
+  putAdmin: (userId: string, token: string) => Promise<void>;
+  putDeleteAdmin: (userId: string, token: string) => Promise<void>;
 };
 
 export const useStore = create<Store>((set, get) => ({
@@ -105,4 +108,86 @@ export const useStore = create<Store>((set, get) => ({
       throw error;
     }
   },
+
+  updateUser: async (id: string, name?: string, image?: string, token?: string) => {
+    try {
+        if (!token) {
+            throw new Error('Token de autorización faltante');
+        }
+
+        const requestBody: any = {};
+
+        if (name !== undefined && name !== null) {
+            requestBody.name = name;
+        }
+
+        if (image !== undefined && image !== null) {
+            requestBody.image = image;
+        }
+
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users/editNameAndPic/${id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `${token}`
+            },
+
+            body: Object.keys(requestBody).length > 0 ? JSON.stringify(requestBody) : undefined
+        });
+
+        if (response.ok) {
+            await get().fetchUsers();
+            return;
+        }
+
+        throw new Error('Fallo al actualizar el usuario');
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+},
+putAdmin: async (userId: string, token: string) => {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users/${userId}/putAdmin`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `${token}`,
+      }
+    });
+
+    if (response.ok) {
+      await get().fetchUsers();
+      return;
+    }
+
+    throw new Error('Failed to update user to admin');
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+},
+
+putDeleteAdmin: async (userId: string, token: string) => {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users/${userId}/putDeleteAdmin`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `${token}`,
+      }
+    });
+
+    if (response.ok) {
+      await get().fetchUsers();
+      return;
+    }
+
+    throw new Error('Failed to update user to non-admin');
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
 }));

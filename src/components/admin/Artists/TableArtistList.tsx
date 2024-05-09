@@ -4,6 +4,8 @@ import { useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import useArtistStore from '@/store/artist.store';
+import useUpdateArtistsModal from '@/store/hooks/useUpdateArtists';
+import { Pen } from 'lucide-react';
 
 export default function TableArtistList({
   query,
@@ -13,7 +15,7 @@ export default function TableArtistList({
   currentPage: number;
 }) {
   const { artists, getArtists } = useArtistStore();
-
+  const editUsersModal = useUpdateArtistsModal();
   useEffect(() => {
     getArtists();
   }, []);
@@ -22,6 +24,10 @@ export default function TableArtistList({
   const filteredAlbums = artists?.filter((album) =>
     album.name.toLowerCase().includes(query.toLowerCase())
   );
+  const onClickEdit = (artistId: string) => {
+    console.log(artistId)
+    editUsersModal.onOpen(artistId);
+  }
 
   return (
     <section className="container mx-auto font-semibold">
@@ -33,6 +39,7 @@ export default function TableArtistList({
                 <th className="px-4 py-3">#</th>
                 <th className="px-4 py-3 pl-8">Artist Name</th>
                 <th className="px-4 py-3">Photography</th>
+                <th className="px-4 py-3">Actions</th>
               </tr>
             </thead>
             <tbody className="">
@@ -49,6 +56,15 @@ export default function TableArtistList({
                   </td>
                   <td className="px-4 py-3 text-sm dark:text-gray-200 dark:border-slate-600 ">
                     <Image className='rounded-full' src={album.image} alt={album.name} width={100} height={100} />
+                  </td>
+                  <td className="px-4 py-3 text-sm dark:text-gray-200 dark:border-slate-600 ">
+
+                    <button
+                      className="p-2 mr-2 rounded-full bg-green-500 text-white hover:bg-green-600"
+                      onClick={() => onClickEdit(album.id)}
+                    >
+                      <Pen />
+                    </button>
                   </td>
                 </tr>
               ))}

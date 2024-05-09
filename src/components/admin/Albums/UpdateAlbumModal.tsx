@@ -7,26 +7,25 @@ import { Input } from '@/components/ui/input';
 import Button from '@/components/ui/header/Button';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
-import useActionsUserModal from '@/store/hooks/useActionsUserModal';
 import { handlePhotoSubmit } from '@/store/actions/postCloudinary';
 import { useSession } from 'next-auth/react';
 import { useStore } from '@/store/user.store';
-import usePutAdminModal from '@/store/hooks/usePutAdmin';
-import useDeleteAdminModal from '@/store/hooks/useDeleteAdmin';
+import useUpdateAlbumModal from '@/store/hooks/useUpdateAlbums';
+import useAlbumsStore from '@/store/albums.store';
 
 
-const UserActionsModal = () => {
-  const uploadModal = useActionsUserModal();
-  const putAdminModal = usePutAdminModal();
-  const deleteAdminModal = useDeleteAdminModal();
+
+const UpdateAlbumModal = () => {
+  const uploadModal = useUpdateAlbumModal();
+
   const [isLoading, setIsLoading] = useState(false);
-  const { updateUser } = useStore();
+  const { updateAlbum } = useAlbumsStore();
   const [photoFile, setPhotoFile] = useState<File | undefined>(undefined);
   const { data: session } = useSession();
   const router = useRouter();
-  const userId = uploadModal.userId;
+  const userId = uploadModal.albumId;
   const token = session?.user?.token ?? '';
-  const isAdmin = uploadModal.isAdmin;
+
 
   const handleImageChange = (e: any) => {
     const file = e.target.files[0];
@@ -53,20 +52,20 @@ const UserActionsModal = () => {
       if (photoFile && !name) {
         photoUploadResponse = await handlePhotoSubmit({ photo: photoFile });
         image = photoUploadResponse.url;
-        await updateUser(userId || '', undefined, image, token);
+        await updateAlbum(userId || '', undefined, image, token);
       }
       else if (name && !photoFile) {
-        await updateUser(userId || '', name, undefined, token);
+        await updateAlbum(userId || '', name, undefined, token);
       }
       else if (name && photoFile) {
         photoUploadResponse = await handlePhotoSubmit({ photo: photoFile });
         image = photoUploadResponse.url;
-        await updateUser(userId || '', name, image, token);
+        await updateAlbum(userId || '', name, image, token);
       }
 
       router.refresh();
       setIsLoading(false);
-      toast.success('Usuario actualizado correctamente');
+      toast.success('Artista actualizado correctamente');
       reset();
       uploadModal.onClose();
     } catch (error: any) {
@@ -75,18 +74,11 @@ const UserActionsModal = () => {
       setIsLoading(false);
     }
   }
-  const onClickPutAdmin = (userId: string) => {
-    return putAdminModal.onOpen(userId);
-  }
-
-  const onClickDeleteAdmin = (userId: string) => {
-    return deleteAdminModal.onOpen(userId);
-  }
 
   return (
     <Modal
-      title="Actualizar Usuario"
-      description="Complete los detalles a continuación para agregar un nuevo género."
+      title="Actualizar Album"
+      description="Complete los detalles a continuación para actualizar al album."
       isOpen={uploadModal.isOpen}
       onChange={onChange}
     >
@@ -112,24 +104,11 @@ const UserActionsModal = () => {
         </div>
 
         <Button disabled={isLoading} type="submit">
-          Update User
+          Update Artist
         </Button>
       </form>
-      {isAdmin && (
-        <p
-          className="mt-8 p-2 mr-2 rounded-full text-white cursor-pointer text-center"
-          onClick={() => onClickDeleteAdmin(userId || '')}
-        >Quitar Administrador
-        </p>
-      )}
-      {!isAdmin && (
-        <p className="mt-8 text-white cursor-pointer text-center"
-          onClick={() => onClickPutAdmin(userId || '')}>
-          Otorgar Administrador
-        </p>
-      )}
     </Modal>
   );
 }
 
-export default UserActionsModal;
+export default UpdateAlbumModal;

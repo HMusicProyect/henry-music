@@ -3,6 +3,8 @@ import { useEffect } from 'react';
 import Link from 'next/link';
 import { capitalizeWords } from '@/utils/CapitalizeWords';
 import useAlbumsStore from '@/store/albums.store';
+import useUpdateAlbumModal from '@/store/hooks/useUpdateAlbums';
+import { Pen } from 'lucide-react';
 
 export default function TableAlbumsCompact({
   query,
@@ -12,7 +14,7 @@ export default function TableAlbumsCompact({
   currentPage: number;
 }) {
   const { albums, getAlbums } = useAlbumsStore();
-
+  const editUsersModal = useUpdateAlbumModal();
   useEffect(() => {
     getAlbums();
   }, []);
@@ -21,6 +23,13 @@ export default function TableAlbumsCompact({
   const filteredAlbums = albums?.filter((album) =>
     album.name.toLowerCase().includes(query.toLowerCase())
   );
+
+
+  const onClickEdit = (albumId: string) => {
+    console.log(albumId)
+    editUsersModal.onOpen(albumId);
+  }
+
 
   return (
     <section className="container mx-auto font-semibold">
@@ -31,6 +40,7 @@ export default function TableAlbumsCompact({
               <tr className="text-sm font-bold text-left text-black-600 border-b border-gray-100/30 ">
                 <th className="px-4 py-3">#</th>
                 <th className="px-4 py-3 ">Album Name</th>
+                <th className="px-4 py-3">Actions</th>
               </tr>
             </thead>
             <tbody className="">
@@ -53,7 +63,14 @@ export default function TableAlbumsCompact({
                       </div>
                     </div>
                   </td>
-                 
+                  <td className="px-4 py-3 text-sm dark:text-gray-200 dark:border-slate-600 ">
+                    <button
+                      className="p-2 mr-2 rounded-full bg-green-500 text-white hover:bg-green-600"
+                      onClick={() => onClickEdit(album.id)}
+                    >
+                      <Pen />
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>

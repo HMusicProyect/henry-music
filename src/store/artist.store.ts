@@ -12,6 +12,7 @@ export interface State {
     error: string | null;
     getArtists: () => Promise<void>;
     postArtist: (name: string, image: string) => Promise<void>;
+    updateArtist: (id: string, name?: string, image?: string, token?: string) => Promise<void>;
 }
 
 export const useArtistStore = create<State>((set) => ({
@@ -44,6 +45,43 @@ export const useArtistStore = create<State>((set) => ({
         } catch (error) {
             console.error(error);
             throw new Error('Error al agregar el artista');
+        }
+    },
+    updateArtist: async (id: string, name?: string, image?: string, token?: string) => {
+        try {
+            if (!token) {
+                throw new Error('Token de autorización faltante');
+            }
+    
+            const requestBody: any = {};
+    
+            if (name !== undefined && name !== null) {
+                requestBody.name = name;
+            }
+    
+            if (image !== undefined && image !== null) {
+                requestBody.image = image;
+            }
+    
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/artists/editArtist/${id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `${token}`
+                },
+    
+                body: Object.keys(requestBody).length > 0 ? JSON.stringify(requestBody) : undefined
+            });
+    
+            if (response.ok) {
+                await useArtistStore.getState().getArtists();
+                return;
+            }
+    
+            throw new Error('Fallo al actualizar el usuario');
+        } catch (error) {
+            console.error(error);
+            throw error;
         }
     },
 }));

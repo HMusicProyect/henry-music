@@ -1,9 +1,10 @@
 "use client";
 import { useEffect } from 'react';
-import Link from 'next/link';
 import { capitalizeWords } from '@/utils/CapitalizeWords';
-import useAlbumsStore from '@/store/albums.store';
 import useArtistStore from '@/store/artist.store';
+import useUpdateArtistsModal from '@/store/hooks/useUpdateArtists';
+import { Pen } from 'lucide-react';
+
 
 export default function TableArtistCompact({
   query,
@@ -12,6 +13,7 @@ export default function TableArtistCompact({
   query: string;
   currentPage: number;
 }) {
+  const editUsersModal = useUpdateArtistsModal();
   const { artists, getArtists } = useArtistStore();
 
   useEffect(() => {
@@ -23,6 +25,12 @@ export default function TableArtistCompact({
     album.name.toLowerCase().includes(query.toLowerCase())
   );
 
+  const onClickEdit = (artistId: string) => {
+    console.log(artistId)
+    editUsersModal.onOpen(artistId);
+  }
+
+
   return (
     <section className="container mx-auto font-semibold">
       <div className="w-full mb-8 rounded-t-xl">
@@ -32,6 +40,7 @@ export default function TableArtistCompact({
               <tr className="text-sm font-bold text-left text-black-600 border-b border-gray-100/30 ">
                 <th className="px-4 py-3">#</th>
                 <th className="px-4 py-3 ">Artist Name</th>
+                <th className="px-4 py-3 ">Actions</th>
               </tr>
             </thead>
             <tbody className="">
@@ -54,7 +63,15 @@ export default function TableArtistCompact({
                       </div>
                     </div>
                   </td>
-                 
+                  <td className="px-4 py-3 text-sm dark:text-gray-200 dark:border-slate-600 ">
+
+                    <button
+                      className="p-2 mr-2 rounded-full bg-green-500 text-white hover:bg-green-600"
+                      onClick={() => onClickEdit(album.id)}
+                    >
+                      <Pen />
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
