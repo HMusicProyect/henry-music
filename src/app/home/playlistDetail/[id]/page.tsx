@@ -39,8 +39,6 @@ const MusicPlayer: React.FC = ({
     const playlistData = usePlaylistStore((state) => state.playlistDetail?.dataValues);
 
     const otherDetails = usePlaylistStore((state) => state.playlistDetail?.playlistDetails);
-
-    console.log('otherDetails', otherDetails)
     
     const [set, setset ] = useState(0);
     
@@ -50,9 +48,6 @@ const MusicPlayer: React.FC = ({
     useEffect(() => {
         fetchPlaylistDetail(id);
     }, [set, id ]);
-    
-    console.log('state.playlistDetail?.playlistDetails', otherDetails?.length)
-    console.log('render',set)
     
     const onPlay = useOnPlay((otherDetails || []).map((song) => ({
         id: song.SongsID,
