@@ -13,7 +13,8 @@ import useOnPlay from '@/store/hooks/useOnPlay';
 import { Play } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import TablePlayList from '@/components/ui/sidebar/playlist/TablePlayList';
-import { TablePlayListCompact, EditPlaylistDetails, AddMusicToPlaylist} from '@/components/home/playlist/index.playlist';
+// import { TablePlayListCompact, EditPlaylistDetails, AddMusicToPlaylist} from '@/components/home/playlist/index.playlist';
+import { TablePlayListCompact, EditPlaylistDetails, AddMusicToPlaylist} from '@/components/ui/playlist/index.playlist';
 
 
 //comentario 
@@ -41,9 +42,7 @@ const MusicPlayer: React.FC = ({
     const playlistData = usePlaylistStore((state) => state.playlistDetail?.dataValues);
 
     const otherDetails = usePlaylistStore((state) => state.playlistDetail?.playlistDetails);
-    
     const [set, setset ] = useState(0);
-    
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isModalEditOpen, setIsModalEditOpen] = useState(false);
     
