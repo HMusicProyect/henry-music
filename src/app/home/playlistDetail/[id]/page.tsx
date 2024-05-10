@@ -30,8 +30,8 @@ const MusicPlayer: React.FC = ({
     };
 }) => {
     const { selectedOption } = useOptionsStore();
-    const query = searchParams?.music || '';
-    const id = searchParams?.id || '';
+    const query = searchParams?.music;
+    const id = searchParams?.id;
     const { data: session, status } = useSession();
 
 
@@ -53,7 +53,9 @@ const MusicPlayer: React.FC = ({
     const [isModalEditOpen, setIsModalEditOpen] = useState(false);
     
     useEffect(() => {
-        fetchPlaylistDetail(id);
+        if(id){
+            fetchPlaylistDetail(id);
+        }
     }, [set, id ]);
     
     const onPlay = useOnPlay((otherDetails || []).map((song) => ({

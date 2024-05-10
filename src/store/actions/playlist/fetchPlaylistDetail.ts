@@ -6,6 +6,7 @@
 import { PlaylistDetail, PlaylistDetailData, PlaylistDetailSong, Song } from "./playlist.store";
 
 export const fetchPlaylistDetail = async (id: string): Promise<PlaylistDetail> => {
+    console.log('fetchPlaylistDetail', id);
     if (!id) {
         console.error('Error: ID is undefined');
         throw new Error('ID is undefined');
