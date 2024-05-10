@@ -60,7 +60,7 @@ const MusicLibrary: React.FC<MusicLibraryProps> = ({ playlist = [], user }) => {
     const handleCreatePlaylist = () => {
         const defaultPlaylistName = "New Playlist";
         if (user?.id) {
-            if (userPlaylists.length === 5 && session?.user.rol !== "premium") {
+            if (userPlaylists.length === 5 && session?.user.rol !== "premium" && session?.user.rol !== "admin") {
                 Swal.fire({
                     icon: "error",
                     title: "Límite de playlist alcanzado",
