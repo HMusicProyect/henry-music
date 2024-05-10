@@ -30,8 +30,10 @@ const MusicPlayer: React.FC = ({
     };
 }) => {
     const { selectedOption } = useOptionsStore();
-    const query = searchParams?.music;
-    const id = searchParams?.id;
+    const query = searchParams?.music || '';
+    const id = searchParams?.id || '';
+
+    console.log('id', id);
     const { data: session, status } = useSession();
 
 
