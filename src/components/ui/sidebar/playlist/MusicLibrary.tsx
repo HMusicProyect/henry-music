@@ -8,6 +8,7 @@ import { Menu, MenuItem } from '@mui/material';
 
 import PlaylistItem from './PlaylistItem';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 
 interface Playlist{
     id: string;
@@ -55,12 +56,12 @@ const MusicLibrary: React.FC<MusicLibraryProps> = ({ playlist = [], user }) => {
     const postPlaylist = usePlaylistStore(state => state.postPlaylist);
     const userPlaylists = usePlaylistStore(state => state.userPlaylists);
     const [isModalOpen, setIsModalOpen] = useState(false);
-
+    const { data: session, status } = useSession();
 
     const handleCreatePlaylist = () => {
         const defaultPlaylistName = "New Playlist";
         if (user?.id) {
-            if (userPlaylists.length === 5) {
+            if (userPlaylists.length === 5 && session?.user.rol !== "premium") {
                 Swal.fire({
                     icon: "error",
                     title: "Límite de playlist alcanzado",
