@@ -34,8 +34,7 @@ const MusicPlayer: React.FC = ({
     const id = searchParams?.id || '';
     const { data: session, status } = useSession();
 
-    console.log(session?.user?.id);
-    const userId = session?.user?.id;
+
     
     const fetchPlaylistDetail = usePlaylistStore((state) => state.fetchPlaylistDetail);
     
@@ -90,7 +89,7 @@ const MusicPlayer: React.FC = ({
                     <AddMusicToPlaylist
                         setset={setset}
                         setIsModalOpen={setIsModalOpen}
-                        userId={userId}
+                        // userId={userId}
                         id={id}
                     />
                 </ModalComponent>
