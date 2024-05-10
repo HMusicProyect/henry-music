@@ -10,13 +10,12 @@ import { InvoicesTableSkeleton } from '@/components/ui/skeletons';
 import { useOptionsStore } from '@/store/hooks/useOptions';
 import { Music } from '@/lib/definitions';
 import TablePlayList from '@/components/ui/sidebar/playlist/TablePlayList';
-
 import useOnPlay from '@/store/hooks/useOnPlay';
 import { Play } from 'lucide-react';
 import { useSession } from 'next-auth/react';
-import AddMusicToPlaylist from '@/components/home/Playlist/addMusic';
-import EditPlaylistDetails from '@/components/home/Playlist/editPlaylist';
-import TablePlayListCompact from '@/components/home/Playlist/TablePlayListCompact';
+import AddMusicToPlaylist from '@/components/home/playlist/addMusic';
+import EditPlaylistDetails from '@/components/home/playlist/editPlaylist';
+import TablePlayListCompact from '@/components/home/playlist/TablePlayListCompact';
 
 const MusicPlayer: React.FC = ({
     searchParams,
