@@ -160,7 +160,7 @@ const ProfilePage = () => {
                     <div className="flex justify-center">
                         <Image
                             className="rounded-full mx-auto absolute -top-20 w-32 h-32 shadow-md border-4 border-white transition duration-200 transform hover:scale-110"
-                            src={userSession?.image ? userSession.image : session?.image!}
+                            src={userSession?.image ? userSession.image : session?.user.image!}
                             alt="" 
                             width={128}
                             height={128}
