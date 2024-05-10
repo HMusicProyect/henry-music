@@ -215,7 +215,10 @@ const ProfilePage = () => {
                             />
                             ) : (
                                 <>
-                                    <UserProfile session={userSession} />
+                                    <UserProfile 
+                                        session={userSession}
+                                        localSession={localSession}
+                                    />
                                 </>
                         )
                     }

@@ -2,11 +2,11 @@ import { UserWithPhoto } from "@/lib/definitions";
 
 interface UserProfileProps {
     session: UserWithPhoto;
+    localSession: any;
 }
-    const localSessionString = localStorage.getItem('session');
-    const localSession = localSessionString ? JSON.parse(localSessionString) : null;
 
-const UserProfile:  React.FC<UserProfileProps> = ({session}) => {
+
+const UserProfile:  React.FC<UserProfileProps> = ({session, localSession}) => {
     return (
         <div>
             <div className="text-center mt-12">
