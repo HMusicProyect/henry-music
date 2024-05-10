@@ -48,7 +48,7 @@ const MusicPlayer: React.FC = ({
 
     useEffect(() => {
         fetchPlaylistDetail(id);
-    }, [set, id]);
+    }, [set, fetchPlaylistDetail, id]);
     
     console.log(set)
 
@@ -64,13 +64,30 @@ const MusicPlayer: React.FC = ({
         onPlay(songId);
     };
 
+    const handleImageClick = () => {
+        if (playlistData?.name !== 'Favoritos') {
+            setIsModalEditOpen(true);
+        } else {
+            return;
+        }
+    };
 
 
 
 
-    if(status === "loading"){
-        return <p>Cargando...</p>;
-    }
+
+    useEffect(() => {
+        let timeoutId: NodeJS.Timeout;
+        if (status === "loading" || playlistData?.image === undefined) {
+            timeoutId = setTimeout(() => {
+                fetchPlaylistDetail(id);
+            }, 1000);
+        }
+        return () => {
+            clearTimeout(timeoutId);
+        };
+    }, [status, playlistData?.image, fetchPlaylistDetail, id]);
+
 
     return (
         <div className='bg-neutral-900 rounded-lg h-full w-full overflow-hidden overflow-y-auto'>
@@ -94,16 +111,18 @@ const MusicPlayer: React.FC = ({
                     isModalOpen={isModalEditOpen}
                     setIsModalOpen={setIsModalEditOpen}
                 >
+
                     <EditPlaylistDetails
                         setset={setset}
                         setIsModalOpen={setIsModalEditOpen}
                     />
+
                 </ModalComponent>
                 <div className='mt-2 mb-7 px-6'>
                     <div className="flex gap-x-4 items-center">
                         <div
                             className="relative rounded-lg overflow-hidden cursor-pointer hover:opacity-80"
-                            onClick={() => setIsModalEditOpen(true)}
+                            onClick={handleImageClick}
                         >
                             <Image
                                 className="w-full h-full object-cover"
@@ -116,7 +135,7 @@ const MusicPlayer: React.FC = ({
 
                         <div>
                             <h2
-                                onClick={() => setIsModalEditOpen(true)}
+                                onClick={handleImageClick}
                                 className="text-4xl cursor-pointer hover:opacity-80 font-semibold"
                             >
                                 {playlistData && capitalizeWords(playlistData.name)}

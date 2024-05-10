@@ -150,11 +150,12 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
     updatePlaylist: async (id: string, name?: string, image?: File) => {
         try {
             const updatedPlaylist = await updatePlaylist(id, set, handlePhotoSubmit, name, image);
-            set((state) => ({
-                userPlaylists: state.userPlaylists.map((p) =>
-                    p.id === id ? { ...p, name: updatedPlaylist.name, image: updatedPlaylist.image } : p
-                ),
-            }));
+
+            // set((state) => ({
+            //     userPlaylists: state.userPlaylists.map((p) =>
+            //         p.id === id ? { ...p, name: updatedPlaylist.name, image: updatedPlaylist.image } : p
+            //     ),
+            // }));
         } catch (error) {
             console.log('Error updating playlist:', error);
             set({ error: 'Error updating playlist:' + error });
