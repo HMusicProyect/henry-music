@@ -13,9 +13,8 @@ import useOnPlay from '@/store/hooks/useOnPlay';
 import { Play } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import TablePlayList from '@/components/ui/sidebar/playlist/TablePlayList';
-
 import { TablePlayListCompact, EditPlaylistDetails, AddMusicToPlaylist} from '@/components/home/Playlist/index.playlist';
-
+//cambio
 const MusicPlayer: React.FC = ({
     searchParams,
 }: {
