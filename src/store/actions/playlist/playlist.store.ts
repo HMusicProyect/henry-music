@@ -103,6 +103,7 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
     postPlaylist: async (name: string, userId: string) => {
         try {
             const newPlaylist = await postPlaylist(name, userId);
+
             set((state) => {
                 if (Array.isArray(state.userPlaylists)) {
                     return { userPlaylists: [...state.userPlaylists, newPlaylist] };
@@ -133,32 +134,17 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
     
     //este controlador es para eliminar una cancion de una playlist, recibe el id de la cancion y 
     //el id de la playlist por params.
-deleteSongFromPlaylist: async (songId: string,) => {
-    try {
-        const updatedPlaylist = await deleteSongFromPlaylist(songId);
-        if (updatedPlaylist) {
-            set((state: PlaylistState) => {
-                const playlistIndex = state.userPlaylists.findIndex((playlist) => playlist.id === updatedPlaylist.dataValues.id);
-                
-                if (playlistIndex !== -1) {
-                    const newState = { ...state };
-                    newState.userPlaylists[playlistIndex].songs = newState.userPlaylists[playlistIndex].songs.filter(song => song.id !== Number(songId));
-                    // Comprobar si la canción actual es la que se está eliminando
-                    if (newState.currentSong && newState.currentSong.id === Number(songId)) {
-                        newState.currentSong = null;
-                    }
-                    return newState;
-                }
-                return state;
-            });
+    deleteSongFromPlaylist: async (songId: string,) => {
+        try {
+            await deleteSongFromPlaylist(songId);
+
+        } catch (error) {
+            set((state) => ({ 
+                ...state, 
+                error: 'Error deleting song from playlist:' + error 
+            }));
         }
-    } catch (error) {
-        set((state) => ({ 
-            ...state, 
-            error: 'Error deleting song from playlist:' + error 
-        }));
-    }
-},
+    },
     
     // Este controlador es para actualizar una playlist existente
     updatePlaylist: async (id: string, name?: string, image?: File) => {
@@ -170,6 +156,7 @@ deleteSongFromPlaylist: async (songId: string,) => {
                 ),
             }));
         } catch (error) {
+            console.log('Error updating playlist:', error);
             set({ error: 'Error updating playlist:' + error });
         }
     },

@@ -8,6 +8,7 @@ import { PlaylistState } from "./playlist.store";
 };
     
 export const updatePlaylist = (id: string, set: Function, handlePhotoSubmit: Function, name?: string, image?: string | File): Promise<any> => {
+    
     return new Promise(async (resolve, reject) => {
         let imageUrl: string = '';
 
@@ -28,6 +29,7 @@ export const updatePlaylist = (id: string, set: Function, handlePhotoSubmit: Fun
         }
 
         try {
+            console.log('img', imageUrl);
             const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/playlist/putPlaylist`, {
                 method: 'PUT',
                 body: JSON.stringify({ id, name, image: imageUrl }),
@@ -42,6 +44,7 @@ export const updatePlaylist = (id: string, set: Function, handlePhotoSubmit: Fun
             }
 
             const updatedPlaylist = await response.json();
+            console.log('updatedPlaylist', updatedPlaylist);
 
             set((state: PlaylistState) => {
                 const updatedUserPlaylists = state.userPlaylists.map((playlist) =>
@@ -54,6 +57,7 @@ export const updatePlaylist = (id: string, set: Function, handlePhotoSubmit: Fun
 
             resolve(updatedPlaylist);
         } catch (error) {
+            console.log('Error updating playlist:', error);
             reject('Error updating playlist:' + error);
         }
     });

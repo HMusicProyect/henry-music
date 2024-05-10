@@ -4,7 +4,7 @@
 
 import { PlaylistDetail } from "./playlist.store";
 
-export const deleteSongFromPlaylist = async (songId: string ): Promise<PlaylistDetail | undefined>  => {
+export const deleteSongFromPlaylist = async (songId: string  ): Promise<PlaylistDetail | undefined>  => {
     if (!songId) {
         console.error('Error: ID is undefined');
         return;
