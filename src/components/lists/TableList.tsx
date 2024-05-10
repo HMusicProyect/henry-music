@@ -5,6 +5,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 import MediaItem from '../ui/sidebar/MediaItem';
 import { Clock } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import { User } from '@/lib/auth/user.auth';
+import toast from 'react-hot-toast';
 
 export default function TableList({
   query,
@@ -15,7 +18,10 @@ export default function TableList({
 }) {
   const { todos, getMusic } = useStore();
   const [isLiked, setIsLiked] = useState(false);
+  const { data: session, status } = useSession();
+  const userSession: User = session?.user!;
 
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     getMusic();
   }, []);
@@ -27,7 +33,14 @@ export default function TableList({
   );
 
   const handleHeartClick = async (id: string) => {
-      const userId = "yourUserId"; // Reemplaza esto con el ID de usuario actual
+      const userId = userSession.id; // Reemplaza esto con el ID de usuario actual
+      setIsLoading(true);
+
+        if(!userId){
+            toast.error('User not found');
+            setIsLoading(false);
+            return;
+        }
 
       try {
           const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/playlist/favorites`, {
@@ -43,11 +56,14 @@ export default function TableList({
           }
 
           const data = await response.json();
-          console.log(data);
-
+          toast.success("Successful addition to favorites.");
       } catch (error) {
+          toast.error(`Musicasong already exists in favorites.`);
+          setIsLoading(true);
           console.error('Error adding song to favorites:', error);
-      }
+        } finally{
+            setIsLoading(false);
+        }
   };
 
   return (

@@ -87,12 +87,10 @@ const ProfilePage = () => {
 
         try {
             const response = await updateUserInfo(editProfile, userSession, token);
-            console.log('Response:', response);
             if (response.status !== 'success') {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            console.log('User information updated:', response);
             // Transforma la respuesta para que tenga la misma estructura que la sesión
             if (session) {
                 // Transforma la respuesta para que tenga la misma estructura que la sesión
