@@ -9,13 +9,13 @@ import { ModalComponent } from '@/components/ui/Modal/Modal';
 import { InvoicesTableSkeleton } from '@/components/ui/skeletons';
 import { useOptionsStore } from '@/store/hooks/useOptions';
 import { Music } from '@/lib/definitions';
-import TablePlayList from '@/components/ui/sidebar/playlist/TablePlayList';
-import AddMusicToPlaylist from '@/components/home/playlist/addMusic';
-import EditPlaylistDetails from '@/components/home/playlist/editPlaylist';
-import TablePlayListCompact from '@/components/home/playlist/TablePlayListCompact';
 import useOnPlay from '@/store/hooks/useOnPlay';
 import { Play } from 'lucide-react';
 import { useSession } from 'next-auth/react';
+import TablePlayListCompact from '@/components/home/Playlist/TablePlayListCompact';
+import EditPlaylistDetails from '@/components/home/Playlist/editPlaylist';
+import AddMusicToPlaylist from '@/components/home/Playlist/addMusic';
+import TablePlayList from '@/components/ui/sidebar/playlist/TablePlayList';
 
 const MusicPlayer: React.FC = ({
     searchParams,
