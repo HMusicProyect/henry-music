@@ -38,7 +38,14 @@ const MusicPlayer: React.FC = ({
     
     const fetchPlaylistDetail = usePlaylistStore((state) => state.fetchPlaylistDetail);
     
-    const playlistData = usePlaylistStore((state) => state.playlistDetail?.dataValues);
+    const playlistData = usePlaylistStore((state) => {
+        if (state.playlistDetail) {
+            return state.playlistDetail.dataValues;
+        } else {
+            // Manejar el caso en que playlistDetail es undefined
+            return null;
+        }
+    });
 
     const otherDetails = usePlaylistStore((state) => state.playlistDetail?.playlistDetails);
     const [set, setset ] = useState(0);
@@ -70,7 +77,6 @@ const MusicPlayer: React.FC = ({
 
     
     if(status === "loading" || playlistData?.image === undefined){
-        fetchPlaylistDetail(id);
         return <p>Cargando...</p>;
     }
 
