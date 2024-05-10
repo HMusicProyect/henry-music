@@ -12,10 +12,8 @@ import { Music } from '@/lib/definitions';
 import useOnPlay from '@/store/hooks/useOnPlay';
 import { Play } from 'lucide-react';
 import { useSession } from 'next-auth/react';
-import TablePlayListCompact from '@/components/home/Playlist/TablePlayListCompact';
-import EditPlaylistDetails from '@/components/home/Playlist/editPlaylist';
-import AddMusicToPlaylist from '@/components/home/Playlist/addMusic';
-import TablePlayList from '@/components/ui/sidebar/playlist/TablePlayList';
+
+import { TablePlayListCompact, EditPlaylistDetails, AddMusicToPlaylist, TablePlayList} from '@/components/home/Playlist/index.playlist';
 
 const MusicPlayer: React.FC = ({
     searchParams,
