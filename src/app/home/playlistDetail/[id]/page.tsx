@@ -73,6 +73,7 @@ const MusicPlayer: React.FC = ({
         }
     };
 
+    
     if(status === "loading" || playlistData?.image === undefined){
         fetchPlaylistDetail(id);
         return <p>Cargando...</p>;
