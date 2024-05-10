@@ -51,12 +51,15 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
 
     const handlePremium = async () => {
         try {
-            const usuario = userSession.email
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pay`, {
-            email:usuario
-            });
-            window.location.href = response.data.url;
-            
+            if (userSession?.rol === 'admin') {
+                router.push('/admin');
+            } else {
+                const usuario = userSession.email
+                const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pay`, {
+                    email:usuario
+                });
+                window.location.href = response.data.url;
+            }
         } catch (error) {
             console.error('Error:', error);
         }
