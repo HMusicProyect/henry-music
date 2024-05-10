@@ -5,7 +5,6 @@ import usePlaylistStore, { PlaylistDetailSong } from '@/store/actions/playlist/p
 
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
 
 
 export default function TablePlayList({
@@ -25,10 +24,6 @@ export default function TablePlayList({
 
   const deleteSongFromPlaylist = usePlaylistStore((state) => state.deleteSongFromPlaylist);
 
-  const handleDeleteSong = (songId: string) => {
-    setset((prev: number) => prev + 1);
-    deleteSongFromPlaylist(songId);
-  }
   
   return (
     <section className="container mx-auto font-semibold">
@@ -80,7 +75,11 @@ export default function TablePlayList({
                   <td className="px-4 py-3 text-md font-semibold dark:border-slate-500 ">
                     <button 
                         className="self-end text-gray-400 w-6 h-6 focus:outline-none"
-                        onClick={() => handleDeleteSong(invoice?.id)}
+                        onClick={(e) => {
+                              e.stopPropagation();
+                              setset((prev: number) => prev + 1);
+                              deleteSongFromPlaylist(invoice.id);
+                        }}
                     >
                         ✖
                     </button>

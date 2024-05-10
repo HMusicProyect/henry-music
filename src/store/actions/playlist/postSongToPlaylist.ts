@@ -6,8 +6,8 @@ export const postSongToPlaylist = async (playlistId: string, songId: string, set
         console.error('Error: Playlist ID or Song ID is undefined');
         return;
     }
-    let updatedPlaylist: PlaylistDetail | null = null;
     try {
+
         const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/postPlaylist`, {
             method: 'POST',
             body: JSON.stringify({ playlistId, songId }),
@@ -21,24 +21,21 @@ export const postSongToPlaylist = async (playlistId: string, songId: string, set
         }
 
         const data = await response.json();
-        console.log(`data----`,data)
-        const newSong = data.newSong;
+        console.log('data', data);
+        // Actualizar solo la parte modificada del estado
+        set((state: PlaylistState) => {
+            const updatedPlaylistDetails = state.playlistDetail?.playlistDetails 
+                ? [...state.playlistDetail.playlistDetails, data] 
+                : [data];
 
-        updatedPlaylist = data.playlistDetail?.songs
-            ? { 
-                ...data.playlistDetail, 
-                songs: [...data.playlistDetail.songs, newSong] 
-            }
-            : data.playlistDetail;
-
-
-        set((state: PlaylistState) => ({
-            ...state,
-            playlistDetail: updatedPlaylist
-        }));
-
-        
-        return data;
+            return {
+                ...state,
+                playlistDetail: {
+                    ...state.playlistDetail,
+                    playlistDetails: updatedPlaylistDetails
+                }
+            };
+        });
 
     } catch (error) {
         console.error('Error posting song to playlist:', error);

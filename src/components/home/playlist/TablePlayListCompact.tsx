@@ -12,14 +12,6 @@ export default function TablePlayListCompact({
   const playlistDetail = usePlaylistStore((state) => state.playlistDetail?.playlistDetails);
 
 
-  // const filteredTodos = playlistDetail?.filter((invoice) =>
-  //   typeof query === 'string' && (
-  //     invoice.SongsName?.toLowerCase().includes(query.toLowerCase()) ||
-  //     invoice.ArtistName.toLowerCase().includes(query.toLowerCase()) ||
-  //     invoice.GenreName.toLowerCase().includes(query.toLowerCase())
-  //   )
-  // );
-
   return (
     <section className="container mx-auto font-semibold">
       <div className="w-full mb-8 rounded-t-xl">

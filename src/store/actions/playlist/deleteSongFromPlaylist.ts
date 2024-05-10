@@ -2,14 +2,15 @@
 //este controlador es para eliminar una cancion de una playlist, recibe el id de la cancion y 
 //el id de la playlist por params.
 
-import { PlaylistDetail } from "./playlist.store";
+import { PlaylistDetail, PlaylistState } from "./playlist.store";
 
-export const deleteSongFromPlaylist = async (songId: string  ): Promise<PlaylistDetail | undefined>  => {
+export const deleteSongFromPlaylist = async (songId: string, set: any  ): Promise<PlaylistDetail | undefined>  => {
     if (!songId) {
         console.error('Error: ID is undefined');
         return;
     }
-    let updatedPlaylist;
+
+    let updatedPlaylist: PlaylistDetail | null = null;
     try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/playlist/deleteSongFromPlaylist?id=${songId}`, {
             method: 'DELETE',
@@ -24,15 +25,22 @@ export const deleteSongFromPlaylist = async (songId: string  ): Promise<Playlist
 
         const data = await response.json();
 
-        updatedPlaylist = data.playlistDetail?.songs
-            ? { 
-                ...data.playlistDetail, 
-                songs: data.playlistDetail.songs.filter((song: { id: string }) => song.id !== songId) 
-            }
-            : data.playlistDetail;
+        // Actualizar solo la parte modificada del estado
+        set((state: PlaylistState) => {
+            const updatedPlaylistDetails = state.playlistDetail?.playlistDetails 
+                ? state.playlistDetail.playlistDetails.filter((song: { id: string }) => song.id !== songId) 
+                : [];
+
+            return {
+                ...state,
+                playlistDetail: {
+                    ...state.playlistDetail,
+                    playlistDetails: updatedPlaylistDetails
+                }
+            };
+        });
 
     } catch (error) {
         console.error('Error deleting song from playlist:', error);
     }
-    return updatedPlaylist;
 };

@@ -33,8 +33,8 @@ export default function Playlist({
         </h1>
       </Header>
       <div className="px-6 mb-7 flex items-center justify-between gap-2 md:mt-8">
-        <Input className='w-1/4' placeholder='Search Invoices' />
-        <OptionsDropdown />
+        {/* <Input className='w-1/4' placeholder='Search Invoices' /> */}
+        {/* <OptionsDropdown /> */}
       </div>
       <div className="mt-2 mb-7 px-6 flex justify-between items-center">
         <Suspense

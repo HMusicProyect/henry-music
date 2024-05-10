@@ -10,12 +10,13 @@ import { InvoicesTableSkeleton } from '@/components/ui/skeletons';
 import { useOptionsStore } from '@/store/hooks/useOptions';
 import { Music } from '@/lib/definitions';
 import TablePlayList from '@/components/ui/sidebar/playlist/TablePlayList';
-import AddMusicToPlaylist from '@/components/home/playlist/addMusic';
-import EditPlaylistDetails from '@/components/home/playlist/editPlaylist';
-import TablePlayListCompact from '@/components/home/playlist/TablePlayListCompact';
+
 import useOnPlay from '@/store/hooks/useOnPlay';
 import { Play } from 'lucide-react';
 import { useSession } from 'next-auth/react';
+import AddMusicToPlaylist from '@/components/home/Playlist/addMusic';
+import EditPlaylistDetails from '@/components/home/Playlist/editPlaylist';
+import TablePlayListCompact from '@/components/home/Playlist/TablePlayListCompact';
 
 const MusicPlayer: React.FC = ({
     searchParams,
@@ -38,22 +39,22 @@ const MusicPlayer: React.FC = ({
     const fetchPlaylistDetail = usePlaylistStore((state) => state.fetchPlaylistDetail);
     
     const playlistData = usePlaylistStore((state) => state.playlistDetail?.dataValues);
-
     const otherDetails = usePlaylistStore((state) => state.playlistDetail?.playlistDetails);
+
+    console.log('otherDetails', otherDetails)
     
     const [set, setset ] = useState(0);
-
+    
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isModalEditOpen, setIsModalEditOpen] = useState(false);
-
+    
     useEffect(() => {
         fetchPlaylistDetail(id);
-    }, [set, fetchPlaylistDetail, id]);
+    }, [set, id ]);
     
-    console.log(set)
-
+    console.log('state.playlistDetail?.playlistDetails', otherDetails?.length)
+    console.log('render',set)
     
-
     const onPlay = useOnPlay((otherDetails || []).map((song) => ({
         id: song.SongsID,
         name: song.SongsName, 
@@ -64,7 +65,8 @@ const MusicPlayer: React.FC = ({
         onPlay(songId);
     };
 
-    const handleImageClick = () => {
+    const handleImageClick = (e: React.MouseEvent) => {
+        e.preventDefault();
         if (playlistData?.name !== 'Favoritos') {
             setIsModalEditOpen(true);
         } else {
@@ -72,21 +74,11 @@ const MusicPlayer: React.FC = ({
         }
     };
 
+    if(status === "loading" || playlistData?.image === undefined){
+        fetchPlaylistDetail(id);
+        return <p>Cargando...</p>;
+    }
 
-
-
-
-    useEffect(() => {
-        let timeoutId: NodeJS.Timeout;
-        if (status === "loading" || playlistData?.image === undefined) {
-            timeoutId = setTimeout(() => {
-                fetchPlaylistDetail(id);
-            }, 1000);
-        }
-        return () => {
-            clearTimeout(timeoutId);
-        };
-    }, [status, playlistData?.image, fetchPlaylistDetail, id]);
 
 
     return (
@@ -122,7 +114,7 @@ const MusicPlayer: React.FC = ({
                     <div className="flex gap-x-4 items-center">
                         <div
                             className="relative rounded-lg overflow-hidden cursor-pointer hover:opacity-80"
-                            onClick={handleImageClick}
+                            onClick={(e) => handleImageClick(e)}
                         >
                             <Image
                                 className="w-full h-full object-cover"
@@ -135,7 +127,7 @@ const MusicPlayer: React.FC = ({
 
                         <div>
                             <h2
-                                onClick={handleImageClick}
+                                onClick={(e) => handleImageClick(e)}
                                 className="text-4xl cursor-pointer hover:opacity-80 font-semibold"
                             >
                                 {playlistData && capitalizeWords(playlistData.name)}

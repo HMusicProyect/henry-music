@@ -1,5 +1,5 @@
 "use client";
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import useStore from '@/store/songs.store';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -14,6 +14,7 @@ export default function TableList({
   currentPage: number;
 }) {
   const { todos, getMusic } = useStore();
+  const [isLiked, setIsLiked] = useState(false);
 
   useEffect(() => {
     getMusic();
@@ -24,6 +25,30 @@ export default function TableList({
     invoice.Artist?.name.toLowerCase().includes(query.toLowerCase()) ||
     invoice.Genre?.name.toLowerCase().includes(query.toLowerCase())
   );
+
+  const handleHeartClick = async (id: string) => {
+      const userId = "yourUserId"; // Reemplaza esto con el ID de usuario actual
+
+      try {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/playlist/favorites`, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ userId, songId: id }),
+          });
+
+          if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const data = await response.json();
+          console.log(data);
+
+      } catch (error) {
+          console.error('Error adding song to favorites:', error);
+      }
+  };
 
   return (
     <section className="container mx-auto font-semibold">
@@ -67,6 +92,14 @@ export default function TableList({
                   </td>
                   <td className="px-4 py-3 text-sm dark:text-gray-200 dark:border-slate-600 ">
                     {invoice.Genre?.name}
+                  </td>
+                  <td className="px-4 py-3 text-sm dark:text-gray-200 dark:border-slate-600 ">
+                      <button onClick={() => {
+                        handleHeartClick(invoice.id);
+                        setIsLiked(!isLiked);
+                      }}>
+                        <span style={{color: isLiked ? 'red' : 'grey'}}>❤️</span>
+                      </button>
                   </td>
                 </tr>
               ))}
