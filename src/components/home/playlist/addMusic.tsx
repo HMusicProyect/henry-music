@@ -31,8 +31,7 @@ export default function AddMusicToPlaylist ({ id, userId, setIsModalOpen, setset
 
     useEffect(() => {
         getMusic();
-        fetchPlaylistDetail(playlistID);
-    }, [getMusic, fetchPlaylistDetail, playlistID]);
+    }, [getMusic]);
 
     
 

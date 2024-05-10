@@ -40,10 +40,15 @@ const MusicPlayer: React.FC = ({
     const playlistData = usePlaylistStore((state) => state.playlistDetail?.dataValues);
 
     const otherDetails = usePlaylistStore((state) => state.playlistDetail?.playlistDetails);
-    const [set, setset ] = useState<number>(0);
+    
+    const [set, setset ] = useState(0);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isModalEditOpen, setIsModalEditOpen] = useState(false);
+
+    useEffect(() => {
+        fetchPlaylistDetail(id);
+    }, [set, id]);
     
 
     
@@ -60,9 +65,7 @@ const MusicPlayer: React.FC = ({
 
 
 
-    useEffect(() => {
-        fetchPlaylistDetail(id);
-    }, [set, isModalOpen, isModalEditOpen,  fetchPlaylistDetail, id]);
+
 
     if(status === "loading"){
         return <p>Cargando...</p>;
@@ -157,6 +160,7 @@ const MusicPlayer: React.FC = ({
                 >
                     {selectedOption === 'list' ? (
                         <TablePlayList
+                            playlistDetail={otherDetails}
                             setset={setset}
                             query={query}
                             id={id}

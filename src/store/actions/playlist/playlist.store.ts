@@ -117,11 +117,11 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
     },
     
     // Este módulo define una función para agregar una canción a una lista de reproducción en una base de datos.
-        postSongToPlaylist: async (playlistId: string, songId: string, ) => {
-            try {
-                const updatedSong = await postSongToPlaylist(playlistId, songId, set);
-                console.log(`updatedSong`,updatedSong)
-                set((state) => {
+    postSongToPlaylist: async (playlistId: string, songId: string, ) => {
+        try {
+            const updatedSong = await postSongToPlaylist(playlistId, songId, set);
+            console.log(`updatedSong`,updatedSong)
+            set((state) => {
                 const playlistIndex = state.userPlaylists.findIndex((playlist) => playlist.id === playlistId);
                 if (playlistIndex !== -1) {
                     // Clonar el estado actual para evitar la mutación directa
@@ -145,15 +145,15 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
                     return newState;
                 }
                 return state;
-                });
+            });
 
-            } catch (error) {
-                set((state) => ({ 
-                    ...state, 
-                    error: 'Error posting song to playlist:' + error 
-                }));
-            }
-        },
+        } catch (error) {
+            set((state) => ({ 
+                ...state, 
+                error: 'Error posting song to playlist:' + error 
+            }));
+        }
+    },
     
     //este controlador es para eliminar una cancion de una playlist, recibe el id de la cancion y 
     //el id de la playlist por params.

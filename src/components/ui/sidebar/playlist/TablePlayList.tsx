@@ -9,10 +9,12 @@ import { useEffect } from 'react';
 
 
 export default function TablePlayList({
+  playlistDetail,
   query,
   setset,
   id
 }: {
+  playlistDetail: any;
   query: string;
   setset: any;
   id: string;
@@ -23,15 +25,11 @@ export default function TablePlayList({
 
   const deleteSongFromPlaylist = usePlaylistStore((state) => state.deleteSongFromPlaylist);
 
-  const playlistDetail = usePlaylistStore((state) => state.playlistDetail?.playlistDetails);
-
-    useEffect(() => {
-        fetchPlaylistDetail(id);
-    }, [playlistDetail, id]);
-    
-    console.log(playlistDetail?.length);
+  const handleDeleteSong = (songId: string) => {
+    setset((prev: number) => prev + 1);
+    deleteSongFromPlaylist(songId);
+  }
   
-
   return (
     <section className="container mx-auto font-semibold">
       <div className="w-full mb-8 rounded-t-xl">
@@ -82,11 +80,7 @@ export default function TablePlayList({
                   <td className="px-4 py-3 text-md font-semibold dark:border-slate-500 ">
                     <button 
                         className="self-end text-gray-400 w-6 h-6 focus:outline-none"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            deleteSongFromPlaylist(invoice?.id);
-                            setset((prev: number) => prev + 1);
-                        }}
+                        onClick={() => handleDeleteSong(invoice?.id)}
                     >
                         ✖
                     </button>
