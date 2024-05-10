@@ -62,7 +62,7 @@ const MusicPlayer: React.FC = ({
 
     useEffect(() => {
         fetchPlaylistDetail(id);
-    }, [set, id]);
+    }, [set, isModalOpen, isModalEditOpen,  fetchPlaylistDetail, id]);
 
     if(status === "loading"){
         return <p>Cargando...</p>;

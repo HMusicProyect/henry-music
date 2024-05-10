@@ -122,19 +122,29 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
                 const updatedSong = await postSongToPlaylist(playlistId, songId, set);
                 console.log(`updatedSong`,updatedSong)
                 set((state) => {
-                    const playlistIndex = state.userPlaylists.findIndex((playlist) => playlist.id === playlistId);
-                    if (playlistIndex !== -1) {
-                        // Clonar el estado actual para evitar la mutación directa
-                        const newState = { ...state };
-                        // Actualizar la lista de canciones de la playlist
-                        newState.userPlaylists[playlistIndex].songs = [...newState.userPlaylists[playlistIndex].songs, updatedSong];
-                        // Actualizar playlistDetail si es la playlist actual
-                        if (newState.playlistDetail && newState.playlistDetail.dataValues && newState.playlistDetail.dataValues.id === playlistId) {
-                            newState.playlistDetail.songs = [...newState.playlistDetail.songs, updatedSong];
-                        }
-                        return newState;
+                const playlistIndex = state.userPlaylists.findIndex((playlist) => playlist.id === playlistId);
+                if (playlistIndex !== -1) {
+                    // Clonar el estado actual para evitar la mutación directa
+                    const newState = { ...state };
+                    // Crear un nuevo objeto Song a partir de updatedSong
+                    const newSong: Song = {
+                        AlbumsID: updatedSong.SongsID,
+                        ArtistID: updatedSong.ArtistName,
+                        GenreID: updatedSong.GenreName,
+                        id: updatedSong.SongsID,
+                        image: updatedSong.SongsImage,
+                        name: updatedSong.SongsName,
+                        pathMusic: updatedSong.pathMusic,
+                    };
+                    // Actualizar la lista de canciones de la playlist
+                    newState.userPlaylists[playlistIndex].songs = [...newState.userPlaylists[playlistIndex].songs, newSong];
+                    // Actualizar playlistDetail si es la playlist actual
+                    if (newState.playlistDetail && newState.playlistDetail.dataValues && newState.playlistDetail.dataValues.id === playlistId) {
+                        newState.playlistDetail.songs = [...newState.playlistDetail.songs, newSong];
                     }
-                    return state;
+                    return newState;
+                }
+                return state;
                 });
 
             } catch (error) {
@@ -147,28 +157,32 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
     
     //este controlador es para eliminar una cancion de una playlist, recibe el id de la cancion y 
     //el id de la playlist por params.
-    deleteSongFromPlaylist: async (songId: string,) => {
-        try {
-            const updatedPlaylist = await deleteSongFromPlaylist(songId);
-            if (updatedPlaylist) {
-                set((state: PlaylistState) => {
-                    const playlistIndex = state.userPlaylists.findIndex((playlist) => playlist.id === updatedPlaylist.dataValues.id);
-                    
-                    if (playlistIndex !== -1) {
-                        const newState = { ...state };
-                        newState.userPlaylists[playlistIndex].songs = newState.userPlaylists[playlistIndex].songs.filter(song => song.id !== Number(songId));
-                        return newState;
+deleteSongFromPlaylist: async (songId: string,) => {
+    try {
+        const updatedPlaylist = await deleteSongFromPlaylist(songId);
+        if (updatedPlaylist) {
+            set((state: PlaylistState) => {
+                const playlistIndex = state.userPlaylists.findIndex((playlist) => playlist.id === updatedPlaylist.dataValues.id);
+                
+                if (playlistIndex !== -1) {
+                    const newState = { ...state };
+                    newState.userPlaylists[playlistIndex].songs = newState.userPlaylists[playlistIndex].songs.filter(song => song.id !== Number(songId));
+                    // Comprobar si la canción actual es la que se está eliminando
+                    if (newState.currentSong && newState.currentSong.id === Number(songId)) {
+                        newState.currentSong = null;
                     }
-                    return state;
-                });
-            }
-        } catch (error) {
-            set((state) => ({ 
-                ...state, 
-                error: 'Error deleting song from playlist:' + error 
-            }));
+                    return newState;
+                }
+                return state;
+            });
         }
-    },
+    } catch (error) {
+        set((state) => ({ 
+            ...state, 
+            error: 'Error deleting song from playlist:' + error 
+        }));
+    }
+},
     
     // Este controlador es para actualizar una playlist existente
     updatePlaylist: async (id: string, name?: string, image?: File) => {

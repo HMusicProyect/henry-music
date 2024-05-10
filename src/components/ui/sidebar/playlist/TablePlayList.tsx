@@ -1,9 +1,11 @@
 "use client";
 import MediaItem from '@/components/ui/sidebar/MediaItem';
+import { fetchPlaylistDetail } from '@/store/actions/playlist/fetchPlaylistDetail';
 import usePlaylistStore, { PlaylistDetailSong } from '@/store/actions/playlist/playlist.store';
 
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
 
 
 export default function TablePlayList({
@@ -22,6 +24,12 @@ export default function TablePlayList({
   const deleteSongFromPlaylist = usePlaylistStore((state) => state.deleteSongFromPlaylist);
 
   const playlistDetail = usePlaylistStore((state) => state.playlistDetail?.playlistDetails);
+
+    useEffect(() => {
+        fetchPlaylistDetail(id);
+    }, [playlistDetail, id]);
+    
+    console.log(playlistDetail?.length);
   
 
   return (
