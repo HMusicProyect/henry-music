@@ -12,6 +12,7 @@ import UserPutAdminModal from "@/components/admin/Users/UserPutAdminModal";
 import UserDeleteAdminModal from "@/components/admin/Users/UserDeleteAdminModal";
 import UpdateArtistsModal from "@/components/admin/Artists/UpdateArtistsModal";
 import UpdateAlbumModal from "@/components/admin/Albums/UpdateAlbumModal";
+import AddSongsToAlbumModal from "@/components/admin/Albums/AddSongsToAlbumModal";
 
 
 const ModalProvider = () => {
@@ -39,6 +40,7 @@ const ModalProvider = () => {
         <UpdateArtistsModal />
         <UpdateAlbumModal />
         <UpdateArtistsModal />
+        <AddSongsToAlbumModal />
         </>
     )
 }

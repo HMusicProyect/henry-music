@@ -1,3 +1,4 @@
+import { Music } from '@/lib/definitions';
 import { create } from 'zustand';
 
 export interface Album {
@@ -6,6 +7,14 @@ export interface Album {
     image: string;
 }
 
+export interface AlbumDetail {
+    album: {
+        id: number;
+        name: string;
+        image: string;
+        Songs: Music[];
+    };
+}
 export interface State {
     albums: Album[];
     loading: boolean;
@@ -13,6 +22,8 @@ export interface State {
     getAlbums: () => Promise<void>;
     postAlbum: (name: string, image: string) => Promise<void>;
     updateAlbum: (id: string, name?: string, image?: string, token?: string) => Promise<void>;
+    getAlbumById: (id: number) => Promise<AlbumDetail | null>;
+    addSongAlbum: (albumsId: string, songId:string) => Promise<void>;
 }
 
 export const useAlbumsStore = create<State>((set) => ({
@@ -83,7 +94,45 @@ export const useAlbumsStore = create<State>((set) => ({
             console.error(error);
             throw error;
         }
+    }, 
+    getAlbumById: async (id: number) => {
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/albums/${id}`);
+            if (!response.ok) {
+                throw new Error('Error al obtener el álbum');
+            }
+            return await response.json();
+        } catch (error) {
+            console.error(error);
+            return null;
+        }
     },
+    addSongAlbum: async (albumsId: string, songId: string) => {
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/albums/editAlbum/${albumsId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ id: songId }),
+            });
+            if (!response.ok) {
+                throw new Error('Error al agregar la canción al álbum');
+            }
+    
+            const updatedAlbum = await useAlbumsStore.getState().getAlbumById(parseInt(albumsId));
+            if (updatedAlbum) {
+                useAlbumsStore.setState(state => ({
+                    ...state,
+                    albums: state.albums.map(album => album.id === updatedAlbum.album.id ? updatedAlbum.album : album)
+                }));
+            }
+        } catch (error) {
+            console.error(error);
+            throw new Error('Error al agregar la canción al álbum');
+        }
+    },
+      
 }));
 
 export default useAlbumsStore;

@@ -41,7 +41,6 @@ export default function TableAlbumsList({
               <tr className="text-sm font-bold text-left text-black-600 border-b border-gray-100/30 ">
                 <th className="px-4 py-3">#</th>
                 <th className="px-4 py-3 pl-8">Name</th>
-                <th className="px-4 py-3">Image</th>
                 <th className="px-4 py-3">Actions</th>
               </tr>
             </thead>
@@ -54,14 +53,18 @@ export default function TableAlbumsList({
                   <td className="px-4 py-3 text-md font-semibold dark:border-slate-500 ">
                     {album?.id}
                   </td>
-                  <td className="px-6 py-3 dark:border-slate-500 ">
-                    {album?.name}
-                  </td>
+                  <Link href={`/admin/albums/${album.id}`}>
+                      <div className="flex items-center text-sm">
+                        <div className="relative mr-3 rounded-full md:block">
+                          <MediaItem
+                            onClick={() => { }}
+                            key={album.id}
+                            data={album}
+                          />
+                        </div>
+                      </div>
+                    </Link>
                   <td className="px-4 py-3 text-sm dark:text-gray-200 dark:border-slate-600 ">
-                    <Image src={album.image} alt={album.name} width={100} height={100} />
-                  </td>
-                  <td className="px-4 py-3 text-sm dark:text-gray-200 dark:border-slate-600 ">
-
                     <button
                       className="p-2 mr-2 rounded-full bg-green-500 text-white hover:bg-green-600"
                       onClick={() => onClickEdit(album.id)}

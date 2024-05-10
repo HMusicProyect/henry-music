@@ -1,6 +1,5 @@
-    // Este módulo define una función para agregar una canción a una lista de reproducción en una base de datos.
 
-import { PlaylistDetail } from "./playlist.store";
+import { PlaylistDetail, PlaylistState } from "./playlist.store";
 
 export const postSongToPlaylist = async (playlistId: string, songId: string, set:any ):  Promise<PlaylistDetail | undefined> => {
     if (!playlistId || !songId) {
@@ -23,7 +22,7 @@ export const postSongToPlaylist = async (playlistId: string, songId: string, set
 
         const data = await response.json();
         console.log(`data----`,data)
-        const newSong = data.newSong; // Asegúrate de que tu backend devuelva la nueva canción en la respuesta
+        const newSong = data.newSong;
 
         updatedPlaylist = data.playlistDetail?.songs
             ? { 
@@ -32,7 +31,7 @@ export const postSongToPlaylist = async (playlistId: string, songId: string, set
             }
             : data.playlistDetail;
 
-        // Actualizar el estado de la tienda con la lista de reproducción actualizada
+
         set((state: PlaylistState) => ({
             ...state,
             playlistDetail: updatedPlaylist

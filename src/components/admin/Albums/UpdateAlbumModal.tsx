@@ -65,7 +65,7 @@ const UpdateAlbumModal = () => {
 
       router.refresh();
       setIsLoading(false);
-      toast.success('Artista actualizado correctamente');
+      toast.success('Album actualizado correctamente');
       reset();
       uploadModal.onClose();
     } catch (error: any) {
