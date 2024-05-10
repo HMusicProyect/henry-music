@@ -13,8 +13,9 @@ import useOnPlay from '@/store/hooks/useOnPlay';
 import { Play } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import TablePlayList from '@/components/ui/sidebar/playlist/TablePlayList';
-import { TablePlayListCompact, EditPlaylistDetails, AddMusicToPlaylist} from '@/components/home/Playlist/index.playlist';
-//cambio
+import { TablePlayListCompact, EditPlaylistDetails, AddMusicToPlaylist} from '@/components/ui/playlist/index.playlist';
+
+
 const MusicPlayer: React.FC = ({
     searchParams,
 }: {
@@ -28,28 +29,31 @@ const MusicPlayer: React.FC = ({
     const { selectedOption } = useOptionsStore();
     const query = searchParams?.music || '';
     const id = searchParams?.id || '';
+
     const { data: session, status } = useSession();
 
-    console.log(session?.user?.id);
-    const userId = session?.user?.id;
+
     
     const fetchPlaylistDetail = usePlaylistStore((state) => state.fetchPlaylistDetail);
     
-    const playlistData = usePlaylistStore((state) => state.playlistDetail?.dataValues);
+    const playlistData = usePlaylistStore((state) => {
+        if (state.playlistDetail) {
+            return state.playlistDetail.dataValues;
+        } else {
+            return null;
+        }
+    });
 
     const otherDetails = usePlaylistStore((state) => state.playlistDetail?.playlistDetails);
-    
     const [set, setset ] = useState(0);
-    
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isModalEditOpen, setIsModalEditOpen] = useState(false);
     
     useEffect(() => {
-        fetchPlaylistDetail(id);
+        if(id){
+            fetchPlaylistDetail(id);
+        }
     }, [set, id ]);
-    
-    console.log('state.playlistDetail?.playlistDetails', otherDetails?.length)
-    console.log('render',set)
     
     const onPlay = useOnPlay((otherDetails || []).map((song) => ({
         id: song.SongsID,
@@ -90,7 +94,7 @@ const MusicPlayer: React.FC = ({
                     <AddMusicToPlaylist
                         setset={setset}
                         setIsModalOpen={setIsModalOpen}
-                        userId={userId}
+                        // userId={userId}
                         id={id}
                     />
                 </ModalComponent>

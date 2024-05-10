@@ -6,12 +6,11 @@ import { useSearchParams } from 'next/navigation';
 import { fetchUserPlaylists } from '@/store/actions/playlist/fetchUserPlaylists';
 interface AddMusicToPlaylistProps {
     id: string;
-    userId: string | undefined;
     setset: any;
     setIsModalOpen: (arg0: boolean) => void;
 }
 
-export default function AddMusicToPlaylist ({ id, userId, setIsModalOpen, setset }: AddMusicToPlaylistProps) {
+export default function AddMusicToPlaylist ({ id, setIsModalOpen, setset }: AddMusicToPlaylistProps) {
     const [selectedSongs, setSelectedSongs] = useState<string[]>([]);
 
     const postSongToPlaylist = usePlaylistStore((state) => state.postSongToPlaylist);
@@ -50,7 +49,8 @@ export default function AddMusicToPlaylist ({ id, userId, setIsModalOpen, setset
             return;
         }
         try {
-            if(!userId) return;
+            // if(!userId) return;
+
             for (const songId of selectedSongs) {
                 postSongToPlaylist(id, songId);
             }

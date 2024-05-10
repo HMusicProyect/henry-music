@@ -130,9 +130,13 @@ const ProfilePage = () => {
         setMessage(['']);
         setImageURL(null);
     };
-    const localSessionString = localStorage.getItem('session');
-    const localSession = localSessionString ? JSON.parse(localSessionString) : null;
 
+    let localSession : any;
+    
+    if (typeof window !== 'undefined') {
+        const localSessionString = localStorage.getItem('session');
+        localSession = localSessionString ? JSON.parse(localSessionString) : null;
+    }
     return (
         <section className="pt-16 bg-blueGray-50">
         <div className="w-full lg:w-4/12 px-4 mx-auto">
@@ -164,7 +168,7 @@ const ProfilePage = () => {
                         />
                     </div>
                     </div>
-                        <div className="w-full px-4 text-center mt-20">
+                        {/* <div className="w-full px-4 text-center mt-20">
                             <div className="flex justify-center py-4 lg:pt-4 pt-8">
                                 <div className="mr-4 p-3 text-center">
                                     <span className="text-xl font-bold block uppercase tracking-wide text-black">
@@ -185,7 +189,7 @@ const ProfilePage = () => {
                                     <span className="text-sm text-black">playlis</span>
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                 </div>
 
 
@@ -290,7 +294,7 @@ const ProfilePage = () => {
         </div>
 
         </div>
-            <footer className="relative bg-transparent pt-8 pb-6 mt-8">
+            {/* <footer className="relative bg-transparent pt-8 pb-6 mt-8">
                 <div className="container mx-auto px-4">
                     <div className="flex flex-wrap items-center md:justify-between justify-center">
                         <div className="w-full md:w-6/12 px-4 mx-auto text-center">
@@ -302,7 +306,7 @@ const ProfilePage = () => {
                         </div>
                     </div>
                 </div>
-            </footer>
+            </footer> */}
         </section>
     );
 };
