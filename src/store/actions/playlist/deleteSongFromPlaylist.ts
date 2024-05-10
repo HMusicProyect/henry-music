@@ -4,12 +4,13 @@
 
 import { PlaylistDetail } from "./playlist.store";
 
-export const deleteSongFromPlaylist = async (songId: string  ): Promise<PlaylistDetail | undefined>  => {
+export const deleteSongFromPlaylist = async (songId: string, set: any  ): Promise<PlaylistDetail | undefined>  => {
     if (!songId) {
         console.error('Error: ID is undefined');
         return;
     }
-    let updatedPlaylist;
+
+    let updatedPlaylist: PlaylistDetail | null = null;
     try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/playlist/deleteSongFromPlaylist?id=${songId}`, {
             method: 'DELETE',
@@ -30,9 +31,12 @@ export const deleteSongFromPlaylist = async (songId: string  ): Promise<Playlist
                 songs: data.playlistDetail.songs.filter((song: { id: string }) => song.id !== songId) 
             }
             : data.playlistDetail;
+        // Actualizar el estado de playlistDetail en el store de Zustand
+            set((state: any) => {
+                return { ...state, playlistDetail: updatedPlaylist };
+            });
 
     } catch (error) {
         console.error('Error deleting song from playlist:', error);
     }
-    return updatedPlaylist;
 };

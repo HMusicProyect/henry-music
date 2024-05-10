@@ -48,12 +48,8 @@ const MusicPlayer: React.FC = ({
 
     useEffect(() => {
         fetchPlaylistDetail(id);
-    }, [set, fetchPlaylistDetail, id]);
+    }, [ fetchPlaylistDetail, id]);
     
-    console.log(set)
-
-    
-
     const onPlay = useOnPlay((otherDetails || []).map((song) => ({
         id: song.SongsID,
         name: song.SongsName, 
@@ -64,7 +60,8 @@ const MusicPlayer: React.FC = ({
         onPlay(songId);
     };
 
-    const handleImageClick = () => {
+    const handleImageClick = (e: React.MouseEvent) => {
+        e.preventDefault();
         if (playlistData?.name !== 'Favoritos') {
             setIsModalEditOpen(true);
         } else {
@@ -72,21 +69,11 @@ const MusicPlayer: React.FC = ({
         }
     };
 
+    if(status === "loading" || playlistData?.image === undefined){
+        fetchPlaylistDetail(id);
+        return <p>Cargando...</p>;
+    }
 
-
-
-
-    useEffect(() => {
-        let timeoutId: NodeJS.Timeout;
-        if (status === "loading" || playlistData?.image === undefined) {
-            timeoutId = setTimeout(() => {
-                fetchPlaylistDetail(id);
-            }, 1000);
-        }
-        return () => {
-            clearTimeout(timeoutId);
-        };
-    }, [status, playlistData?.image, fetchPlaylistDetail, id]);
 
 
     return (
@@ -122,7 +109,7 @@ const MusicPlayer: React.FC = ({
                     <div className="flex gap-x-4 items-center">
                         <div
                             className="relative rounded-lg overflow-hidden cursor-pointer hover:opacity-80"
-                            onClick={handleImageClick}
+                            onClick={(e) => handleImageClick(e)}
                         >
                             <Image
                                 className="w-full h-full object-cover"
@@ -135,7 +122,7 @@ const MusicPlayer: React.FC = ({
 
                         <div>
                             <h2
-                                onClick={handleImageClick}
+                                onClick={(e) => handleImageClick(e)}
                                 className="text-4xl cursor-pointer hover:opacity-80 font-semibold"
                             >
                                 {playlistData && capitalizeWords(playlistData.name)}

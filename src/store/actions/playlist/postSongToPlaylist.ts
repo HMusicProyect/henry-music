@@ -8,6 +8,30 @@ export const postSongToPlaylist = async (playlistId: string, songId: string, set
     }
     let updatedPlaylist: PlaylistDetail | null = null;
     try {
+        // Actualizar el estado primero
+        set((state: PlaylistState) => {
+            const updatedState = { ...state };
+            const playlist = updatedState.userPlaylists.find(pl => pl.id === playlistId);
+            if (playlist) {
+                if (!playlist.songs) {
+                    playlist.songs = [];
+                }
+                playlist.songs.push({ AlbumsID: 0, ArtistID: 0, GenreID: 0, id: 0, image: '', name: '', pathMusic: '' }); // Asegúrate de reemplazar esto con la canción real
+                updatedState.playlistDetail = {
+                    dataValues: {
+                        UsersID: '', // Actualiza esto con los valores correctos
+                        id: playlist.id,
+                        image: playlist.image,
+                        name: playlist.name,
+                    },
+                    playlistDetails: [], // Actualiza esto con los valores correctos
+                    songs: playlist.songs,
+                };
+            }
+            return updatedState;
+        });
+
+
         const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/postPlaylist`, {
             method: 'POST',
             body: JSON.stringify({ playlistId, songId }),
@@ -21,7 +45,6 @@ export const postSongToPlaylist = async (playlistId: string, songId: string, set
         }
 
         const data = await response.json();
-        console.log(`data----`,data)
         const newSong = data.newSong;
 
         updatedPlaylist = data.playlistDetail?.songs
@@ -31,14 +54,11 @@ export const postSongToPlaylist = async (playlistId: string, songId: string, set
             }
             : data.playlistDetail;
 
-
+          // Actualizar el estado con los datos de la API
         set((state: PlaylistState) => ({
             ...state,
             playlistDetail: updatedPlaylist
         }));
-
-        
-        return data;
 
     } catch (error) {
         console.error('Error posting song to playlist:', error);

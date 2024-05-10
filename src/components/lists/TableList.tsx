@@ -68,6 +68,11 @@ export default function TableList({
                   <td className="px-4 py-3 text-sm dark:text-gray-200 dark:border-slate-600 ">
                     {invoice.Genre?.name}
                   </td>
+                  <td className="px-4 py-3 text-sm dark:text-gray-200 dark:border-slate-600 ">
+                    <button>
+                      
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>

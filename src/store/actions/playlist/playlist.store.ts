@@ -70,7 +70,6 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
     fetchUserPlaylists: async (id: string) => {
         try {
             const playlists = await fetchUserPlaylists(id);
-            console.log(playlists)
             set({ userPlaylists: playlists });
         } catch (error) {
             set({ error: 'Error fetching user playlists:' + error });
@@ -120,9 +119,9 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
     // Este módulo define una función para agregar una canción a una lista de reproducción en una base de datos.
     postSongToPlaylist: async (playlistId: string, songId: string, ) => {
         try {
-            await postSongToPlaylist(playlistId, songId, set);
+            postSongToPlaylist(playlistId, songId, set);
 
-            fetchPlaylistDetail(playlistId);
+            // fetchPlaylistDetail(playlistId);
 
         } catch (error) {
             set((state) => ({ 
@@ -136,7 +135,7 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
     //el id de la playlist por params.
     deleteSongFromPlaylist: async (songId: string,) => {
         try {
-            await deleteSongFromPlaylist(songId);
+            deleteSongFromPlaylist(songId, set);
 
         } catch (error) {
             set((state) => ({ 
@@ -149,13 +148,7 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
     // Este controlador es para actualizar una playlist existente
     updatePlaylist: async (id: string, name?: string, image?: File) => {
         try {
-            const updatedPlaylist = await updatePlaylist(id, set, handlePhotoSubmit, name, image);
-
-            // set((state) => ({
-            //     userPlaylists: state.userPlaylists.map((p) =>
-            //         p.id === id ? { ...p, name: updatedPlaylist.name, image: updatedPlaylist.image } : p
-            //     ),
-            // }));
+            updatePlaylist(id, set, handlePhotoSubmit, name, image);
         } catch (error) {
             console.log('Error updating playlist:', error);
             set({ error: 'Error updating playlist:' + error });

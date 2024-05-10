@@ -55,7 +55,7 @@ export default function AddMusicToPlaylist ({ id, userId, setIsModalOpen, setset
                 postSongToPlaylist(id, songId);
             }
             setset((prev: number) => prev + 1);
-            setIsModalOpen(false);
+            // setIsModalOpen(false);
             toast.success('Las canciones se han agregado con éxito a la playlist.');
         } catch (error) {
             toast.error('Hubo un error al agregar las canciones a la playlist.');
