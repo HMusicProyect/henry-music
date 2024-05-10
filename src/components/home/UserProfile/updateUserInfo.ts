@@ -33,7 +33,7 @@ export const updateUserInfo = async (user: UserWithPhoto, userSession: any, toke
 
     console.log('Token to be used in request', userSession.token);
     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users/editNameAndPic/${userSession.id}`, {
-        method: 'PUT',
+        method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `${token}`
