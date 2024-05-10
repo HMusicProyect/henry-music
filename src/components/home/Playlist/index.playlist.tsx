@@ -1,8 +1,8 @@
-import TablePlayListCompact from '@/components/home/Playlist/TablePlayListCompact';
-import EditPlaylistDetails from '@/components/home/Playlist/editPlaylist';
-import AddMusicToPlaylist from '@/components/home/Playlist/addMusic';
-import TablePlayList from '@/components/ui/sidebar/playlist/TablePlayList';
+import TablePlayListCompact from './TablePlayListCompact';
+import EditPlaylistDetails from './editPlaylist';
+import AddMusicToPlaylist from './addMusic';
 
 
 
-export { TablePlayListCompact, EditPlaylistDetails, AddMusicToPlaylist, TablePlayList}
+
+export { TablePlayListCompact, EditPlaylistDetails, AddMusicToPlaylist}
