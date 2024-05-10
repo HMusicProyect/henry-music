@@ -38,17 +38,21 @@ const MusicPlayer: React.FC = ({
     const fetchPlaylistDetail = usePlaylistStore((state) => state.fetchPlaylistDetail);
     
     const playlistData = usePlaylistStore((state) => state.playlistDetail?.dataValues);
-
     const otherDetails = usePlaylistStore((state) => state.playlistDetail?.playlistDetails);
+
+    console.log('otherDetails', otherDetails)
     
     const [set, setset ] = useState(0);
-
+    
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isModalEditOpen, setIsModalEditOpen] = useState(false);
-
+    
     useEffect(() => {
         fetchPlaylistDetail(id);
-    }, [ fetchPlaylistDetail, id]);
+    }, [set, id ]);
+    
+    console.log('state.playlistDetail?.playlistDetails', otherDetails?.length)
+    console.log('render',set)
     
     const onPlay = useOnPlay((otherDetails || []).map((song) => ({
         id: song.SongsID,

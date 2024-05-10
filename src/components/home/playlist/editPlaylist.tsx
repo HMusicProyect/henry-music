@@ -33,7 +33,7 @@ const EditPlaylistDetails: React.FC<EditPlaylistDetailsProps> = ({ globalState, 
 
     const handleSave = async () => {
         setIsLoading(true);
-
+        
         if (playlistDetail) {
             let editedField = '';
             try {
