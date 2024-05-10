@@ -11,26 +11,22 @@ import { useOptionsStore } from '@/store/hooks/useOptions';
 import { Music } from '@/lib/definitions';
 import useOnPlay from '@/store/hooks/useOnPlay';
 import { Play } from 'lucide-react';
-import { useSession } from 'next-auth/react';
 import TablePlayList from '@/components/ui/sidebar/playlist/TablePlayList';
 import { TablePlayListCompact, EditPlaylistDetails, AddMusicToPlaylist} from '@/components/ui/playlist/index.playlist';
+import { useSearchParams } from 'next/navigation';
 
 
-const MusicPlayer: React.FC = ({
-    searchParams,
-}: {
-    searchParams?: {
-        id?: string;
-        music?: string;
-        page?: string;
-        songs: Music[];
-    };
-}) => {
+//comentario 
+
+const MusicPlayer: React.FC = () => {
     const { selectedOption } = useOptionsStore();
-    const query = searchParams?.music || '';
-    const id = searchParams?.id || '';
+    const searchParams = useSearchParams();
+    const id = searchParams.get('id');
+    const query = searchParams.get('query');
 
-    const { data: session, status } = useSession();
+
+    console.log('id', id);
+
 
 
     
@@ -95,7 +91,7 @@ const MusicPlayer: React.FC = ({
                         setset={setset}
                         setIsModalOpen={setIsModalOpen}
                         // userId={userId}
-                        id={id}
+                        id={id || ''}
                     />
                 </ModalComponent>
 
@@ -174,12 +170,12 @@ const MusicPlayer: React.FC = ({
                         <TablePlayList
                             playlistDetail={otherDetails}
                             setset={setset}
-                            query={query}
-                            id={id}
+                            query={query || ''}
+                            id={id || ''}
                         />
                     ) : (
                         <TablePlayListCompact
-                            query={query}
+                            query={query || ''}
                         />
                     )}
                 </Suspense>
