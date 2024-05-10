@@ -7,7 +7,7 @@ import { updateUserInfo } from '@/components/home/UserProfile/updateUserInfo';
 import { ModalComponent } from '@/components/ui/Modal/Modal';
 import { User } from '@/lib/auth/user.auth';
 import { UserWithPhoto } from '@/lib/definitions';
-import { useSession } from 'next-auth/react';
+import { SessionContext, useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -16,8 +16,13 @@ import { BookUser, EditIcon, RectangleEllipsis } from 'lucide-react';
 
 
 
+
+
 const ProfilePage = () => {
     const { data: session, status, update } = useSession();
+
+    const sessionStore = React.useContext<any>(SessionContext);
+
     const searchParams = useSearchParams();
     const router = useRouter();
     
@@ -82,7 +87,7 @@ const ProfilePage = () => {
 
         try {
             const response = await updateUserInfo(editProfile, userSession, token);
-
+            console.log('Response:', response);
             if (response.status !== 'success') {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -99,8 +104,8 @@ const ProfilePage = () => {
                         name: response.data.name,
                     },
                 };
-                console.log('Updated session:', updatedSession);
-                // Actualiza la sesión con la nueva información del usuario
+                sessionStore?.setSession(updatedSession.user);
+                console.log('sessionStore', sessionStore.user.image)
                 update(updatedSession);
                 toast.success('Información de usuario actualizada con éxito');
             } else {
@@ -155,7 +160,7 @@ const ProfilePage = () => {
                     <div className="flex justify-center">
                         <Image
                             className="rounded-full mx-auto absolute -top-20 w-32 h-32 shadow-md border-4 border-white transition duration-200 transform hover:scale-110"
-                            src={userSession?.image!}
+                            src={userSession?.image ? userSession.image : session?.image!}
                             alt="" 
                             width={128}
                             height={128}
