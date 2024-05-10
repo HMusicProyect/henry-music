@@ -11,7 +11,7 @@ const UserProfile:  React.FC<UserProfileProps> = ({session}) => {
         <div>
             <div className="text-center mt-12">
                 <h3 className="text-xl font-semibold leading-normal mb-2 text-black mb-2">
-                    {localSession.name? localSession.name : session?.name}
+                    {localSession?.name ? localSession?.name : session?.name!}
                 </h3>
                 <div className="text-sm leading-normal mt-0 mb-2 text-black font-bold uppercase">
                     <i className="fas fa-map-marker-alt mr-2 text-lg text-black"></i>
