@@ -50,6 +50,7 @@ const MusicPlayer: React.FC = ({
         fetchPlaylistDetail(id);
     }, [set, id]);
     
+    console.log(set)
 
     
 

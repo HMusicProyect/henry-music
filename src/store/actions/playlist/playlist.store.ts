@@ -119,33 +119,9 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
     // Este módulo define una función para agregar una canción a una lista de reproducción en una base de datos.
     postSongToPlaylist: async (playlistId: string, songId: string, ) => {
         try {
-            const updatedSong = await postSongToPlaylist(playlistId, songId, set);
-            console.log(`updatedSong`,updatedSong)
-            set((state) => {
-                const playlistIndex = state.userPlaylists.findIndex((playlist) => playlist.id === playlistId);
-                if (playlistIndex !== -1) {
-                    // Clonar el estado actual para evitar la mutación directa
-                    const newState = { ...state };
-                    // Crear un nuevo objeto Song a partir de updatedSong
-                    const newSong: Song = {
-                        AlbumsID: updatedSong.SongsID,
-                        ArtistID: updatedSong.ArtistName,
-                        GenreID: updatedSong.GenreName,
-                        id: updatedSong.SongsID,
-                        image: updatedSong.SongsImage,
-                        name: updatedSong.SongsName,
-                        pathMusic: updatedSong.pathMusic,
-                    };
-                    // Actualizar la lista de canciones de la playlist
-                    newState.userPlaylists[playlistIndex].songs = [...newState.userPlaylists[playlistIndex].songs, newSong];
-                    // Actualizar playlistDetail si es la playlist actual
-                    if (newState.playlistDetail && newState.playlistDetail.dataValues && newState.playlistDetail.dataValues.id === playlistId) {
-                        newState.playlistDetail.songs = [...newState.playlistDetail.songs, newSong];
-                    }
-                    return newState;
-                }
-                return state;
-            });
+            await postSongToPlaylist(playlistId, songId, set);
+
+            fetchPlaylistDetail(playlistId);
 
         } catch (error) {
             set((state) => ({ 

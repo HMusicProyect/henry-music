@@ -20,9 +20,9 @@
             }
 
             const data = await response.json();
-            // set((state:any) => {
-            //     state.playlistDetail.song= [ ...state.playlistDetail.song, data];
-            // });
+            set((state:any) => {
+                state.playlistDetail.song= [ ...state.playlistDetail.song, data];
+            });
             console.log(`updatedSong----`,data)
             return data;
 
