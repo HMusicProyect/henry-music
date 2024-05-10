@@ -20,8 +20,11 @@ interface HeaderProps{
 }
 const Header: React.FC<HeaderProps> = ({ children, className }) => {
     const router = useRouter();
-    const localSessionString = localStorage.getItem('session');
-    const localSession = localSessionString ? JSON.parse(localSessionString) : null;
+    let localSession : any;
+    if (typeof window !== 'undefined') {
+        const localSessionString = localStorage.getItem('session');
+        localSession = localSessionString ? JSON.parse(localSessionString) : null;
+    }
 
     const [message, setMessage] = useState("");
 

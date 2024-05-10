@@ -132,9 +132,13 @@ const ProfilePage = () => {
         setMessage(['']);
         setImageURL(null);
     };
-    const localSessionString = localStorage.getItem('session');
-    const localSession = localSessionString ? JSON.parse(localSessionString) : null;
 
+    let localSession : any;
+    
+    if (typeof window !== 'undefined') {
+        const localSessionString = localStorage.getItem('session');
+        localSession = localSessionString ? JSON.parse(localSessionString) : null;
+    }
     return (
         <section className="pt-16 bg-blueGray-50">
         <div className="w-full lg:w-4/12 px-4 mx-auto">
