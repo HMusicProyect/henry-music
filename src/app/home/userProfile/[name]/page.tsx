@@ -104,8 +104,8 @@ const ProfilePage = () => {
                         name: response.data.name,
                     },
                 };
-                sessionStore?.setSession(updatedSession.user);
-                console.log('sessionStore', sessionStore.user.image)
+                localStorage.setItem('session', JSON.stringify(updatedSession.user));
+
                 update(updatedSession);
                 toast.success('Información de usuario actualizada con éxito');
             } else {
@@ -134,7 +134,8 @@ const ProfilePage = () => {
         setMessage(['']);
         setImageURL(null);
     };
-
+    const localSessionString = localStorage.getItem('session');
+    const localSession = localSessionString ? JSON.parse(localSessionString) : null;
 
     return (
         <section className="pt-16 bg-blueGray-50">
@@ -160,7 +161,7 @@ const ProfilePage = () => {
                     <div className="flex justify-center">
                         <Image
                             className="rounded-full mx-auto absolute -top-20 w-32 h-32 shadow-md border-4 border-white transition duration-200 transform hover:scale-110"
-                            src={userSession?.image ? userSession.image : session?.user.image!}
+                            src={localSession?.image? localSession?.image : session?.user.image!}
                             alt="" 
                             width={128}
                             height={128}

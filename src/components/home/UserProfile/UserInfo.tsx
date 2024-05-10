@@ -3,14 +3,15 @@ import { UserWithPhoto } from "@/lib/definitions";
 interface UserProfileProps {
     session: UserWithPhoto;
 }
-
+    const localSessionString = localStorage.getItem('session');
+    const localSession = localSessionString ? JSON.parse(localSessionString) : null;
 
 const UserProfile:  React.FC<UserProfileProps> = ({session}) => {
     return (
         <div>
             <div className="text-center mt-12">
                 <h3 className="text-xl font-semibold leading-normal mb-2 text-black mb-2">
-                    {session?.name}
+                    {localSession.name? localSession.name : session?.name}
                 </h3>
                 <div className="text-sm leading-normal mt-0 mb-2 text-black font-bold uppercase">
                     <i className="fas fa-map-marker-alt mr-2 text-lg text-black"></i>

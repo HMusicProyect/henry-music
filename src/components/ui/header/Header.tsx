@@ -20,6 +20,9 @@ interface HeaderProps{
 }
 const Header: React.FC<HeaderProps> = ({ children, className }) => {
     const router = useRouter();
+    const localSessionString = localStorage.getItem('session');
+    const localSession = localSessionString ? JSON.parse(localSessionString) : null;
+
     const [message, setMessage] = useState("");
 
     const { data: session } = useSession();
@@ -104,7 +107,7 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
                                         >
                                         <Image
                                             className="rounded-full"
-                                            src={userSession?.image || '/images/img-perfil-padron.jpg'}
+                                            src={localSession?.image? localSession?.image : session?.user.image! || '/images/img-perfil-padron.jpg'}
                                             alt="img perfil"
                                             width={100}
                                             height={100}
