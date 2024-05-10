@@ -16,8 +16,6 @@ import { BookUser, EditIcon, RectangleEllipsis } from 'lucide-react';
 
 
 
-
-
 const ProfilePage = () => {
     const { data: session, status, update } = useSession();
 

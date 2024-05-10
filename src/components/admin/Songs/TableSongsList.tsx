@@ -13,21 +13,27 @@ export default function TableSongsList({
   sortDirection:string;
 }) {
   const { todos, getMusic } = useStore();
-
+  const [noResults, setNoResults] = useState(false);
 
   useEffect(() => {
     getMusic();
   }, []);
 
+  useEffect(() => {
+    const filteredResults = todos.filter((invoice) =>
+      invoice.name?.toLowerCase().includes(query.toLowerCase()) ||
+      invoice.Artist?.name.toLowerCase().includes(query.toLowerCase()) ||
+      invoice.Genre?.name.toLowerCase().includes(query.toLowerCase())
+    );
 
-
+    setNoResults(filteredResults.length === 0);
+  }, [query, todos]);
 
   const filteredTodos = todos?.filter((invoice) =>
     invoice.name?.toLowerCase().includes(query.toLowerCase()) ||
     invoice.Artist?.name.toLowerCase().includes(query.toLowerCase()) ||
     invoice.Genre?.name.toLowerCase().includes(query.toLowerCase())
   );
-
 
   const sortedTodos = [...filteredTodos].sort((a, b) => {
     if (a && b) {
@@ -44,48 +50,51 @@ export default function TableSongsList({
   return (
     <section className="container mx-auto font-semibold">
       <div className="w-full mb-8 rounded-t-xl">
-       
-        <div className="w-full">
-          <table className="w-full">
-            <thead>
-              <tr className="text-sm font-bold text-left text-black-600 border-b border-gray-100/30 ">
-                <th className="px-4 py-3">#</th>
-                <th className="px-4 py-3 pl-8">Title</th>
-                <th className="px-4 py-3">Artist</th>
-                <th className="px-4 py-3">Género</th>
-              </tr>
-            </thead>
-            <tbody className="">
-              {sortedTodos?.map((invoice: any) => (
-                <tr
-                  key={invoice.id}
-                  className="text-white transition-transform duration-300 ease-in-out transform  hover:bg-neutral-400/10 "
-                >
-                  <td className="px-4 py-3 text-md font-semibold dark:border-slate-500 ">
-                    {invoice?.id}
-                  </td>
-                  <td className="px-6 py-3 dark:border-slate-500 ">
-                    <div className="flex items-center text-sm">
-                      <div className="relative mr-3 rounded-full md:block">
-                        <MediaItem
-                          onClick={() => { }}
-                          key={invoice.id}
-                          data={invoice}
-                        />
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 text-sm dark:text-gray-200 dark:border-slate-600 ">
-                    {invoice.Artist?.name}
-                  </td>
-                  <td className="px-4 py-3 text-sm dark:text-gray-200 dark:border-slate-600 ">
-                    {invoice.Genre?.name}
-                  </td>
+        {noResults ? (
+          <div className="text-center text-red-500 font-bold">No se encontraron resultados</div>
+        ) : (
+          <div className="w-full">
+            <table className="w-full">
+              <thead>
+                <tr className="text-sm font-bold text-left text-black-600 border-b border-gray-100/30 ">
+                  <th className="px-4 py-3">#</th>
+                  <th className="px-4 py-3 pl-8">Title</th>
+                  <th className="px-4 py-3">Artist</th>
+                  <th className="px-4 py-3">Género</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody className="">
+                {sortedTodos?.map((invoice: any) => (
+                  <tr
+                    key={invoice.id}
+                    className="text-white transition-transform duration-300 ease-in-out transform  hover:bg-neutral-400/10 "
+                  >
+                    <td className="px-4 py-3 text-md font-semibold dark:border-slate-500 ">
+                      {invoice?.id}
+                    </td>
+                    <td className="px-6 py-3 dark:border-slate-500 ">
+                      <div className="flex items-center text-sm">
+                        <div className="relative mr-3 rounded-full md:block">
+                          <MediaItem
+                            onClick={() => { }}
+                            key={invoice.id}
+                            data={invoice}
+                          />
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-sm dark:text-gray-200 dark:border-slate-600 ">
+                      {invoice.Artist?.name}
+                    </td>
+                    <td className="px-4 py-3 text-sm dark:text-gray-200 dark:border-slate-600 ">
+                      {invoice.Genre?.name}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </section>
   );
