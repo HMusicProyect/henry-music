@@ -16,8 +16,6 @@ import { TablePlayListCompact, EditPlaylistDetails, AddMusicToPlaylist} from '@/
 import { useSearchParams } from 'next/navigation';
 
 
-//comentario 
-
 const MusicPlayer: React.FC = () => {
     const { selectedOption } = useOptionsStore();
     const searchParams = useSearchParams();

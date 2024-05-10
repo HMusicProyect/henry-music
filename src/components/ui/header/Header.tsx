@@ -41,10 +41,12 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
 
     const handleSignOut = async () => {
         try {
-        await signOut();
-
+            await signOut();
+            if (typeof window !== 'undefined') {
+                localStorage.clear();
+            }
         } catch (error) {
-        setMessage('Error al cerrar sesión:');
+            setMessage('Error al cerrar sesión:');
         }
     };
 
