@@ -185,7 +185,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
                         </button>
                         {/* <img className="w-20" src="https://cdn-icons-png.flaticon.com/512/1047/1047711.png" alt="cookies-img" /> */}
                         <h1 className="mb-10 text-lg">
-                            Empieza a escuchar con una cuenta gratis de Spotify
+                            Empieza a escuchar con una cuenta gratis de henry music
                         </h1>
                         <button
                         onClick={()=> router.push('/register')}
