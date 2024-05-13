@@ -6,11 +6,11 @@
 import { PlaylistDetail, PlaylistDetailData, PlaylistDetailSong, Song } from "./playlist.store";
 
 export const fetchPlaylistDetail = async (id: string): Promise<PlaylistDetail> => {
-    console.log('fetchPlaylistDetail', id);
     if (!id) {
         console.error('Error: ID is undefined');
         throw new Error('ID is undefined');
     }
+    
     try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/getPlaylistDetail/${id}`);
         if (!response.ok) {

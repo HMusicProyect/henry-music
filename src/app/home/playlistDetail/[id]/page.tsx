@@ -14,20 +14,16 @@ import { Play } from 'lucide-react';
 import TablePlayList from '@/components/ui/sidebar/playlist/TablePlayList';
 import { TablePlayListCompact, EditPlaylistDetails, AddMusicToPlaylist} from '@/components/ui/playlist/index.playlist';
 import { useSearchParams } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 
 const MusicPlayer: React.FC = () => {
+    const { status } = useSession();
     const { selectedOption } = useOptionsStore();
     const searchParams = useSearchParams();
     const id = searchParams.get('id');
     const query = searchParams.get('query');
 
-
-    console.log('id', id);
-
-
-
-    
     const fetchPlaylistDetail = usePlaylistStore((state) => state.fetchPlaylistDetail);
     
     const playlistData = usePlaylistStore((state) => {

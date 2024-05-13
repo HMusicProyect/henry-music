@@ -22,10 +22,6 @@ const EditarPlaylist: React.FC = () => {
             body: JSON.stringify({ name: playlistName }),
         })
             .then(response => response.json())
-            .then(data => {
-                // Aquí puedes manejar la respuesta de la API después de editar la playlist
-                console.log(data);
-            })
             .catch(error => {
                 // Manejar errores en caso de que la solicitud falle
                 console.error(error);

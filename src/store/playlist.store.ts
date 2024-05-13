@@ -176,13 +176,11 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
     updatePlaylist: (id: string, name?: string, image?: File): Promise<void> => {
         return new Promise(async (resolve, reject) => {
             let imageUrl: string = '';
-            console.log('updatePlaylist', id, name, image);
 
             if (image) {
                 // Crear un objeto FilePair con la imagen
                 const filePair: FilePair = { photo: image };
                 const uploadResponse = await handlePhotoSubmit(filePair);
-                console.log('uploadResponse:', uploadResponse);
                 if (uploadResponse.status === 200) {
                     imageUrl = uploadResponse.url;
                 } else {
@@ -276,7 +274,6 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
     //elimina.
 
     deletePlaylist: async (id: string) => {
-        console.log('deletePlaylist', id)
         if (!id) {
             console.error('Error: ID is undefined');
             return;
@@ -294,7 +291,6 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
                     const data = await response.json();
                     console.error(`HTTP error! status: ${response.status}, message: ${data.error}`);
                 } else {
-                    console.log(response)
                     console.error(`HTTP error! status: ${response.status}`);
                 }
                 return;
@@ -311,7 +307,6 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
             });
 
         } catch (error) {
-            console.log(error)
             console.error('Error deleting playlist:', error);
         }
     },

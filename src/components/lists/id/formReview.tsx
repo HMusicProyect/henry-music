@@ -36,7 +36,6 @@ const FormReview: React.FC<FormReviewProps> = ({ currentSongId, userId, onReview
             }
 
             const { content } = values;
-            console.log("Datos enviados:", { content, punctuation, currentSongId, userId });
             await addReview(content, punctuation, currentSongId, userId)
             onReviewSubmit(); 
             router.refresh();

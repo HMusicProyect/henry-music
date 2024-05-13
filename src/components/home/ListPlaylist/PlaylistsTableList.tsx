@@ -26,7 +26,6 @@ export default function TableList({
     invoice.Genre?.name.toLowerCase().includes(query.toLowerCase())
   );
 
-  console.log('filteredTodos',filteredTodos);
   return (
     <section className="container mx-auto font-semibold">
       <div className="w-full mb-8 rounded-t-xl">

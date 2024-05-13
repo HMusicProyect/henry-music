@@ -21,7 +21,6 @@ const Sidebar: React.FC<SidebarProps> = ({ children}) => {
     const userSession: User = session?.user!;
     const pathname = usePathname();
     const player = usePlayer();
-    console.log('userPlaylists', userPlaylistsFromPlaylistStore.length)
 
 
     useEffect(() => {

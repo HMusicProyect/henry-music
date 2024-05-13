@@ -29,7 +29,6 @@ const AddSongsToPlaylistsModal = ({playlistId}: AddMusicToPlaylistProps) => {
 
   const handleSongSelect = (event: ChangeEvent<HTMLSelectElement>) => {
     setSelectedSongs(Array.from(event.target.selectedOptions, option => option.value));
-    console.log("Canción seleccionada:", event.target.value);
   };
   
 

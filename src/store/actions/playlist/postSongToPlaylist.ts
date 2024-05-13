@@ -21,7 +21,6 @@ export const postSongToPlaylist = async (playlistId: string, songId: string, set
         }
 
         const data = await response.json();
-        console.log('data', data);
         // Actualizar solo la parte modificada del estado
         set((state: PlaylistState) => {
             const updatedPlaylistDetails = state.playlistDetail?.playlistDetails 

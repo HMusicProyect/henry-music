@@ -5,7 +5,6 @@ import { PlaylistState } from "./playlist.store";
     //este controlador es para eliminar una playlist, toma el id de la playlist a eliminar por params y la 
     //elimina.
     export const deletePlaylist = async (id: string, set: Function) => {
-        console.log('deletePlaylist', id)
         if (!id) {
             console.error('Error: ID is undefined');
             return;
@@ -23,7 +22,6 @@ import { PlaylistState } from "./playlist.store";
                     const data = await response.json();
                     console.error(`HTTP error! status: ${response.status}, message: ${data.error}`);
                 } else {
-                    console.log(response)
                     console.error(`HTTP error! status: ${response.status}`);
                 }
                 return;
@@ -40,7 +38,6 @@ import { PlaylistState } from "./playlist.store";
             });
 
         } catch (error) {
-            console.log(error)
             console.error('Error deleting playlist:', error);
         }
     };

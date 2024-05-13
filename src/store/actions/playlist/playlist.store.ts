@@ -150,7 +150,6 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
         try {
             await updatePlaylist(id, set, handlePhotoSubmit, name, image);
         } catch (error) {
-            console.log('Error updating playlist:', error);
             set({ error: 'Error updating playlist:' + error });
         }
     },

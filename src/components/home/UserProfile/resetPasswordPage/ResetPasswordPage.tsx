@@ -36,7 +36,6 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({
 
 
     const handleSubmit = async (formValues: FormValues) => {
-        console.log(formValues)
         const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users/${id}/editPasword`, {
             method: 'PUT',
             headers: {
