@@ -10,12 +10,10 @@ interface AddMusicToPlaylistProps {
     setIsModalOpen: (arg0: boolean) => void;
 }
 
-export default function AddMusicToPlaylist ({ id, setIsModalOpen, setset }: AddMusicToPlaylistProps) {
+export default function AddMusicToPlaylist ({ id, setset }: AddMusicToPlaylistProps) {
     const [selectedSongs, setSelectedSongs] = useState<string[]>([]);
 
     const postSongToPlaylist = usePlaylistStore((state) => state.postSongToPlaylist);
-
-    const fetchPlaylistDetail = usePlaylistStore((state) => state.fetchPlaylistDetail);
 
     const searchParams = useSearchParams();
     const playlistID = searchParams.get('id') || '';
@@ -39,26 +37,19 @@ export default function AddMusicToPlaylist ({ id, setIsModalOpen, setset }: AddM
     };
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-        setIsLoading(true);
-
         event.preventDefault();
-
+        setIsLoading(true);
         if (selectedSongs.length === 0) {
-            alert('Por favor, selecciona al menos una canción.');
+            toast.error('Por favor, selecciona al menos una canción.');
             setIsLoading(false);
             return;
         }
         try {
-            // if(!userId) return;
-
             for (const songId of selectedSongs) {
-                postSongToPlaylist(id, songId);
+                const song = postSongToPlaylist(id, songId);
             }
             setset((prev: number) => prev + 1);
-            // setIsModalOpen(false);
-            toast.success('Las canciones se han agregado con éxito a la playlist.');
         } catch (error) {
-            toast.error('Hubo un error al agregar las canciones a la playlist.');
             console.error(error);
         } finally {
             setIsLoading(false);

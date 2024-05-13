@@ -1,4 +1,4 @@
-
+import toast from 'react-hot-toast';
 import { PlaylistDetail, PlaylistState } from "./playlist.store";
 
 export const postSongToPlaylist = async (playlistId: string, songId: string, set:any ):  Promise<PlaylistDetail | undefined> => {
@@ -7,7 +7,6 @@ export const postSongToPlaylist = async (playlistId: string, songId: string, set
         return;
     }
     try {
-
         const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/postPlaylist`, {
             method: 'POST',
             body: JSON.stringify({ playlistId, songId }),
@@ -17,11 +16,29 @@ export const postSongToPlaylist = async (playlistId: string, songId: string, set
         });
 
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            const errorData = await response.json();
+            switch (response.status) {
+                case 400:
+                    toast.error(errorData.error);
+                    break;
+                case 404:
+                    toast.error(errorData.error);
+                    break;
+                case 409:
+                    toast.error(errorData.error);
+                    break;
+                case 500:
+                    toast.error(errorData.error);
+                    break;
+                default:
+                    toast.error('Ha ocurrido un error desconocido.');
+            }
+            throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
         }
 
         const data = await response.json();
         // Actualizar solo la parte modificada del estado
+        toast.success('Las canciones se han agregado con éxito a la playlist.');
         set((state: PlaylistState) => {
             const updatedPlaylistDetails = state.playlistDetail?.playlistDetails 
                 ? [...state.playlistDetail.playlistDetails, data] 
@@ -37,6 +54,8 @@ export const postSongToPlaylist = async (playlistId: string, songId: string, set
         });
 
     } catch (error) {
-        console.error('Error posting song to playlist:', error);
+        if (error instanceof Error) {
+            console.error('Error posting song to playlist:', error);
+        }
     }
 };

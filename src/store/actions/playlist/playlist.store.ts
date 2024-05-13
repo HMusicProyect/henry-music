@@ -8,7 +8,7 @@ export interface Playlist {
     name: string;
     image: string;
     likes: any[];
-     songs: Song[]; 
+    songs: Song[]; 
 }
 
 export interface PlaylistDetailData {
@@ -119,8 +119,8 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
     // Este módulo define una función para agregar una canción a una lista de reproducción en una base de datos.
     postSongToPlaylist: async (playlistId: string, songId: string, ) => {
         try {
-            await postSongToPlaylist(playlistId, songId, set);
-
+            const song = await postSongToPlaylist(playlistId, songId, set);
+            return song;
             // fetchPlaylistDetail(playlistId);
 
         } catch (error) {
