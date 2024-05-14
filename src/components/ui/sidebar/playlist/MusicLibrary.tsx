@@ -9,6 +9,7 @@ import { Menu, MenuItem } from '@mui/material';
 import PlaylistItem from './PlaylistItem';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
+import Head from 'next/head';
 
 interface Playlist{
     id: string;
@@ -96,16 +97,17 @@ const MusicLibrary: React.FC<MusicLibraryProps> = ({ playlist = [], user }) => {
                         data={item}
                     />
                 ))}
-                    {
-                        (session?.user.rol == null || session?.user.rol !== "premium" && session?.user.rol !== "admin") && 
-                            <script 
-                                async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8470945940628090"
-                                crossOrigin="anonymous"
-                            >
-                                    
-                            </script>
-                    }
             </div>
+            {
+                (session?.user.rol == null || session?.user.rol !== "premium" && session?.user.rol !== "admin") && 
+                <Head>
+                    <script 
+                        async 
+                        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8470945940628090"
+                        crossOrigin="anonymous"
+                    />
+                </Head>
+            }
         </div>
     )
 }
