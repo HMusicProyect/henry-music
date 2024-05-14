@@ -74,22 +74,6 @@ const MusicLibrary: React.FC<MusicLibraryProps> = ({ playlist = [], user }) => {
         }
     };
 
-    useEffect(() => {
-        if (session?.user.rol === "admin") {
-            const script = document.createElement('script');
-
-            script.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8470945940628090";
-            script.async = true;
-            script.crossOrigin = "anonymous";
-
-            document.body.appendChild(script);
-
-            return () => {
-                document.body.removeChild(script);
-            }
-        }
-    }, [session?.user.rol]);
-
     return (
         <div className='flex flex-col'>
             <div className="flex items-center justify-between px-5 pt-4">
@@ -112,6 +96,15 @@ const MusicLibrary: React.FC<MusicLibraryProps> = ({ playlist = [], user }) => {
                         data={item}
                     />
                 ))}
+                    {
+                        (session?.user.rol == null || session?.user.rol !== "premium" && session?.user.rol !== "admin") && 
+                            <script 
+                                async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8470945940628090"
+                                crossOrigin="anonymous"
+                            >
+                                    
+                            </script>
+                    }
             </div>
         </div>
     )
