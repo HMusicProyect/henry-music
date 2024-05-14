@@ -3,11 +3,14 @@ import zIndex from "@mui/material/styles/zIndex";
 import Link from 'next/link';
 import React from "react";
 import "./landing.css"; // Importar el archivo CSS
+import Footer from "@/components/ui/foter/foter";
 
 
 const App: React.FC = () => {
   return (
-    <div className="App gradient-style">
+   
+     <>
+      <div className="App gradient-style">
       <div className="container-style">
         <div className="box-style">
           <h2 className="text-4xl font-bold mb-4">
@@ -39,7 +42,10 @@ const App: React.FC = () => {
           </Link>
         </div>
       </div>
+     
     </div>
+     <Footer companyName={"H music"} year={2024}></Footer>
+     </>
   );
 };
 

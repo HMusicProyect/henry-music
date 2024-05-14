@@ -77,6 +77,11 @@
     .box-style {
       display: none;
     }
+    .box-style2 {
+    
+      width: 500px;
+     
+    }
     .imagen2 {
         margin-left: 200px;
         scale: 0.8;
