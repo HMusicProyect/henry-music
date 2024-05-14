@@ -7,25 +7,29 @@ import { updateUserInfo } from '@/components/home/UserProfile/updateUserInfo';
 import { ModalComponent } from '@/components/ui/Modal/Modal';
 import { User } from '@/lib/auth/user.auth';
 import { UserWithPhoto } from '@/lib/definitions';
-import { SessionContext, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { BookUser, EditIcon, RectangleEllipsis } from 'lucide-react';
+import usePlaylistStore from '@/store/actions/playlist/playlist.store';
+import useFavoritePlaylistMusic from '@/components/home/UserProfile/musicLikes/musicLikes';
 
 
 
 const ProfilePage = () => {
     const { data: session, status, update } = useSession();
 
-    const sessionStore = React.useContext<any>(SessionContext);
-
     const searchParams = useSearchParams();
     const router = useRouter();
+
+    
+    const favoriteMusic = useFavoritePlaylistMusic();
     
     
     const [editProfile, setEditProfile] = useState<UserWithPhoto>({ name: '', photo: undefined });
+    const userPlaylists = usePlaylistStore(state => state.userPlaylists);
     
     const [isEditingPassword, setIsEditingPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -35,7 +39,6 @@ const ProfilePage = () => {
     const [message, setMessage]= useState<string[]>([]);
     const [messageType, setMessageType] = useState<'success' | 'error' | ''>('');
     const [ isModalOpen, setIsModalOpen ] = useState(false);
-    const [user, setUser] = useState<User | null>(null);
 
     if(status === "loading"){
         return <p>Cargando...</p>;
@@ -168,28 +171,28 @@ const ProfilePage = () => {
                         />
                     </div>
                     </div>
-                        {/* <div className="w-full px-4 text-center mt-20">
+                        <div className="w-full px-4 text-center mt-20">
                             <div className="flex justify-center py-4 lg:pt-4 pt-8">
                                 <div className="mr-4 p-3 text-center">
                                     <span className="text-xl font-bold block uppercase tracking-wide text-black">
-                                        22
+                                        {favoriteMusic?.length}
                                     </span>
-                                    <span className="text-sm text-black">Friends</span>
+                                    <span className="text-sm text-black">Favoritos</span>
                                 </div>
-                                <div className="mr-4 p-3 text-center">
+                                {/* <div className="mr-4 p-3 text-center">
                                     <span className="text-xl font-bold block uppercase tracking-wide text-black">
                                         10
                                     </span>
                                     <span className="text-sm text-black">Cansiones</span>
-                                </div>
+                                </div> */}
                                 <div className="lg:mr-4 p-3 text-center">
                                     <span className="text-xl font-bold block uppercase tracking-wide text-black">
-                                        89
+                                        {userPlaylists.length}
                                     </span>
                                     <span className="text-sm text-black">playlis</span>
                                 </div>
                             </div>
-                        </div> */}
+                        </div>
                 </div>
 
 

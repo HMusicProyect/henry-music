@@ -38,6 +38,7 @@ const MusicPlayer: React.FC = () => {
     const [set, setset ] = useState(0);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isModalEditOpen, setIsModalEditOpen] = useState(false);
+
     
     useEffect(() => {
         if(id){
@@ -122,14 +123,14 @@ const MusicPlayer: React.FC = () => {
                             >
                                 {playlistData && capitalizeWords(playlistData.name)}
                             </h2>
-                            <p className="text-md text-gray-500">
+                            {/* <p className="text-md text-gray-500">
                                 <span className='text-white font-semibold text-md'>Nombre: </span>
                                 {playlistData?.name}
                             </p>
                             <p className="text-md text-gray-500">
                                 <span className='text-white font-semibold text-md'>Autor: </span>
-                                {playlistData?.name}
-                            </p>
+                                {playlistData?.ArtistName}
+                            </p> */}
                                 {otherDetails && otherDetails.length > 0 &&
                                     <button
                                         className='transition rounded-full flex items-center bg-yellow-500 p-4 drop-shadow-md translate translate-y-1/4 group-hover:opacity-100 group-hover:translate-y-0 hover:scale-110'

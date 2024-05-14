@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
+import Swal from 'sweetalert2';
 
 import { SignInResponse, getSession, signIn, signOut } from "next-auth/react";
 
@@ -61,9 +62,19 @@ useEffect(() => {
       const user = session?.user;
       if (user) {
         const userName = user.name.replace(/\s/g, '');
+        if (user.ban == true){
+          signOut()
+          Swal.fire({
+            icon: "error",
+            title: "Cuenta Baneada",
+            text: "Tu cuenta ha sido baneada por infringir nuestras políticas.",
+            footer: '<a href="#">¿Por qué tengo este problema?</a>',
+            iconColor: 'red'
+          });
+        }
         if (user.esta_verificado === false) {
           const urlVerification = `${window.location.origin}/verification/${userName}?id=${user.id}` ;
-          // signOut({ callbackUrl: urlVerification });
+          signOut({ callbackUrl: urlVerification });
         } else if (user.esta_verificado === true) {
           router.push("/home");
         }

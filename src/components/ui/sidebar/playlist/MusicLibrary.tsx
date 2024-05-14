@@ -55,6 +55,7 @@ const CreatePlaylistMenu: React.FC<{ onCreate: () => void, onClose: () => void }
 const MusicLibrary: React.FC<MusicLibraryProps> = ({ playlist = [], user }) => {
     const postPlaylist = usePlaylistStore(state => state.postPlaylist);
     const userPlaylists = usePlaylistStore(state => state.userPlaylists);
+    
     const { data: session, status } = useSession();
 
     const handleCreatePlaylist = () => {
