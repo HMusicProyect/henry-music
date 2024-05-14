@@ -3,7 +3,7 @@ import Swal from 'sweetalert2';
 import { Plus, Library } from 'lucide-react';
 import usePlaylistStore from '@/store/actions/playlist/playlist.store';
 import { User } from '@/lib/definitions';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Menu, MenuItem } from '@mui/material';
 
 import PlaylistItem from './PlaylistItem';
@@ -73,6 +73,22 @@ const MusicLibrary: React.FC<MusicLibraryProps> = ({ playlist = [], user }) => {
             }
         }
     };
+
+    useEffect(() => {
+        if (session?.user.rol === "admin") {
+            const script = document.createElement('script');
+
+            script.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8470945940628090";
+            script.async = true;
+            script.crossOrigin = "anonymous";
+
+            document.body.appendChild(script);
+
+            return () => {
+                document.body.removeChild(script);
+            }
+        }
+    }, [session?.user.rol]);
 
     return (
         <div className='flex flex-col'>
