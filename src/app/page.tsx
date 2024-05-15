@@ -4,12 +4,20 @@ import Link from 'next/link';
 import React from "react";
 import "./landing.css"; // Importar el archivo CSS
 import Footer from "@/components/ui/foter/foter";
+import Head from "next/head";
 
 
 const App: React.FC = () => {
   return (
    
      <>
+      <Head>
+          <script 
+              async 
+              src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8470945940628090"
+              crossOrigin="anonymous"
+          />
+      </Head>
       <div className="App gradient-style">
       <div className="container-style">
         <div className="box-style">
@@ -42,10 +50,9 @@ const App: React.FC = () => {
           </Link>
         </div>
       </div>
-     
     </div>
-     <Footer companyName={"H music"} year={2024}></Footer>
-     </>
+    <Footer companyName={"H music"} year={2024}></Footer>
+    </>
   );
 };
 

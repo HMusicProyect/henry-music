@@ -112,24 +112,26 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
                                 >
                                     <span className="absolute -inset-1.5" />
                                     <span className="sr-only">Open user menu</span>
-    <div className="relative w-14 h-14">
-        <Image
-            className="rounded-full"
-            src={localSession?.image? localSession?.image : session?.user.image! || '/images/img-perfil-padron.jpg'}
-            alt="img perfil"
-            layout="fill"
-            objectFit="cover"
-        />
-<div className="absolute bottom-[-10px] right-0 w-8 h-8"> 
-    <Image
-        src="/images/perfilemini.png"
-        className="rounded-full"
-        alt="Icon"
-        layout="fill"
-        objectFit="cover"
-    />
-</div>
-    </div>
+                                    <div className="relative w-14 h-14">
+                                        <Image
+                                            className="rounded-full"
+                                            src={localSession?.image? localSession?.image : session?.user.image! || '/images/img-perfil-padron.jpg'}
+                                            alt="img perfil"
+                                            layout="fill"
+                                            objectFit="cover"
+                                        />
+                                        {userSession?.rol === 'admin' || userSession?.rol === 'premium' ? (
+                                            <div className="absolute bottom-[-20px] right-0 w-8 h-8"> 
+                                                <Image
+                                                    src="/images/perfilemini.png"
+                                                    className="rounded-full"
+                                                    alt="Icon"
+                                                    layout="fill"
+                                                    objectFit="cover"
+                                                />
+                                            </div>
+                                        ) : null}
+                                    </div>
                                 </Menu.Button>
                                 </div>
                                 <Transition
