@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
 import Swal from 'sweetalert2';
 
+
 import { SignInResponse, getSession, signIn, signOut } from "next-auth/react";
 
 import { useRouter } from "next/navigation";
@@ -47,8 +48,19 @@ async function onSubmit(event: React.SyntheticEvent) {
   });
 
   if (response?.error) {
+    console.log(response)
     setErrors(response.error.split(","));
     setIsLoading(false);
+    if (response.error == 'Usuario baneado') {
+      Swal.fire({
+          icon: "error",
+          title: '<span style="color: white;">Error</span>',
+          html: `<span style="color: white;">${response.error.split(",")}</span>`,
+          footer: '<a href="#" style="color: white;">¿Por qué tengo este problema?</a>',
+          background: '#505050',
+          confirmButtonColor: '#FFCC00',
+      })
+    }
   }
 
   if (response) {
@@ -62,16 +74,6 @@ useEffect(() => {
       const user = session?.user;
       if (user) {
         const userName = user.name.replace(/\s/g, '');
-        if (user.ban == true){
-          signOut()
-          Swal.fire({
-            icon: "error",
-            title: "Cuenta Baneada",
-            text: "Tu cuenta ha sido baneada por infringir nuestras políticas.",
-            footer: '<a href="#">¿Por qué tengo este problema?</a>',
-            iconColor: 'red'
-          });
-        }
         if (user.esta_verificado === false) {
           const urlVerification = `${window.location.origin}/verification/${userName}?id=${user.id}` ;
           signOut({ callbackUrl: urlVerification });

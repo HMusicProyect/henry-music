@@ -50,10 +50,10 @@ export type PlaylistState = {
     currentSong: Song | null;
     playlistDetail: PlaylistDetail | null;
     error: string | null;
-    fetchUserPlaylists: (id: string) => void;
+    fetchUserPlaylists: (id: string, signOut: () => void) => void;
     fetchAllPlaylists: () => void;
     fetchPlaylistDetail: (id: string) => void;
-    postPlaylist: (name: string, userId: string) => void;
+    postPlaylist: (name: string, userId: string,  signOut: () => void ) => void;
     postSongToPlaylist: (playlistId: string, songId: string) => void;
     deleteSongFromPlaylist: (id: string ) => void;
     updatePlaylist: (id: string, name?: string, image?: File) => Promise<void>;
@@ -67,9 +67,10 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
     playlistDetail: null,
     error: null,
     //este controlador es para traer las playlist del usuario que consulta
-    fetchUserPlaylists: async (id: string) => {
+    fetchUserPlaylists: async (id: string, signOut: () => void) => {
+        
         try {
-            const playlists = await fetchUserPlaylists(id);
+            const playlists = await fetchUserPlaylists(id, signOut );
             set({ userPlaylists: playlists });
         } catch (error) {
             set({ error: 'Error fetching user playlists:' + error });
@@ -99,9 +100,9 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
     },
 
     //este controlador es para crear una playlist nueva
-    postPlaylist: async (name: string, userId: string) => {
+    postPlaylist: async (name: string, userId: string, logout) => {
         try {
-            const newPlaylist = await postPlaylist(name, userId);
+            const newPlaylist = await postPlaylist(name, userId, logout);
 
             set((state) => {
                 if (Array.isArray(state.userPlaylists)) {
@@ -111,6 +112,7 @@ const usePlaylistStore = create<PlaylistState>((set) => ({
                     return state;
                 }
             });
+            return newPlaylist;
         } catch (error) {
             set({ error: 'Error posting new playlist:' + error });
         }

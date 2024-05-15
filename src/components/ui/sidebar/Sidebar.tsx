@@ -1,14 +1,14 @@
 "use client";
 import { usePathname } from 'next/navigation';
 import { useEffect, useMemo } from 'react';
-import { Home, Search, List } from 'lucide-react';
+import { Home, Search, List, LogOut } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
 import Box from './Box';
 import SidebarItem from './SidebarItem';
 import MusicLibrary from './playlist/MusicLibrary';
 import usePlayer from '@/store/hooks/usePlayer';
 import usePlaylistStore from '@/store/actions/playlist/playlist.store'; 
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import {User} from "@/lib/definitions"
 
 interface SidebarProps {
@@ -25,7 +25,7 @@ const Sidebar: React.FC<SidebarProps> = ({ children}) => {
 
     useEffect(() => {
         if (userSession?.id && (userPlaylistsFromPlaylistStore.length === 0 || !userPlaylistsFromPlaylistStore)) {
-            fetchUserPlaylists(userSession.id);
+            fetchUserPlaylists(userSession.id, signOut);
         }
     }, [userSession, fetchUserPlaylists, userPlaylistsFromPlaylistStore]);
 

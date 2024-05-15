@@ -44,7 +44,8 @@ export async function getUser(email: string, password: string): Promise<User> {
     try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/login?email=${email}&password=${password}`);
         if (!response.ok) {
-            throw new Error('Failed to fetch user.');
+            const errorData = await response.json();
+            throw new Error(errorData.message);
         }
         const user = await response.json();
         if (user.error) throw user;
@@ -56,8 +57,13 @@ export async function getUser(email: string, password: string): Promise<User> {
 
         return user;
     } catch (error) {
-        console.error('Failed to fetch user:', error);
-        throw new Error('Failed to fetch user.', error!);
+        if (error instanceof Error) {
+            console.error('Failed to fetch user:', error.message);
+            throw new Error(error.message);
+        } else {
+            console.error('Failed to fetch user:', error);
+            throw error;
+        }
     }
 }
 

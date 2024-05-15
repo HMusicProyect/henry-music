@@ -47,6 +47,7 @@ const handler = NextAuth({
                 if (parsedCredentials.success) {
                 const { email, password } = parsedCredentials.data;
                 const user = await getUser(email, password);
+                console.log('user', user)
                 return user;
             }
             return null;
@@ -83,11 +84,10 @@ const handler = NextAuth({
                 password: user.password,
                 rol: user.rol,
                 token: token.token,
-                expires: new Date(token.exp * 1000).toISOString(), // Convertir la fecha de expiración de UNIX a ISO
+                expires: new Date(token.exp * 1000).toISOString(),
                 esta_verificado: user.esta_verificado,
                 ban: user.ban
             };
-            console.log('----session User',session);
             return session;
         },
     },

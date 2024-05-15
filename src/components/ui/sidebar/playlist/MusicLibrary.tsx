@@ -8,7 +8,7 @@ import { Menu, MenuItem } from '@mui/material';
 
 import PlaylistItem from './PlaylistItem';
 import Link from 'next/link';
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import Head from 'next/head';
 
 interface Playlist{
@@ -58,6 +58,13 @@ const MusicLibrary: React.FC<MusicLibraryProps> = ({ playlist = [], user }) => {
     const userPlaylists = usePlaylistStore(state => state.userPlaylists);
     
     const { data: session, status } = useSession();
+    const handleLogout = () => {
+    // Aquí iría tu lógica para cerrar la sesión
+    // Por ejemplo, podrías borrar el token de sesión del almacenamiento local
+    localStorage.removeItem('sessionToken');
+    // Y luego redirigir al usuario a la página de inicio de sesión
+    window.location.href = '/login';
+}
 
     const handleCreatePlaylist = () => {
         const defaultPlaylistName = "New Playlist";
@@ -70,7 +77,7 @@ const MusicLibrary: React.FC<MusicLibraryProps> = ({ playlist = [], user }) => {
                     footer: '<a href="URL_AQUI">Hazte premium</a>'
                 });
             } else {
-                postPlaylist(defaultPlaylistName, user.id);
+                postPlaylist(defaultPlaylistName, user.id,  signOut );
             }
         }
     };
