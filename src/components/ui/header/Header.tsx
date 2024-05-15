@@ -107,20 +107,29 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
 
                             <Menu as="div" className="relative ml-3 bg-gradient-to-b from-transparent to-black rounded-full">
                                 <div>
-                                <Menu.Button className="relative m-1 flex rounded-full bg-transparent text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                                <Menu.Button 
+                                    className="relative m-1 flex rounded-full bg-transparent text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                                >
                                     <span className="absolute -inset-1.5" />
                                     <span className="sr-only">Open user menu</span>
-                                    <div
-                                        className="h-13 w-12 rounded-full"
-                                        >
-                                        <Image
-                                            className="rounded-full"
-                                            src={localSession?.image? localSession?.image : session?.user.image! || '/images/img-perfil-padron.jpg'}
-                                            alt="img perfil"
-                                            width={100}
-                                            height={100}
-                                        />
-                                    </div>
+    <div className="relative w-14 h-14">
+        <Image
+            className="rounded-full"
+            src={localSession?.image? localSession?.image : session?.user.image! || '/images/img-perfil-padron.jpg'}
+            alt="img perfil"
+            layout="fill"
+            objectFit="cover"
+        />
+<div className="absolute bottom-[-10px] right-0 w-8 h-8"> 
+    <Image
+        src="/images/perfilemini.png"
+        className="rounded-full"
+        alt="Icon"
+        layout="fill"
+        objectFit="cover"
+    />
+</div>
+    </div>
                                 </Menu.Button>
                                 </div>
                                 <Transition

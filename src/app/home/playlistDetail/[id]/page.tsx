@@ -146,12 +146,11 @@ const MusicPlayer: React.FC = () => {
             <div className="flex justify-center items-center mt-4">
                 <button
                     onClick={() => setIsModalOpen(true)}
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    className="text-black font-bold py-2 px-5 rounded-full transform transition duration-500 ease-in-out hover:scale-110 text-lg bg-gradient-to-r from-yellow-500 to-black"
                 >
-                    Add Song to Playlist
+                    Add Song
                 </button>
             </div>
-
             <div className="px-6 mb-7 flex items-center justify-between gap-2 md:mt-8">
                 {/* <Input className='w-1/4' placeholder='Search Invoices' /> */}
                 {/* <OptionsDropdown /> */}
