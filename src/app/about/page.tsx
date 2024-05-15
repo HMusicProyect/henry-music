@@ -26,22 +26,22 @@ const developers: Developer[] = [
     image: './images/foto-miguel.jpeg'
   },
   {
-    name: 'Alan Fernandez',
+    name: 'Alan Damian Fernandez',
     role: 'Frontend',
     Linkedin: 'https://www.linkedin.com/in/alan-damian-fern%C3%A1ndez2022/',
     github: 'https://github.com/Alan-Fernandez',
     image: './images/foto-alan.jpg'
   },
   {
-    name: 'Juan Manuel Ramos Lencina',
+    name: 'Sadhu Isaac Cavero Egusquiza Hulica',
     role: 'Frontend',
     Linkedin: 'https://www.linkedin.com/in/juan-manuel-ramos-lencina-43a03b222',
     github: 'https://www.github.com/JuanManuelRamosL',
     image: './images/user-image.png'
   },
   {
-    name: 'Juan Manuel Ramos Lencina',
-    role: 'Frontend',
+    name: 'Derwyn Andres Herrera Garcia',
+    role: 'Backend',
     Linkedin: 'https://www.linkedin.com/in/juan-manuel-ramos-lencina-43a03b222',
     github: 'https://www.github.com/JuanManuelRamosL',
     image: './images/user-image.png'
@@ -56,8 +56,8 @@ const Card: React.FC<{ developer: Developer }> = ({ developer }) => {
       </div>
       <h1 className='name-dev'>{developer.name}</h1>
       <div className="developer-info">
-        <h2>Encargado de:</h2>
-        <p>{developer.role}</p>
+        <h2 className='title-dev-rol'>Encargado de:</h2>
+        <p className='dev-rol'>{developer.role}</p>
         <p className='txt-links'>Links</p>
         <svg className='svg-icon' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M233.4 105.4c12.5-12.5 32.8-12.5 45.3 0l192 192c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L256 173.3 86.6 342.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l192-192z" /></svg>
       </div>
