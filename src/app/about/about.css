@@ -56,7 +56,9 @@ body {
 }
 
 .user-image {
-	width: 100px;
+	width: 130px;
+	height: 130px;
+	border-radius: 8px;
 	transition: 0.3s;
 }
 
@@ -95,6 +97,7 @@ body {
 
 .name-dev {
 	font-size: 22px;
+	margin-top: -10px;
 }
 
 .developer-info {
@@ -150,12 +153,11 @@ body {
 	position: relative;
 	scale: 0.1;
 	fill: #fff;
-	transform: translate(450%, 400%);
-	animation: up 1s linear infinite;
-	/* display: none; */
+	transform: translate(450%, 270%);
+	/* animation: up 1s linear infinite; */
   }
 
-  @keyframes up {
+  /* @keyframes up {
 	0% {
 		scale: 0.1;
 		transform: translate(450%, 400%);
@@ -168,7 +170,7 @@ body {
 		scale: 0.1;
 		transform: translate(450%, 400%);
 	}
-  }
+  } */
 
   /* @media screen and (max-width: 768px) {
 	.svg-icon path {
@@ -193,3 +195,8 @@ body {
 /* .button-links {
 	
 } */
+
+.txt-links {
+	position: relative;
+	top: 110px;
+}
