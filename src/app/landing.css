@@ -20,22 +20,25 @@
   /* Estilos para el primer cuadro */
   .box-style {
     flex: 1;
+    width: 600px;
+    height: 460px;
     background-color: #000;
     border-radius: 20px 0px 0px 20px;
     padding: 40px;
     font-size: 24px;
-    margin-top: -20px;
+    margin-top: -30px;
   }
   
   /* Estilos para el segundo cuadro */
   .box-style2 {
+    width: 600px;
+    height: 460px;
     flex: 1;
     background-color: #181818;
     border-radius: 0px 20px 20px 0px;
     padding: 40px;
     font-size: 19px;
-    width: 600px;
-    margin-top: -20px;
+    margin-top: -30px;
   }
   
   /* Animación para el disco */
@@ -48,17 +51,19 @@
     }
   }
   
-  /* Estilos para la imagen 2 */
+  .imagen1 {
+    scale: 0.9;
+  }
+
   .imagen2 {
-    margin-left:13rem;
-    
+    margin-left: 13rem;
+    scale: 0.9;
   }
   
   /* Estilos para el botón */
   .boton {
     z-index: 10;
-    transform: translateX(-154px);
-    margin-top: -140px;
+    transform: translate(-154px, -70px);
     border: none;
   }
   
@@ -79,18 +84,19 @@
       display: none;
     }
     .box-style2 {
-    
       width: 500px;
-     
+      border-radius: 15px;
     }
     .imagen2 {
-        margin-left: 200px;
+        margin-left: 00px;
         scale: 0.8;
-        margin-top: -40px;
+        margin-top: -20px;
       }
       .boton {
         z-index: 10;
-        transform: translateX(154px);
+        position: relative;
+        top: 55px;
+        left: 60%;
         margin-top: 0px;
         border: none;
       }

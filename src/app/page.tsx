@@ -22,7 +22,7 @@ const App: React.FC = () => {
           <p className="text-lg">Bienvenido a H Music, tu aplicación de música.</p>
           <p className="text-lg">Descubre decenas de canciones y disfruta de la música en cualquier momento y lugar.</p>
           <p className="text-lg">Con H Music, la música está siempre al alcance de tu mano.</p>
-          <img src="/images/ejemplo.png" alt="imagen ejemplo" className="w-80 h-55 mt-4 rounded-lg" />
+          <img src="/images/ejemplo.png" alt="imagen ejemplo" className="w-80 h-55 mt-4 rounded-lg imagen1" />
         </div>
         <div className="box-style2">
           <h2 className="text-4xl mb-4">Inicia tu experiencia ahora</h2>

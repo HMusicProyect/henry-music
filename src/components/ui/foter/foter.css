@@ -1,5 +1,26 @@
 .foter{
-	background-color: transparent;
+	background-color: #000;
 	margin-top: -150px;
 }
 
+.correo-footer {
+	text-align: center;
+}
+
+.button-footer {
+	width: 230px;
+	color: #fff;
+}
+
+@media screen and (max-width: 768px) {
+	.foter {
+		margin-top: -180px;
+	}
+	.button-footer {
+		scale: 0.9;
+	}
+	.container-button-about-footer {
+		display: flex;
+		justify-content: space-between;
+	}
+}
