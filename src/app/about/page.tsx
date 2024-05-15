@@ -19,6 +19,20 @@ const developers: Developer[] = [
     github: 'https://www.github.com/JuanManuelRamosL',
   },
   {
+    name: 'Sadhu Isaac Cavero Egusquiza Hulica',
+    role: 'Frontend',
+    Linkedin: 'https://www.linkedin.com/in/sadhu-cavero-egusquiza/',
+    github: 'https://github.com/iska1234',
+    image: './images/foto-isaac.jpeg'
+  },
+  {
+    name: 'Derwyn Andres Herrera Garcia',
+    role: 'Backend',
+    Linkedin: 'https://www.linkedin.com/in/hderwyn/',
+    github: 'https://github.com/HDerwyn',
+    image: './images/foto-derwin.jpeg'
+  },
+  {
     name: 'Miguel Angel Nicolas Campomanes',
     role: 'Backend',
     Linkedin: 'https://www.linkedin.com/in/miguel-nicolas-8b6582258/',
@@ -31,20 +45,6 @@ const developers: Developer[] = [
     Linkedin: 'https://www.linkedin.com/in/alan-damian-fern%C3%A1ndez2022/',
     github: 'https://github.com/Alan-Fernandez',
     image: './images/foto-alan.jpg'
-  },
-  {
-    name: 'Sadhu Isaac Cavero Egusquiza Hulica',
-    role: 'Frontend',
-    Linkedin: 'https://www.linkedin.com/in/juan-manuel-ramos-lencina-43a03b222',
-    github: 'https://www.github.com/JuanManuelRamosL',
-    image: './images/user-image.png'
-  },
-  {
-    name: 'Derwyn Andres Herrera Garcia',
-    role: 'Backend',
-    Linkedin: 'https://www.linkedin.com/in/juan-manuel-ramos-lencina-43a03b222',
-    github: 'https://www.github.com/JuanManuelRamosL',
-    image: './images/user-image.png'
   },
 ];
 
