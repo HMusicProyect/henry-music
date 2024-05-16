@@ -116,48 +116,45 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
 
     return (
             <>
-               <div className='grid grid-cols-1 md:grid-cols-3 h-full'>
-    <div className='hidden lg:flex justify-start md:col-span-2'>
-        <Link href={`/home/lists/${song.id}`}>
-            <div className='flex items-center gap-x-4'>
-                <MediaItem data={song}/>
-            </div>
-        </Link>
-    </div>
-    <div className='flex justify-center items-center md:col-span-1 max-w-[722px] gap-x-6'>
-        <StepBack
-            onClick={onPlayPrevious}
-            size={30}
-            className='text-neutral-400 cursor-pointer hover:text-white transition'
-        />
-        <div
-            onClick={handlePlay}
-            className='flex items-center justify-center h-10 w-10 rounded-full bg-white p-1 cursor-pointer'
-        >
-            {isPlaying ? (
-                <Pause className="text-black" fill="black" />
-            ) : (
-                <Play className="text-black" fill="black" />
-            )}
-        </div>
-        <StepForward
-            onClick={onPlayNext}
-            size={30}
-            className='text-neutral-400 cursor-pointer hover:text-white transition'
-        />
-    </div>
-    <div className='hidden lg:flex justify-end md:justify-start md:col-span-3 md:pr-2'>
-        <div className='flex items-center gap-x-2 w-[120px]'>
-            {volume === 0 ? (
-                <Volume1 onClick={toggleMute} className="text-black cursor-pointer" fill="white" size={35} />
-            ) : (
-                <Volume2 onClick={toggleMute} className="text-black cursor-pointer" fill="white" size={35} />
-            )}
-            <Slider value={volume} onChange={(value) => setVolume(value)} />
-        </div>
-    </div>
-</div>
-
+                <div className='grid grid-cols-2 md:grid-cols-3 h-full'>
+                        <div className='flex w-full justify-start'>
+                            <div className='flex items-center gap-x-4'>
+                                <MediaItem data={song} />
+                            </div>
+                        </div>
+                        <div className='hidden h-full md:flex justify-center items-center w-full max-w-[722px] gap-x-6'>
+                            <StepBack
+                                onClick={onPlayPrevious}
+                                size={30}
+                                className='text-neutral-400 cursor-pointer hover:text-white transition'
+                            />
+                            <div
+                                onClick={handlePlay}
+                                className='flex items-center justify-center h-10 w-10 rounded-full bg-white p-1 cursor-pointer'
+                            >
+                                {isPlaying ? (
+                                    <Pause className="text-black" fill="black" />
+                                ) : (
+                                    <Play className="text-black" fill="black" />
+                                )}
+                            </div>
+                            <StepForward
+                                onClick={onPlayNext}
+                                size={30}
+                                className='text-neutral-400 cursor-pointer hover:text-white transition'
+                            />
+                        </div>
+                        <div className='hidden md:flex w-full justify-end pr-2'>
+                            <div className='flex items-center gap-x-2 w-[120px]'>
+                                {volume === 0 ? (
+                                    <Volume1 onClick={toggleMute} className="text-black cursor-pointer" fill="white" size={35} />
+                                ) : (
+                                    <Volume2 onClick={toggleMute} className="text-black cursor-pointer" fill="white" size={35} />
+                                )}
+                                <Slider value={volume} onChange={(value) => setVolume(value)} />
+                            </div>
+                        </div>
+                </div>
             <ModalComponent
                 isModalOpen={isModalOpen}
                 setIsModalOpen={setIsModalOpen}
