@@ -3,8 +3,6 @@
 import React, { useEffect } from 'react';
 import Header from "@/components/ui/header/Header";
 import AlbumCard from "@/components/ui/sidebar/AlbumCard";
-import { data } from '@/components/ui/sidebar/data';
-import ListItem from "@/components/home/ListItem";
 import useStore from '@/store/songs.store';
 import SongsPage from '@/components/home/SongsPage';
 import Link from 'next/link';
@@ -55,10 +53,11 @@ const Home: React.FC = () => {
         <div className="mt-5 flex justify-between items-center">
           <h2 className="text-white text-2xl font-semibold">Newest Albums</h2>
         </div>
-        <div className="flex  justify-center gap-3 items-center">
-          {Array.isArray(albums) && albums.map((album, index) => (
-              <AlbumCard key={index} imageUrl={album.image} name={album.name} />
-          ))}
+        <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {Array.isArray(albums) && albums.slice(0, 4).map((album, index) => (
+    <AlbumCard key={index} imageUrl={album.image} name={album.name} />
+))}
+
         </div>
       </div>
     </div>
